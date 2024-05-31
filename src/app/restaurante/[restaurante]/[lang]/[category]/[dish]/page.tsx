@@ -1,8 +1,8 @@
 import toTitle from "@/helpers/to-title";
 import Background from "../../../components/background";
 import RestaurantHeader from "../../../components/header";
-import { dishes } from "../page";
-import { Box, Container, Grid, Typography } from "@mui/material";
+import { dishes } from "../../constants/dishes";
+import { Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import formatPrice from "@/helpers/format-price";
 import MenuButton from "../../components/menu-button";

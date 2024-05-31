@@ -1,33 +1,12 @@
 import { Container, Grid } from "@mui/material";
 import Background from "../../components/background";
 import RestaurantHeader from "../../components/header";
-import { mainCategories } from "../page";
+import { mainCategories } from "../constants/main-categories";
 import toTitle from "@/helpers/to-title";
-import { DishInterface } from "./components/dish.d";
 import Dish from "./components/dish";
 import MenuButton from "../components/menu-button";
 import BackButton from "../components/back-button";
-
-export const dishes: DishInterface[] = [
-    {
-        name: 'FETUCCINI A LA HUANCAÍNA CON LOMO SALTADO',
-        description: 'Fetuccini al dente con lomo salteado.',
-        price: 14900,
-        image: '/dishes/fetuccini.png'
-    },
-    {
-        name: 'RAVIOLIS A LA OCOPA CON FILETE AL GRILL',
-        description: 'Raviolis en salsa de ocopa flameados con pisco y acompañado con filete al grill.',
-        price: 14900,
-        image: '/dishes/raviolis.png'
-    },
-    {
-        name: 'ÑOQUIS A LA HUANCAÍNA CON CAMARONES',
-        description: 'Tradicional salsa a la huancaína con camarones.',
-        price: 13900,
-        image: '/dishes/noquis.png'
-    },
-]
+import { dishes } from "../constants/dishes";
 
 export default function CategoryPage({ params: { category } }: { params: { category: string } }) {
     return (

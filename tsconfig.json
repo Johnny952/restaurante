@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/restaurante/[restaurante]/[lang]/[category]"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/restaurante/[restaurante]/[lang]/[category]", "src/app/restaurante/[restaurante]/[lang]/constants"],
   "exclude": ["node_modules"]
 }

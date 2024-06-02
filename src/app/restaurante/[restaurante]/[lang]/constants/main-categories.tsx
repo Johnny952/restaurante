@@ -65,7 +65,7 @@ export const mainCategories: (CategoryInterface | SubCategoryInterface)[] = [
             {
                 name: 'acompañamientos',
                 link: 'acompañamientos',
-                image: '/categories/acompanamientos.png'
+                image: 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/acompanamientos-Lon0RSmTCbFYO8sgjXgl2bjMx04Cxy.png'
             },
             {
                 name: 'arroces y risotos',

@@ -1,10 +1,10 @@
-'use client'
 import { Box, Container, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
 import RestaurantHeader from "./components/header";
 import Background from "./components/background";
 import baseBackgroundImage from "@/../public/main-bg.png"
-import { useRouter, usePathname } from "next/navigation";
-
+import Link from "next/link";
+import { getLanguages } from "@/app/api/get-languages";
+import { notFound } from "next/navigation";
 
 const idioms = [
     {
@@ -14,12 +14,18 @@ const idioms = [
     {
         name: 'English',
         link: 'en',
+    },
+    {
+        name: 'French',
+        link: 'fr',
     }
 ]
 
-export default function RestaurantePage({ params }: { params: { restaurante: string } }) {
-    const router = useRouter();
-    const pathName = usePathname();
+export default async function RestaurantePage({ params: { restaurante } }: { params: { restaurante: string } }) {
+    const languages = (await getLanguages(restaurante)).rows.map((row) => row.language);
+    if (languages.length === 0) {
+        notFound();
+    }
     return (
         <Background image={baseBackgroundImage.src}>
             <RestaurantHeader />
@@ -27,15 +33,19 @@ export default function RestaurantePage({ params }: { params: { restaurante: str
                 <Box display="flex" justifyContent="center">
                     <List sx={{ width: '100%' }}>
                         {
-                            idioms.map((idiom, idx) => (
+                            idioms.filter((idiom) => languages.includes(idiom.link)).map((idiom, idx) => (
                                 <ListItem disablePadding key={idx}>
-                                    <ListItemButton onClick={() => router.push(`${pathName}/${idiom.link}`)}>
-                                        <ListItemText primary={idiom.name} sx={{ textAlign: 'center' }} primaryTypographyProps={{
-                                            fontSize: 20,
-                                            fontWeight: 'medium',
-                                            letterSpacing: 0,
-                                        }} />
-                                    </ListItemButton>
+                                    <div style={{ textAlign: 'center', width: '100%' }}>
+                                        <Link href={`${restaurante}/${idiom.link}`} style={{ color: 'white', colorScheme: 'dark', textDecoration: 'none' }}>
+                                            <ListItemButton>
+                                                <ListItemText primary={idiom.name} sx={{ textAlign: 'center' }} primaryTypographyProps={{
+                                                    fontSize: 20,
+                                                    fontWeight: 'medium',
+                                                    letterSpacing: 0,
+                                                }} />
+                                            </ListItemButton>
+                                        </Link>
+                                    </div>
                                 </ListItem>
                             ))
                         }

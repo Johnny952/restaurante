@@ -11,7 +11,7 @@ export default function Background({ image, children }: { image: string, childre
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'center top',
             backgroundAttachment: 'fixed',
-            boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.7)',
+            boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.8)',
             height: '100vh',
         }}>
             {children}

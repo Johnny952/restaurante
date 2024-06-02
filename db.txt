@@ -1,14 +1,24 @@
-CREATE TABLE Languages (
-  page varchar(255),
-  language varchar(255),
+CREATE TABLE Restaurantes (
+  restaurante varchar(255),
+  link varchar(255),
+  image varchar(255)
 );
 
-INSERT INTO Languages (page, language)
+INSERT INTO Restaurantes (restaurante, link, image)
+VALUES ('johnny', 'johnny', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/logo-njISKiYUdCsNuVkDci32xOKgy5M9uS.png');
+
+
+CREATE TABLE Languages (
+  restaurante varchar(255),
+  language varchar(255)
+);
+
+INSERT INTO Languages (restaurante, language)
 VALUES ('johnny', 'es'),
-('johnny', 'en')
+('johnny', 'en');
 
 CREATE TABLE Categories (
-  page varchar(255),
+  restaurante varchar(255),
   category_name varchar(255),
   language varchar(255),
   category varchar(255),
@@ -17,8 +27,9 @@ CREATE TABLE Categories (
 );
 
 
-INSERT INTO Categories (page, category_name, language, category, category_father, image)
-VALUES ('johnny', 'aperitivos', 'es', 'aperitivos', 'root', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/aperitivos-SNVl70mMPD0Hs6zSSeCcCfWmQZD26b.png'),
+INSERT INTO Categories (restaurante, category_name, language, category, category_father, image)
+VALUES ('johnny', 'root', '', 'root', '', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/main-bg-FQMUD2cSmmREKIE8pL5y9KNedALprr.png'),
+('johnny', 'aperitivos', 'es', 'aperitivos', 'root', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/aperitivos-SNVl70mMPD0Hs6zSSeCcCfWmQZD26b.png'),
 ('johnny', 'appetizers', 'en', 'appetizers', 'root', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/aperitivos-SNVl70mMPD0Hs6zSSeCcCfWmQZD26b.png'),
 ('johnny', 'coctel o aperitivo', 'es', 'coctel-o-aperitivo', 'aperitivos', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/coctel-c9BWtVurbsibze0YQ6yFoHL4AkW2y5.png'),
 ('johnny', 'cocktail or appetizer', 'en', 'cocktail-or-appetizer', 'appetizers', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/coctel-c9BWtVurbsibze0YQ6yFoHL4AkW2y5.png'),
@@ -100,3 +111,27 @@ VALUES ('johnny', 'aperitivos', 'es', 'aperitivos', 'root', 'https://h7s6fkxi0hi
 ('johnny', 'syrah', 'en', 'syrah', 'wines', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/syrah-Y3lXjo0c2npFc5nmpAtxsxsE72Iwza.png'),
 ('johnny', 'viognier', 'es', 'viognier', 'vinos', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/viognier-q9Rr8lUANTweOeqKzTcPz3eqBMo7tK.png'),
 ('johnny', 'viognier', 'en', 'viognier', 'wines', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/viognier-q9Rr8lUANTweOeqKzTcPz3eqBMo7tK.png');
+
+
+
+CREATE TABLE Dishes (
+  restaurante varchar(255),
+  language varchar(255),
+  category varchar(255),
+  name varchar(255),
+  image varchar(255),
+  link varchar(255),
+  description varchar(255),
+  price int8
+);
+
+INSERT INTO Dishes (restaurante, language, category, name, image, link, description, price)
+VALUES
+('johnny', 'es', 'pastas', 'FETUCCINI A LA HUANCAÍNA CON LOMO SALTADO', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/fetuccini-sIN1RXPktpPcM1Z3Hz3YELPk4IhZL0.png', 'fetuccini-a-la-huancaina-con-lomo-saltado', 'Fetuccini al dente con lomo salteado.', 14900),
+('johnny', 'es', 'pastas', 'RAVIOLIS A LA OCOPA CON FILETE AL GRILL', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/raviolis-8DZOPQloDqDimIcPl1h27I6XFma7JY.png', 'raviolis-a-la-ocopa-con-filete-al-grill', 'Raviolis en salsa de ocopa flameados con pisco y acompañado con filete al grill.', 14900),
+('johnny', 'es', 'pastas', 'ÑOQUIS A LA HUANCAÍNA CON CAMARONES', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/noquis-emoSr1K63nRbwztOmwvyrUrppAqBgD.png', 'noquis-a-la-huancaina-con-camarones', 'Tradicional salsa a la huancaína con camarones.', 13900),
+('johnny', 'en', 'pastas', 'Fettuccine Huancaina with sautéed beef', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/fetuccini-sIN1RXPktpPcM1Z3Hz3YELPk4IhZL0.png', 'fettuccine-huancaina-with-sauteed-beef', 'Al dente fettuccine with sautéed beef.', 14900),
+('johnny', 'en', 'pastas', 'Fettuccine with pesto and grilled steak', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/raviolis-8DZOPQloDqDimIcPl1h27I6XFma7JY.png', 'fettuccine-with-pesto-and-grilled-steak', 'Ravioli in Ocopa sauce flambéed with pisco and accompanied by grilled steak.', 14900),
+('johnny', 'en', 'pastas', 'Gnocchi Huancaina with shrimp', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/noquis-emoSr1K63nRbwztOmwvyrUrppAqBgD.png', 'gnocchi-huancaina-with-shrimp', 'Traditional Huancaina sauce with shrimp.', 13900),
+('johnny', 'es', 'pastas', 'FETUCCINI AL PESTO CON PULPO A LA PARRILLA', '', 'fetuccini-al-pesto-con-pulpo-a-la-parrilla', 'Fetuccini al dente con salsa al pesto y pulpo a la parrilla.', 13900),
+('johnny', 'en', 'pastas', 'Fettuccine with pesto and grilled octopus', '', 'fettuccine-with-pesto-and-grilled-octopus', 'Al dente fettuccine with pesto sauce and grilled octopus..', 13900);

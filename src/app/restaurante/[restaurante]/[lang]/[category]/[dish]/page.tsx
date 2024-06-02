@@ -1,24 +1,32 @@
 import toTitle from "@/helpers/to-title";
-import Background from "../../../components/background";
-import RestaurantHeader from "../../../components/header";
-import { dishes } from "../../constants/dishes";
+import Background from "../../../../../components/background";
+import RestaurantHeader from "../../../../../components/header";
 import { Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import formatPrice from "@/helpers/format-price";
-import MenuButton from "../../components/menu-button";
-import BackButton from "../../components/back-button";
+import MenuButton from "../../../../../components/menu-button";
+import BackButton from "@/app/components/back-button";
+import { getDish } from "@/app/api/get-dishes";
+import { notFound } from "next/navigation";
+import defaultDishImg from '@/../public/default-dish.png';
+import { DishPageProps } from "./page.d";
 
-export default function DishPage({ params: { dish } }: { params: { dish: string } }) {
+export default async function DishPage({ params: { dish, restaurante, lang, category } }: DishPageProps) {
+    const dishInfo = (await getDish(restaurante, lang, category, dish)).rows
+    if (dishInfo.length === 0) {
+        notFound()
+    }
+    const image = !dishInfo[0].image || dishInfo[0].image === "" ? defaultDishImg : dishInfo[0].image;
     return (
-        <Background image={dishes[0].image || ""}>
-            <RestaurantHeader title={toTitle(dishes[0].name)} />
+        <Background image={dishInfo[0].image || ""}>
+            <RestaurantHeader title={toTitle(dishInfo[0].name)} restaurante={restaurante} />
             <Container sx={{ paddingY: '60px' }}>
                 <Grid container spacing={2} rowSpacing={2}>
                     <Grid item xs={12} sm={6} display='flex' justifyContent='center'>
                         <div style={{ borderRadius: '5%', border: '3px solid #9c27b0', display: 'inline-block' }}>
                             <Image
                                 alt="plato"
-                                src={dishes[0].image || ""}
+                                src={image}
                                 sizes="100vw"
                                 width='100'
                                 height='100'
@@ -34,10 +42,10 @@ export default function DishPage({ params: { dish } }: { params: { dish: string 
                     <Grid item xs={12} sm={6}>
                         <Grid container rowSpacing={2}>
                             <Grid item xs={12} textAlign='center'>
-                                <Typography variant="body1">{dishes[0].description}</Typography>
+                                <Typography variant="body1">{dishInfo[0].description}</Typography>
                             </Grid>
                             <Grid item xs={12} textAlign='center'>
-                                <Typography variant="h4">{formatPrice(dishes[0].price)}</Typography>
+                                <Typography variant="h4">{formatPrice(dishInfo[0].price)}</Typography>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -1,10 +1,11 @@
 import { Box, Container, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import RestaurantHeader from "./components/header";
-import Background from "./components/background";
-import baseBackgroundImage from "@/../public/main-bg.png"
+import RestaurantHeader from "../../components/header";
+import Background from "../../components/background";
 import Link from "next/link";
 import { getLanguages } from "@/app/api/get-languages";
 import { notFound } from "next/navigation";
+import { getRoot } from "@/app/api/get-categories";
+import { RestaurantePageProps } from "./page.d";
 
 const idioms = [
     {
@@ -21,14 +22,19 @@ const idioms = [
     }
 ]
 
-export default async function RestaurantePage({ params: { restaurante } }: { params: { restaurante: string } }) {
-    const languages = (await getLanguages(restaurante)).rows.map((row) => row.language);
-    if (languages.length === 0) {
+export default async function RestaurantePage({ params: { restaurante } }: RestaurantePageProps) {
+    const responses = await Promise.all([
+        getLanguages(restaurante),
+        getRoot(restaurante),
+    ])
+    const languages = responses[0].rows.map((row) => row.language);
+    const mainBg = responses[1].rows
+    if (languages.length === 0 || mainBg.length === 0) {
         notFound();
     }
     return (
-        <Background image={baseBackgroundImage.src}>
-            <RestaurantHeader />
+        <Background image={mainBg[0].image}>
+            <RestaurantHeader restaurante={restaurante} />
             <Container>
                 <Box display="flex" justifyContent="center">
                     <List sx={{ width: '100%' }}>

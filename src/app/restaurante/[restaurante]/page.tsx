@@ -6,6 +6,8 @@ import { getLanguages } from "@/app/api/get-languages";
 import { notFound } from "next/navigation";
 import { getRoot } from "@/app/api/get-categories";
 import { RestaurantePageProps } from "./page.d";
+import { motion } from "framer-motion";
+import IdiomButton from "@/app/components/idiom-button";
 
 const idioms = [
     {
@@ -40,19 +42,7 @@ export default async function RestaurantePage({ params: { restaurante } }: Resta
                     <List sx={{ width: '100%' }}>
                         {
                             idioms.filter((idiom) => languages.includes(idiom.link)).map((idiom, idx) => (
-                                <ListItem disablePadding key={idx}>
-                                    <div style={{ textAlign: 'center', width: '100%' }}>
-                                        <Link href={`${restaurante}/${idiom.link}`} style={{ color: 'white', colorScheme: 'dark', textDecoration: 'none' }}>
-                                            <ListItemButton>
-                                                <ListItemText primary={idiom.name} sx={{ textAlign: 'center' }} primaryTypographyProps={{
-                                                    fontSize: 20,
-                                                    fontWeight: 'medium',
-                                                    letterSpacing: 0,
-                                                }} />
-                                            </ListItemButton>
-                                        </Link>
-                                    </div>
-                                </ListItem>
+                                <IdiomButton key={idx} link={`${restaurante}/${idiom.link}`} name={idiom.name} />
                             ))
                         }
                     </List>

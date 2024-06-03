@@ -2,8 +2,8 @@ import { Box, Container, Divider, Grid, Typography } from "@mui/material";
 import { HeaderInterface } from "./header.d";
 import { getRestaurante } from "../../api/get-restaurante";
 import { notFound } from "next/navigation";
-import { ImageAsync } from "../image-async";
-import Image from "next/image";
+import LogoAnimated from "./logo-animated";
+import TitleAnimated from "./title-animated";
 
 const logoWidth = 500;
 const logoHeight = 500;
@@ -22,25 +22,13 @@ export default async function RestaurantHeader({ title = "LANGUAGES", restaurant
                     <Grid item xs={12}>
                         <Box display="flex" justifyContent="center">
                             <Box width={Math.floor(logoWidth / 2)} height={Math.floor(logoHeight / 2)}>
-                                <ImageAsync
-                                    src={restauranteInformation[0].image}
-                                    alt="Logo"
-                                    style={{
-                                        width: '100%',
-                                        height: 'auto',
-                                    }}
-                                    sizes="100vw"
-                                    width={100}
-                                    height={100}
-                                    priority={true}
-                                    radius="15"
-                                />
+                                <LogoAnimated image={restauranteInformation[0].image} />
                             </Box>
                         </Box>
                     </Grid>
                     <Grid item xs={12}>
                         <Box display="flex" justifyContent="center" textAlign='center'>
-                            <Typography variant="h5">{title}</Typography>
+                            <TitleAnimated title={title} />
                         </Box>
                     </Grid>
                 </Grid>

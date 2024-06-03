@@ -8,6 +8,7 @@ import ImageListWithStyle from "./image-list-with-style";
 import { CategoryAPI } from "@/app/api/get-categories.types";
 import { getCategories } from "@/app/api/get-categories";
 import Image from "next/image";
+import { ImageAsync } from "../image-async";
 
 export default async function Category(props: CategoryAPI & { restaurante: string, language: string }) {
     const { category_name, category, image = genericImage.src, restaurante, language } = props;
@@ -34,12 +35,13 @@ export default async function Category(props: CategoryAPI & { restaurante: strin
             <ImageListItem>
                 <div className={style.outerBorder}>
                     <div className={style.innerBorder}>
-                        <Image
+                        <ImageAsync
                             alt="categoría"
                             src={image}
                             sizes="100vw"
-                            width='100'
-                            height='100'
+                            width={100}
+                            height={100}
+                            priority={true}
                             style={{
                                 width: '100%',
                                 height: 'auto',

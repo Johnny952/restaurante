@@ -1,5 +1,5 @@
 import { Box, Container, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import RestaurantHeader from "../../components/header";
+import RestaurantHeader from "../../components/header/header";
 import Background from "../../components/background";
 import Link from "next/link";
 import { getLanguages } from "@/app/api/get-languages";

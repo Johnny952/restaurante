@@ -1,5 +1,5 @@
 import Background from "../../../components/background";
-import RestaurantHeader from "../../../components/header";
+import RestaurantHeader from "../../../components/header/header";
 import { Container, Grid } from "@mui/material";
 import Category from "@/app/components/category/category";
 import MenuButton from "../../../components/menu-button";

@@ -1,6 +1,6 @@
 import toTitle from "@/helpers/to-title";
 import Background from "../../../../../components/background";
-import RestaurantHeader from "../../../../../components/header";
+import RestaurantHeader from "../../../../../components/header/header";
 import { Container, Grid, Typography } from "@mui/material";
 import Image from "next/image";
 import formatPrice from "@/helpers/format-price";
@@ -10,6 +10,7 @@ import { getDish } from "@/app/api/get-dishes";
 import { notFound } from "next/navigation";
 import defaultDishImg from '@/../public/default-dish.png';
 import { DishPageProps } from "./page.d";
+import { ImageAsync } from "@/app/components/image-async";
 
 export default async function DishPage({ params: { dish, restaurante, lang, category } }: DishPageProps) {
     const dishInfo = (await getDish(restaurante, lang, category, dish)).rows
@@ -24,7 +25,7 @@ export default async function DishPage({ params: { dish, restaurante, lang, cate
                 <Grid container spacing={2} rowSpacing={2}>
                     <Grid item xs={12} sm={6} display='flex' justifyContent='center'>
                         <div style={{ borderRadius: '5%', border: '3px solid #9c27b0', display: 'inline-block' }}>
-                            <Image
+                            <ImageAsync
                                 alt="plato"
                                 src={image}
                                 sizes="100vw"

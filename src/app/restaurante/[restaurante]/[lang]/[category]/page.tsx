@@ -1,6 +1,6 @@
 import { Container, Grid } from "@mui/material";
 import Background from "../../../../components/background";
-import RestaurantHeader from "../../../../components/header";
+import RestaurantHeader from "../../../../components/header/header";
 import toTitle from "@/helpers/to-title";
 import Dish from "../../../../components/dish";
 import MenuButton from "../../../../components/menu-button";

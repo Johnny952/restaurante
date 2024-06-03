@@ -5,6 +5,7 @@ import formatPrice from "@/helpers/format-price";
 import { usePathname, useRouter } from "next/navigation";
 import { DishInterface } from "@/app/api/get-dishes.types";
 import defaultDishImg from '@/../public/default-dish.png';
+import { ImageAsync } from "./image-async";
 
 export default function Dish({ image, name, description, price, link }: DishInterface) {
     const router = useRouter();
@@ -24,12 +25,19 @@ export default function Dish({ image, name, description, price, link }: DishInte
         >
             <CardActionArea sx={{ display: 'flex', height: '100%' }} onClick={() => router.push(`${pathname}/${link}`)}>
                 <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                    <div style={{ borderRadius: '10%', border: '2px solid #9c27b0' }}>
-                        <CardMedia
-                            component="img"
-                            sx={{ width: 93, borderRadius: '10%' }}
-                            image={img}
+                    <div style={{ borderRadius: '10%', border: '2px solid #9c27b0', width: 93 }}>
+                        <ImageAsync
                             alt="plato"
+                            src={img}
+                            sizes="100vw"
+                            width={100}
+                            height={100}
+                            priority={true}
+                            style={{
+                                width: '100%',
+                                height: 'auto',
+                                borderRadius: '10%'
+                            }}
                         />
                     </div>
                 </Box>

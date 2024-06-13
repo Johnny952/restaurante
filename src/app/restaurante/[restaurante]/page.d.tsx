@@ -1,7 +1,7 @@
 export interface RestaurantePageParams {
-    restaurante: string
+    restaurante: string;
 }
 
 export interface RestaurantePageProps {
-    params: RestaurantePageParams
+    params: RestaurantePageParams;
 }

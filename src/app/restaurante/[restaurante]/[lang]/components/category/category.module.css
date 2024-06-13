@@ -1,0 +1,16 @@
+.categoryTitle {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: unset;
+}
+
+.outerBorder {
+    border: 1px solid #9c27b0;
+    border-radius: 5px;
+}
+
+.innerBorder {
+    border: 2px solid #9c27b0;
+    border-radius: 7px;
+}

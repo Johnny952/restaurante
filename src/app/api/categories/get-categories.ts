@@ -3,61 +3,62 @@ import { CategoryAPI } from "./index.types";
 
 /**
  * Get main background
- * @param restaurante - The restaurante name
+ * @param restauranteLink - The restaurante name
  * @returns The root background
  */
-export async function getRoot(restaurante: string) {
+export async function getRoot(restauranteLink: string) {
     return sql<{ image: string }>`
-    SELECT image
-    FROM Categories
-    WHERE restaurante=(${restaurante}) AND category='root'`;
+    SELECT c.image as image
+    FROM Restaurantes r
+    JOIN Rest_Languages rl ON r.id = rl.restaurante_id
+    JOIN Categories c ON rl.id = c.rest_language_id
+    WHERE r.link = (${restauranteLink}) AND c.name='root';
+    `;
 }
 
 /**
  * Get category information
- * @param restaurante - The restaurante name
+ * @param restaurante - The restaurante link
  * @param language - The language
- * @param category - The category
+ * @param categoryLink - The category link
  * @returns The category information
  */
 export async function getCategory(
-    restaurante: string,
+    restauranteLink: string,
     language: string,
-    category: string
+    categoryLink: string,
 ) {
     return sql<CategoryAPI>`
-    SELECT category_name, image
-    FROM Categories
-    WHERE restaurante=(${restaurante}) AND language=(${language}) AND category=(${category})`;
+        SELECT c.name as name, c.link as link, c.image as image
+        FROM Restaurantes r
+        JOIN Rest_Languages rl ON r.id = rl.restaurante_id
+        JOIN Categories c ON rl.id = c.rest_language_id
+        WHERE r.link = (${restauranteLink})
+        AND rl.language_id = (${language})
+        AND c.link=(${categoryLink});
+    `;
 }
 
 /**
  * Get subcategories for the given category
- * @param restaurante - The restaurante name
+ * @param restauranteLink - The restaurante link
  * @param language - The language
- * @param categoryFather - The category father
+ * @param parent - The category father
  * @returns List of categories
  */
-export async function getCategories(
-    restaurante: string,
+export async function getCategoriesByParentLink(
+    restauranteLink: string,
     language: string,
-    categoryFather: string
+    parent: string
 ) {
     return sql<CategoryAPI>`
-    SELECT category_name, category, image
-    FROM Categories
-    WHERE restaurante=(${restaurante}) AND language=(${language}) AND category_father=(${categoryFather})`;
-}
-
-/**
- * Get every category and subcategory of the restaurante
- * @param restaurante - The restaurante name
- * @param language - The language
- * @returns List of categories
- */
-export async function getAllCategories(restaurante: string, language: string) {
-    return sql<CategoryAPI>`
-    SELECT category_name, category, image, category_father
-    FROM Categories
-    WHERE language=(${language}) AND restaurante=(${restaurante})`;
+        SELECT c.name as name, c.link as link, c.image as image
+        FROM Restaurantes r
+        JOIN Rest_Languages rl ON r.id = rl.restaurante_id
+        JOIN Categories c ON rl.id = c.rest_language_id
+        JOIN Categories par_c ON c.parent_id = par_c.id
+        WHERE r.link = (${restauranteLink})
+        AND rl.language_id = (${language})
+        AND par_c.link = (${parent});
+    `;
 }

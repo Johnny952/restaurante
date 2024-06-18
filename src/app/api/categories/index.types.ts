@@ -1,5 +1,5 @@
 export interface CategoryAPI {
-    category_name: string;
-    category: string;
+    name: string;
+    link: string;
     image: string;
 }

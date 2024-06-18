@@ -1,3 +1,4 @@
 export interface LanguageInterface {
-    language: string;
+    name: string;
+    link: string;
 }

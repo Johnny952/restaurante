@@ -5,9 +5,9 @@ import toTitle from "@/helpers/to-title";
 import Dish from "./components/dish";
 import MenuButton from "../components/menu-button";
 import BackButton from "./components/back-button";
-import { getDishes } from "@/app/api/get-dishes";
+import { getDishes } from "@/app/api/dishes/get-dishes";
 import { notFound } from "next/navigation";
-import { getCategory } from "@/app/api/get-categories";
+import { getCategory } from "@/app/api/categories/get-categories";
 import { CategoryPageProps } from "./page.d";
 
 export default async function CategoryPage({

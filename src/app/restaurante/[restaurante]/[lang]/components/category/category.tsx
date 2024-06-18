@@ -11,20 +11,20 @@ import React from "react";
 import { SubCategory } from "./subcategory";
 import ImageListWithStyle from "./image-list-with-style";
 import { CategoryAPI } from "@/app/api/categories/index.types";
-import { getCategories } from "@/app/api/categories/get-categories";
+import { getCategoriesByParentLink } from "@/app/api/categories/get-categories";
 import { ImageAsync } from "@/components/image-async";
 
 export default async function Category(
     props: CategoryAPI & { restaurante: string; language: string }
 ) {
     const {
-        category_name,
-        category,
+        name,
+        link,
         image = genericImage.src,
         restaurante,
         language,
     } = props;
-    const subcategories = (await getCategories(restaurante, language, category))
+    const subcategories = (await getCategoriesByParentLink(restaurante, language, link))
         .rows;
 
     const DrawerContent = (
@@ -42,7 +42,7 @@ export default async function Category(
                         <Grid key={index} item xs={4} sm={3} md={2}>
                             <SubCategory
                                 {...subcat}
-                                link={`${language}/${subcat.category}`}
+                                link={`${language}/${subcat.link}`}
                             />
                         </Grid>
                     ))
@@ -55,7 +55,7 @@ export default async function Category(
         <ImageListWithStyle
             drawer={DrawerContent}
             hasSubcategories={subcategories.length > 0}
-            link={`${language}/${category}`}
+            link={`${language}/${link}`}
         >
             <ImageListItem>
                 <div className={style.outerBorder}>
@@ -76,7 +76,7 @@ export default async function Category(
                 </div>
 
                 <ImageListItemBar
-                    title={toTitle(category_name)}
+                    title={toTitle(name)}
                     classes={{
                         title: style.categoryTitle,
                     }}

@@ -5,9 +5,34 @@ import { sql } from "@vercel/postgres";
  * Deletes a restaurant for the given link
  * @param restaurante - The resutaurant link
  */
-export async function deleteRestaurante(restaurante: string | number | null) {
+export async function deleteRestaurante(id: string) {
     await sql.query(`
+        START TRANSACTION;
+
+        DELETE FROM Dishes
+        WHERE category_id IN (
+        SELECT id
+        FROM Categories
+        WHERE rest_language_id IN (
+            SELECT id
+            FROM Rest_Languages
+            WHERE restaurante_id = (${id})
+        )
+        );
+
+        DELETE FROM Categories
+        WHERE rest_language_id IN (
+        SELECT id
+        FROM Rest_Languages
+        WHERE restaurante_id = (${id})
+        );
+
+        DELETE FROM Rest_Languages
+        WHERE restaurante_id = (${id});
+
         DELETE FROM Restaurantes
-        WHERE link='${restaurante?.toString()}'
+        WHERE id = (${id});
+
+        COMMIT;
     `);
 }

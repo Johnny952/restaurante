@@ -3,7 +3,7 @@ import RestaurantHeader from "../components/header/header";
 import { Container, Grid } from "@mui/material";
 import Category from "./components/category/category";
 import MenuButton from "./components/menu-button";
-import { getCategories, getRoot } from "@/app/api/get-categories";
+import { getCategoriesByParentLink, getRoot } from "@/app/api/categories/get-categories";
 import { notFound } from "next/navigation";
 import { LanguagePageProps } from "./page.d";
 
@@ -11,7 +11,7 @@ export default async function LanguagePage({
     params: { restaurante, lang },
 }: LanguagePageProps) {
     const responses = await Promise.all([
-        getCategories(restaurante, lang, "root"),
+        getCategoriesByParentLink(restaurante, lang, "root"),
         getRoot(restaurante),
     ]);
     const allCategories = responses[0].rows;

@@ -9,7 +9,6 @@ import {
     DialogContentText,
     DialogTitle,
     IconButton,
-    Modal,
     Toolbar,
     Tooltip,
     Typography,
@@ -27,10 +26,15 @@ import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddRestaurante from "./add-restaurante";
-import { deleteRestaurante } from "@/app/api/restaurantes/delete-restaurante";
-import useLoadStore from "@/store/load-store";
+import AddRestauranteDialog from "./add-restaurante";
 import useSnackStore from "@/store/snackbar-store";
+import {
+    getCountRestaurantes,
+    listRestaurantes,
+} from "@/app/api/restaurantes/get-restaurante";
+import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
+import DeleteRestauranteDialog from "./delete-restaurante";
+import EditRestauranteDialog from "./edit-restaurante";
 
 const filterOperators: GridFilterOperator[] = [
     {
@@ -61,12 +65,17 @@ const filterOperators: GridFilterOperator[] = [
 
 const columns: GridColDef[] = [
     {
-        field: "restaurante",
-        headerName: "Restaurante",
+        field: "name",
+        headerName: "Nombre",
         width: 150,
         filterOperators,
     },
-    { field: "id", headerName: "Link", width: 150, filterOperators },
+    {
+        field: "link",
+        headerName: "Enlace",
+        width: 150,
+        filterOperators,
+    },
     {
         field: "image",
         headerName: "Imagen",
@@ -75,19 +84,7 @@ const columns: GridColDef[] = [
     },
 ];
 
-const modalStyle = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    bgcolor: "background.paper",
-    boxShadow: 24,
-    p: 4,
-};
-
 export default function Table({
-    rows,
-    rowCount,
     page,
     size,
     edit,
@@ -99,8 +96,6 @@ export default function Table({
     filterOperator,
     filterValue,
 }: {
-    rows: object[];
-    rowCount: number;
     page?: number;
     size?: number;
     edit?: string;
@@ -112,14 +107,14 @@ export default function Table({
     filterOperator?: string;
     filterValue?: string;
 }) {
+    const [rowCount, setRowCount] = useState<number>(0);
+    const [rows, setRows] = useState<RestauranteInterface[]>([]);
     const [selectedRow, setSelectedRow] = useState<string | number | null>(
         null
     );
-    const [tableLoading, setTableLoading] = useState(false);
+    const [tableLoading, setTableLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
-    const setLoading = useLoadStore((state) => state.setLoading);
-    const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
     const actualPath = (params: Record<string, string>) => {
         let args: Record<string, string> = {};
@@ -150,10 +145,45 @@ export default function Table({
         return `${pathname}?${query}`;
     };
 
-
     useEffect(() => {
-        setTableLoading(false);
-    }, [rows]);
+        const fetchData = async () => {
+            setTableLoading(true);
+            return Promise.all([
+                listRestaurantes({
+                    page,
+                    size,
+                    sortBy,
+                    sortOrder,
+                    filterField,
+                    filterOperator,
+                    filterValue,
+                }),
+                getCountRestaurantes(filterField, filterOperator, filterValue),
+            ]);
+        };
+
+        fetchData()
+            .then(([dataRows, count]) => {
+                setRowCount(parseInt(count.count, 10));
+                setRows(dataRows);
+                setTableLoading(false);
+            })
+            .catch((error) => {
+                snackError(`Ocurrió un error: ${error.toString()}`);
+                setTableLoading(false);
+            });
+    }, [
+        filterField,
+        filterOperator,
+        filterValue,
+        page,
+        size,
+        sortBy,
+        sortOrder,
+        add,
+        del,
+        edit,
+    ]);
 
     function onPaginationModelChange(model: GridPaginationModel) {
         router.push(
@@ -166,14 +196,9 @@ export default function Table({
     function onRowSelectionModelChange(
         rowSelectionModel: GridRowSelectionModel
     ) {
-        console.log(rowSelectionModel);
         setSelectedRow(rowSelectionModel[0]);
     }
-    function goHere() {
-        router.push(actualPath({}));
-    }
     function redirectLoadData(params: Record<string, string>) {
-        setTableLoading(true);
         router.push(actualPath(params));
     }
 
@@ -202,7 +227,16 @@ export default function Table({
                     {selectedRow ? (
                         <>
                             <Tooltip title="Editar">
-                                <IconButton color="inherit">
+                                <IconButton
+                                    color="inherit"
+                                    onClick={() =>
+                                        router.push(
+                                            actualPath({
+                                                edit: selectedRow.toString(),
+                                            })
+                                        )
+                                    }
+                                >
                                     <EditIcon />
                                 </IconButton>
                             </Tooltip>
@@ -262,50 +296,22 @@ export default function Table({
                     }
                 }}
             />
-            <Modal open={add} onClose={() => redirectLoadData({})}>
-                <Box sx={modalStyle}>
-                    <AddRestaurante goHere={goHere} />
-                </Box>
-            </Modal>
-
-            <Dialog
-                open={Boolean(del)}
+            <AddRestauranteDialog
                 onClose={() => redirectLoadData({})}
-                aria-labelledby="alert-dialog-title"
-                aria-describedby="alert-dialog-description"
-            >
-                <DialogTitle id="alert-dialog-title">
-                    {"¿Esta seguro de eliminar este restaurante?"}
-                </DialogTitle>
-                <DialogContent>
-                    <DialogContentText id="alert-dialog-description">
-                        Esta acción no puede ser revertida.
-                    </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => redirectLoadData({})} color="error">
-                        Cancelar
-                    </Button>
-                    <Button
-                        onClick={async () => {
-                            setLoading(true);
-                            try {
-                                await deleteRestaurante(selectedRow);
-                                snackSuccess(
-                                    `Restaurante ${selectedRow} eliminado`
-                                );
-                            } catch (error) {
-                                snackError(`Ocurrió un error: ${error}`);
-                            }
-                            setLoading(false);
-                            redirectLoadData({});
-                        }}
-                        autoFocus
-                    >
-                        Confirmar
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                open={add}
+            />
+
+            <DeleteRestauranteDialog
+                open={Boolean(del) && del !== ""}
+                onClose={() => redirectLoadData({})}
+                selected={del || ""}
+            />
+
+            <EditRestauranteDialog
+                open={Boolean(edit) && edit !== ""}
+                onClose={() => redirectLoadData({})}
+                selected={edit || ""}
+            />
         </>
     );
 }

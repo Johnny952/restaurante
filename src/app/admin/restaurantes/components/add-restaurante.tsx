@@ -1,15 +1,32 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    TextField,
+} from "@mui/material";
 import { ChangeEvent, useState } from "react";
 import toKebabCase from "@/helpers/to-kebab-case";
 import Uploader from "./uploader";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import { putRestaurante } from "@/app/api/restaurantes/put-restaurante";
+import { PutBlobResult } from "@vercel/blob";
+import { putImage } from "@/app/api/upload/put-image";
 
-export default function AddRestaurante({ goHere }: { goHere: () => void }) {
+export default function AddRestauranteDialog({
+    onClose,
+    open,
+}: {
+    onClose: () => void;
+    open: boolean;
+}) {
     const [nameValue, setNameValue] = useState("");
     const [linkValue, setLinkValue] = useState("");
     const [logoValue, setLogoValue] = useState("");
+    const [file, setfile] = useState<File | null>(null);
 
     function onNameValueChange(
         event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -22,64 +39,72 @@ export default function AddRestaurante({ goHere }: { goHere: () => void }) {
     const snackError = useSnackStore((state) => state.setOpenError);
 
     async function onConfirmAdd() {
-        setLoading(true);
-        try {
-            await putRestaurante(nameValue, linkValue, logoValue);
-            goHere();
-            setLogoValue("");
-            setNameValue("");
-            setLinkValue("");
-            snackSuccess("Restaurante creado");
-        } catch (error) {
-            snackError(`Ocurrió un error: ${error}`);
+        if (file) {
+            setLoading(true);
+            try {
+
+                const url = await putImage(file, `restaurante/${linkValue}/logo.png`);
+
+                if (url === null) {
+                    throw Error('La imagen no tiene enlace')
+                }
+                await putRestaurante(nameValue, linkValue, url);
+                onClose();
+                setLogoValue("");
+                setNameValue("");
+                setLinkValue("");
+                setfile(null);
+                snackSuccess("Restaurante creado");
+            } catch (error) {
+                snackError(`Ocurrió un error: ${error}`);
+            }
+            setLoading(false);
+        } else {
+            snackError('Ninguna imagen seleccionada');
         }
-        setLoading(false);
     }
 
     return (
-        <>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                Agregar nuevo restaurante
-            </Typography>
-            <TextField
-                label="Nombre"
-                variant="standard"
-                value={nameValue}
-                disabled={logoValue !== ""}
-                onChange={onNameValueChange}
-                fullWidth
-                required
-            />
-            <TextField
-                label="Link"
-                variant="standard"
-                value={linkValue}
-                disabled
-                fullWidth
-                required
-            />
-            <Uploader
-                linkValue={linkValue}
-                setLogoValue={setLogoValue}
-                logoValue={logoValue}
-            />
-            <TextField
-                label="Logo"
-                variant="standard"
-                fullWidth
-                disabled
-                required
-                value={logoValue}
-            />
-            <Box flexGrow={1}></Box>
-            <Button
-                sx={{ mt: "15px" }}
-                variant="contained"
-                disabled={logoValue === ""}
-                onClick={onConfirmAdd}
-            >
-                Agregar Restaurante
-            </Button>
-        </>
+        <Dialog open={open} aria-labelledby="add-dialog-title">
+            <DialogTitle id="add-dialog-title">
+                {"Agregar nuevo restaurante"}
+            </DialogTitle>
+            <DialogContent>
+                <TextField
+                    label="Nombre"
+                    variant="standard"
+                    value={nameValue}
+                    onChange={onNameValueChange}
+                    fullWidth
+                    required
+                />
+                <TextField
+                    label="Link"
+                    variant="standard"
+                    value={linkValue}
+                    disabled
+                    fullWidth
+                    required
+                />
+                <Uploader
+                    linkValue={linkValue}
+                    setLogoValue={setLogoValue}
+                    logoValue={logoValue}
+                    setFile={setfile}
+                />
+                <DialogActions>
+                    <Button onClick={onClose} color="error">
+                        Cancelar
+                    </Button>
+                    <Button
+                        disabled={logoValue === "" || nameValue === "" || linkValue === ""}
+                        onClick={onConfirmAdd}
+                        autoFocus
+                    >
+                        Confirmar
+                    </Button>
+                </DialogActions>
+            </DialogContent>
+        </Dialog>
     );
 }

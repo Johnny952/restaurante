@@ -1,11 +1,11 @@
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import toTitle from "@/helpers/to-title";
 import Link from "next/link";
-import { CategoryAPI } from "@/app/api/categories/get-categories.types";
+import { CategoryAPI } from "@/app/api/categories/index.types";
 import { ImageAsync } from "@/components/image-async";
 
 export function SubCategory({
-    category_name,
+    name,
     image,
     link,
 }: CategoryAPI & { link: string }) {
@@ -39,7 +39,7 @@ export function SubCategory({
                             color="white"
                             textAlign="center"
                         >
-                            {toTitle(category_name)}
+                            {toTitle(name)}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

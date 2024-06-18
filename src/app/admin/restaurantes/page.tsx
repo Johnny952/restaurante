@@ -1,7 +1,3 @@
-import {
-    getCountRestaurantes,
-    listRestaurantes,
-} from "@/app/api/restaurantes/get-restaurante";
 import { Paper } from "@mui/material";
 import Table from "./components/table";
 import LinkBreadcrumbs from "@/components/link-breadcrumbs";
@@ -16,7 +12,7 @@ const breadcrumbs = [
     },
 ];
 
-export default async function AdminRestaurantePage(props: {
+export default function AdminRestaurantePage(props: {
     searchParams: {
         page?: string;
         size?: string;
@@ -47,18 +43,6 @@ export default async function AdminRestaurantePage(props: {
         delete: del,
     } = props.searchParams;
 
-    const [dataRows, count] = await Promise.all([
-        listRestaurantes({
-            page,
-            size,
-            sortBy,
-            sortOrder,
-            filterField,
-            filterOperator,
-            filterValue,
-        }),
-        getCountRestaurantes(filterField, filterOperator, filterValue),
-    ]);
     return (
         <div>
             <LinkBreadcrumbs breadcrumbs={breadcrumbs} />
@@ -73,8 +57,6 @@ export default async function AdminRestaurantePage(props: {
                 }}
             >
                 <Table
-                    rows={dataRows}
-                    rowCount={parseInt(count.count, 10)}
                     page={page}
                     size={size}
                     edit={edit}

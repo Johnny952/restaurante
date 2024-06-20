@@ -2,12 +2,6 @@
 import {
     AppBar,
     Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
     IconButton,
     Toolbar,
     Tooltip,
@@ -26,7 +20,6 @@ import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddRestauranteDialog from "./add-restaurante";
 import useSnackStore from "@/store/snackbar-store";
 import {
     getCountRestaurantes,
@@ -34,7 +27,6 @@ import {
 } from "@/app/api/restaurantes/get-restaurante";
 import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
 import DeleteRestauranteDialog from "./delete-restaurante";
-import EditRestauranteDialog from "./edit-restaurante";
 
 const filterOperators: GridFilterOperator[] = [
     {
@@ -87,9 +79,7 @@ const columns: GridColDef[] = [
 export default function Table({
     page,
     size,
-    edit,
     delete: del,
-    add,
     sortBy,
     sortOrder,
     filterField,
@@ -98,9 +88,7 @@ export default function Table({
 }: {
     page?: number;
     size?: number;
-    edit?: string;
     delete?: string;
-    add: boolean;
     sortBy?: string;
     sortOrder?: string;
     filterField?: string;
@@ -172,6 +160,7 @@ export default function Table({
                 snackError(`Ocurrió un error: ${error.toString()}`);
                 setTableLoading(false);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         filterField,
         filterOperator,
@@ -180,9 +169,7 @@ export default function Table({
         size,
         sortBy,
         sortOrder,
-        add,
         del,
-        edit,
     ]);
 
     function onPaginationModelChange(model: GridPaginationModel) {
@@ -218,7 +205,7 @@ export default function Table({
                         <IconButton
                             color="inherit"
                             onClick={() =>
-                                router.push(actualPath({ add: "1" }))
+                                router.push("/admin/restaurantes/agregar")
                             }
                         >
                             <AddIcon />
@@ -231,9 +218,7 @@ export default function Table({
                                     color="inherit"
                                     onClick={() =>
                                         router.push(
-                                            actualPath({
-                                                edit: selectedRow.toString(),
-                                            })
+                                            `/admin/restaurantes/${selectedRow}/editar`
                                         )
                                     }
                                 >
@@ -296,21 +281,11 @@ export default function Table({
                     }
                 }}
             />
-            <AddRestauranteDialog
-                onClose={() => redirectLoadData({})}
-                open={add}
-            />
 
             <DeleteRestauranteDialog
                 open={Boolean(del) && del !== ""}
                 onClose={() => redirectLoadData({})}
                 selected={del || ""}
-            />
-
-            <EditRestauranteDialog
-                open={Boolean(edit) && edit !== ""}
-                onClose={() => redirectLoadData({})}
-                selected={edit || ""}
             />
         </>
     );

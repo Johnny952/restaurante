@@ -26,27 +26,27 @@ export default function DeleteRestauranteDialog({
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
-    const [oldData, setOldData] = useState<RestauranteInterface | null>(null)
-
+    const [oldData, setOldData] = useState<RestauranteInterface | null>(null);
 
     useEffect(() => {
-        if (selected && selected !== '') {
+        if (selected && selected !== "") {
             const fetchData = async () => {
-                setLoading(true)
+                setLoading(true);
                 return getRestauranteByID((selected || "").toString());
-            }
+            };
 
             fetchData()
                 .then((data) => {
-                    setOldData(data)
-                    setLoading(false)
+                    setOldData(data);
+                    setLoading(false);
                 })
                 .catch((error) => {
                     snackError(`Ocurrió un error: ${error.toString()}`);
                     setLoading(false);
-                })
+                });
         }
-    }, [selected])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selected]);
 
     return (
         <Dialog
@@ -72,9 +72,11 @@ export default function DeleteRestauranteDialog({
                         setLoading(true);
                         try {
                             if (oldData && oldData.image) {
-                                await deleteImage(oldData?.image)
+                                await deleteImage(oldData?.image);
                             }
-                            await deleteRestaurante((selected || "").toString());
+                            await deleteRestaurante(
+                                (selected || "").toString()
+                            );
                             snackSuccess(`Restaurante ${selected} eliminado`);
                         } catch (error) {
                             snackError(`Ocurrió un error: ${error}`);

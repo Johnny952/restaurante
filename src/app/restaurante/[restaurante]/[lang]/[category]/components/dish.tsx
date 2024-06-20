@@ -9,7 +9,7 @@ import {
 import toTitle from "@/helpers/to-title";
 import formatPrice from "@/helpers/format-price";
 import { usePathname, useRouter } from "next/navigation";
-import { DishInterface } from "@/app/api/dishes/get-dishes.types";
+import { DishInterface } from "@/app/api/dishes/index.types";
 import defaultDishImg from "@/../public/default-dish.png";
 import { ImageAsync } from "@/components/image-async";
 

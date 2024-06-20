@@ -17,8 +17,6 @@ export default function AdminRestaurantePage(props: {
         page?: string;
         size?: string;
         delete?: string;
-        edit?: string;
-        add?: string;
         sortBy?: string;
         sortOrder?: string;
         filterField?: string;
@@ -32,11 +30,9 @@ export default function AdminRestaurantePage(props: {
     const size = props.searchParams.size
         ? parseInt(props.searchParams.size)
         : undefined;
-    const add = Boolean(props.searchParams.add);
     const {
         sortBy,
         sortOrder,
-        edit,
         filterField,
         filterOperator,
         filterValue,
@@ -59,8 +55,6 @@ export default function AdminRestaurantePage(props: {
                 <Table
                     page={page}
                     size={size}
-                    edit={edit}
-                    add={add}
                     sortBy={sortBy}
                     sortOrder={sortOrder}
                     filterField={filterField}

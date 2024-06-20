@@ -1,6 +1,8 @@
 "use server";
 import { sql } from "@vercel/postgres";
 import { RestauranteInterface } from "./index.types";
+import baseQuery from "../helpers/base-query";
+import { TableParams } from "../helpers/index.types";
 
 /**
  * Get restaurant information
@@ -30,47 +32,6 @@ export async function getRestauranteByID(id: string) {
 }
 
 /**
- * Return SQL filter depending on filters parameters
- * @param filterField - Field to filter data
- * @param filterOperator - Filter operation
- * @param filterValue - Filter value
- * @returns Where sql query
- */
-function baseQuery(
-    filterField?: string,
-    filterOperator?: string,
-    filterValue?: string
-) {
-    let query: string = "";
-    if (
-        filterField &&
-        filterOperator &&
-        filterValue &&
-        filterValue !== "" &&
-        filterValue !== "undefined"
-    ) {
-        switch (filterOperator) {
-            case "contains":
-                query = `WHERE (${filterField}) LIKE '${"%" + filterValue + "%"}'`;
-                break;
-            case "equals":
-                query = `WHERE (${filterField})='${filterValue}'`;
-                break;
-            case "startsWith":
-                query = `WHERE (${filterField}) LIKE '${filterValue + "%"}'`;
-                break;
-            case "endsWith":
-                query = `WHERE (${filterField}) LIKE '${"%" + filterValue}'`;
-                break;
-            default:
-                query = "";
-                break;
-        }
-    }
-    return query;
-}
-
-/**
  * List restaurants with pagination, sorting and filtering
  * @param param - Pagination, sorting and filtering parameters
  * @returns Restaurante list
@@ -83,15 +44,7 @@ export async function listRestaurantes({
     filterField,
     filterOperator,
     filterValue,
-}: {
-    page?: number;
-    size?: number;
-    sortBy?: string;
-    sortOrder?: string;
-    filterField?: string;
-    filterOperator?: string;
-    filterValue?: string;
-}) {
+}: TableParams) {
     const orderByDirection =
         sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
     const res = (
@@ -100,8 +53,7 @@ export async function listRestaurantes({
         FROM Restaurantes
         ${baseQuery(filterField, filterOperator, filterValue)}
         ORDER BY (${sortBy}) ${orderByDirection}
-        LIMIT (${size}) OFFSET (${page * size})`
-        )
+        LIMIT (${size}) OFFSET (${page * size})`)
     ).rows;
     return res as RestauranteInterface[];
 }

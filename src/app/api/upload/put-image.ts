@@ -10,8 +10,7 @@ export async function putImage(file: File, path: string) {
     const res = await fetch("/api/upload", {
         method: "POST",
         headers: {
-            "content-type":
-                file?.type || "application/octet-stream",
+            "content-type": file?.type || "application/octet-stream",
             "image-path-name": path,
         },
         body: file,

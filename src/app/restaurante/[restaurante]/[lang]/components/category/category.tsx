@@ -24,8 +24,9 @@ export default async function Category(
         restaurante,
         language,
     } = props;
-    const subcategories = (await getCategoriesByParentLink(restaurante, language, link))
-        .rows;
+    const subcategories = (
+        await getCategoriesByParentLink(restaurante, language, link)
+    ).rows;
 
     const DrawerContent = (
         <div>
@@ -39,13 +40,13 @@ export default async function Category(
             <Grid container spacing={2} rowSpacing={2} padding="10px">
                 {subcategories.length > 0
                     ? subcategories?.map((subcat, index) => (
-                        <Grid key={index} item xs={4} sm={3} md={2}>
-                            <SubCategory
-                                {...subcat}
-                                link={`${language}/${subcat.link}`}
-                            />
-                        </Grid>
-                    ))
+                          <Grid key={index} item xs={4} sm={3} md={2}>
+                              <SubCategory
+                                  {...subcat}
+                                  link={`${language}/${subcat.link}`}
+                              />
+                          </Grid>
+                      ))
                     : null}
             </Grid>
         </div>

@@ -3,7 +3,10 @@ import RestaurantHeader from "../components/header/header";
 import { Container, Grid } from "@mui/material";
 import Category from "./components/category/category";
 import MenuButton from "./components/menu-button";
-import { getCategoriesByParentLink, getRoot } from "@/app/api/categories/get-categories";
+import {
+    getCategoriesByParentLink,
+    getRoot,
+} from "@/app/api/categories/get-categories";
 import { notFound } from "next/navigation";
 import { LanguagePageProps } from "./page.d";
 

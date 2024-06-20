@@ -14,6 +14,10 @@ import {
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import GroupIcon from "@mui/icons-material/Group";
 import Link from "next/link";
+import LanguageIcon from "@mui/icons-material/Language";
+import TranslateIcon from "@mui/icons-material/Translate";
+import CategoryIcon from "@mui/icons-material/Category";
+import DinnerDiningIcon from "@mui/icons-material/DinnerDining";
 
 const drawerWidth = 240;
 
@@ -30,17 +34,22 @@ const menu = [
     },
     {
         name: "Lenguajes",
-        icon: <RestaurantIcon />,
+        icon: <LanguageIcon />,
         link: "/admin/lenguajes",
     },
     {
+        name: "Restaurantes Lenguajes",
+        icon: <TranslateIcon />,
+        link: "/admin/restaurantes-lenguajes",
+    },
+    {
         name: "Categorías",
-        icon: <RestaurantIcon />,
+        icon: <CategoryIcon />,
         link: "/admin/categorias",
     },
     {
         name: "Platos",
-        icon: <RestaurantIcon />,
+        icon: <DinnerDiningIcon />,
         link: "/admin/platos",
     },
 ];

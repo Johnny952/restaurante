@@ -1,7 +1,7 @@
 import { Box, Container, List } from "@mui/material";
 import RestaurantHeader from "./components/header/header";
 import Background from "./components/background/background";
-import { getLanguages } from "@/app/api/languages/get-languages";
+import { getRestLanguages } from "@/app/api/languages/get-languages";
 import { notFound } from "next/navigation";
 import { getRoot } from "@/app/api/categories/get-categories";
 import { RestaurantePageProps } from "./page.d";
@@ -12,7 +12,7 @@ export default async function RestaurantePage({
     params: { restaurante },
 }: RestaurantePageProps) {
     const responses = await Promise.all([
-        getLanguages(restaurante),
+        getRestLanguages(restaurante),
         getRoot(restaurante),
     ]);
     const languages = responses[0].rows;
@@ -30,7 +30,7 @@ export default async function RestaurantePage({
                             <IdiomButton
                                 key={idx}
                                 link={`${restaurante}/${idiom.link}`}
-                                name={toTitle(idiom.name)}
+                                name={toTitle(idiom.name) || ""}
                             />
                         ))}
                     </List>

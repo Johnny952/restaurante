@@ -6,9 +6,13 @@ import { sql } from "@vercel/postgres";
  * @param id - The restaurant id
  * @param name - The restaurant new name
  * @param link - The restaurant new liink
- * @returns 
+ * @returns
  */
-export async function updateRestauranteName(id: string, name: string, link: string) {
+export async function updateRestauranteName(
+    id: string,
+    name: string,
+    link: string
+) {
     return sql`
     UPDATE Restaurantes
     SET name=(${name}), link=(${link})

@@ -17,17 +17,8 @@ const ImagePreview = styled("img")({
     marginRight: "8px",
 });
 
-const Uploader = ({
-    linkValue,
-    setLogoValue,
-    logoValue,
-    setFile,
-}: {
-    linkValue: string;
-    logoValue: string;
-    setLogoValue: (link: string) => void;
-    setFile: (f: File | null) => void;
-}) => {
+const Uploader = ({ setFile }: { setFile: (f: File | null) => void }) => {
+    const [logoValue, setLogoValue] = useState("");
     const snackError = useSnackStore((state) => state.setOpenError);
 
     const handleImageChange = async (

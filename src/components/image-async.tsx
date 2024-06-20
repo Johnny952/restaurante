@@ -1,33 +1,37 @@
 "use client";
 import { Box, Collapse } from "@mui/material";
 import Image, { ImageProps } from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ContentLoader from "react-content-loader";
 
 export const ImageAsync = ({
     src,
     alt,
     radius = "0",
+    loadingImg,
     ...props
-}: ImageProps & { radius?: string }) => {
+}: ImageProps & { radius?: string; loadingImg?: boolean }) => {
     const [reveal, setReveal] = useState<boolean>(false);
-    const loader = reveal ? "none" : "inline-block";
+    const loading = reveal || loadingImg;
+    const loader = loading ? "none" : "inline-block";
 
     return (
         <Box>
-            <Collapse in={reveal}>
-                <Image
-                    src={src}
-                    alt={alt}
-                    width={props.width}
-                    height={props.height}
-                    {...props}
-                    style={{ ...props.style }}
-                    onError={() => setReveal(true)}
-                    onLoad={() => {
-                        setReveal(true);
-                    }}
-                />
+            <Collapse in={loading}>
+                {src && src !== "" ? (
+                    <Image
+                        src={src}
+                        alt={alt}
+                        width={props.width}
+                        height={props.height}
+                        {...props}
+                        style={{ ...props.style }}
+                        onError={() => setReveal(true)}
+                        onLoad={() => {
+                            setReveal(true);
+                        }}
+                    />
+                ) : null}
             </Collapse>
             <ContentLoader
                 style={{ display: loader }}

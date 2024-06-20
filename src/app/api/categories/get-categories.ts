@@ -26,7 +26,7 @@ export async function getRoot(restauranteLink: string) {
 export async function getCategory(
     restauranteLink: string,
     language: string,
-    categoryLink: string,
+    categoryLink: string
 ) {
     return sql<CategoryAPI>`
         SELECT c.name as name, c.link as link, c.image as image

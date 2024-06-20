@@ -2,8 +2,8 @@
 import { sql } from "@vercel/postgres";
 
 /**
- * Deletes a restaurant for the given link
- * @param restaurante - The resutaurant link
+ * Deletes a restaurant for the given id
+ * @param restaurante - The resutaurant identifier
  */
 export async function deleteRestaurante(id: string) {
     await sql.query(`

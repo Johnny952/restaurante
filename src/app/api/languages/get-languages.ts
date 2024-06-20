@@ -19,7 +19,12 @@ export async function getRestLanguages(restauranteLink: string) {
     `;
 }
 
-export async function getLanguages({
+/**
+ * Get all languages
+ * @param param - Pagination, filter and sort parameters
+ * @returns The languages
+ */
+export async function listLanguages({
     page = 0,
     size = 25,
     sortBy = "id",
@@ -39,4 +44,36 @@ export async function getLanguages({
         LIMIT (${size}) OFFSET (${page * size})`)
     ).rows;
     return res as LanguageTableInterface[];
+}
+
+export async function getLanguage(id: string) {
+    const res = (
+        await sql.query(`
+        SELECT id, name
+        FROM Languages
+        WHERE id='${id}'
+    `)
+    ).rows[0];
+    return res as LanguageTableInterface;
+}
+
+/**
+ * Count languages with filters
+ * @param filterField
+ * @param filterOperator
+ * @param filterValue
+ * @returns
+ */
+export async function getCountLanguages(
+    filterField?: string,
+    filterOperator?: string,
+    filterValue?: string
+) {
+    return (
+        await sql.query(`
+        SELECT COUNT(id)
+        FROM Languages
+        ${baseQuery(filterField, filterOperator, filterValue)}
+    `)
+    ).rows[0] as { count: string };
 }

@@ -1,7 +1,6 @@
-import { deleteRestaurante } from "@/app/api/restaurantes/delete-restaurante";
-import { getRestauranteByID } from "@/app/api/restaurantes/get-restaurante";
-import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
-import { deleteImage } from "@/app/api/upload/delete-image";
+import { deleteLanguage } from "@/app/api/languages/delete-language";
+import { getLanguage } from "@/app/api/languages/get-languages";
+import { LanguageTableInterface } from "@/app/api/languages/index.types";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -14,7 +13,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 
-export default function DeleteRestauranteDialog({
+export default function DeleteLanguageDialog({
     open,
     onClose,
     selected,
@@ -26,13 +25,13 @@ export default function DeleteRestauranteDialog({
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
-    const [oldData, setOldData] = useState<RestauranteInterface | null>(null);
+    const [oldData, setOldData] = useState<LanguageTableInterface | null>(null);
 
     useEffect(() => {
         if (selected && selected !== "") {
             const fetchData = async () => {
                 setLoading(true);
-                return getRestauranteByID((selected || "").toString());
+                return getLanguage((selected || "").toString());
             };
 
             fetchData()
@@ -56,11 +55,11 @@ export default function DeleteRestauranteDialog({
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle id="alert-dialog-title">
-                {`Eliminar restaurante ${selected}`}
+                {`Eliminar lenguaje: ${selected}`}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    ¿Esta seguro de eliminar este restaurante?
+                    ¿Esta seguro de eliminar este lenguaje?
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -71,12 +70,7 @@ export default function DeleteRestauranteDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            if (oldData && oldData.image) {
-                                await deleteImage(oldData?.image);
-                            }
-                            await deleteRestaurante(
-                                (selected || "").toString()
-                            );
+                            await deleteLanguage((selected || "").toString());
                             snackSuccess(`Restaurante ${selected} eliminado`);
                         } catch (error) {
                             snackError(`Ocurrió un error: ${error}`);

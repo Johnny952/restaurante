@@ -1,4 +1,4 @@
-import { updateRestauranteName } from "@/app/api/restaurantes/updateRestaurante";
+import { updateRestauranteName } from "@/app/api/restaurantes/update-restaurante";
 import toKebabCase from "@/helpers/to-kebab-case";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";

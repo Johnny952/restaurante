@@ -1,4 +1,4 @@
-import { updateRestauranteLogo } from "@/app/api/restaurantes/updateRestaurante";
+import { updateRestauranteLogo } from "@/app/api/restaurantes/update-restaurante";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";

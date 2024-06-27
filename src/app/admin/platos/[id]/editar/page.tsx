@@ -28,7 +28,16 @@ const breadcrumbs = [
 
 export default function EditRestaurantePage({
     params: { id },
-    searchParams: { editName, editLang, editRestaurant, editParent, editImage, editCat, editPrice, editDescription },
+    searchParams: {
+        editName,
+        editLang,
+        editRestaurant,
+        editParent,
+        editImage,
+        editCat,
+        editPrice,
+        editDescription,
+    },
 }: {
     params: { id: string };
     searchParams: {
@@ -68,7 +77,17 @@ export default function EditRestaurantePage({
                 setLoading(false);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, editName, editLang, editRestaurant, editParent, editImage, editCat, editPrice, editDescription]);
+    }, [
+        id,
+        editName,
+        editLang,
+        editRestaurant,
+        editParent,
+        editImage,
+        editCat,
+        editPrice,
+        editDescription,
+    ]);
 
     return (
         <EditLayout
@@ -120,7 +139,11 @@ export default function EditRestaurantePage({
                 onClose={() => router.push(pathname)}
             />
             <EditRestLangDialog
-                open={Boolean(editRestaurant) || Boolean(editLang) || Boolean(editCat)}
+                open={
+                    Boolean(editRestaurant) ||
+                    Boolean(editLang) ||
+                    Boolean(editCat)
+                }
                 id={id}
                 onClose={() => router.push(pathname)}
             />

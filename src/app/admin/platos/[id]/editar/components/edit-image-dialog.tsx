@@ -28,10 +28,7 @@ export default function EditImageDialog({
     onClose: () => void;
 }) {
     const [file, setfile] = useState<File | null>(null);
-    const [dish, setDish] = useState<
-        DishTable
-        | undefined
-    >();
+    const [dish, setDish] = useState<DishTable | undefined>();
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
@@ -61,7 +58,7 @@ export default function EditImageDialog({
                 const tryAwait = async () => {
                     try {
                         await deleteImage(dish.image);
-                    } catch (error) { }
+                    } catch (error) {}
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,
@@ -71,7 +68,7 @@ export default function EditImageDialog({
                     ),
                 ]);
 
-                await updateImage(id, url)
+                await updateImage(id, url);
                 snackSuccess("Imagen actualizada");
                 setfile(null);
                 onClose();

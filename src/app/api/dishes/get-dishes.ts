@@ -56,14 +56,16 @@ export async function getDish(
 }
 
 export async function getDishById(id: string) {
-    return (await sql.query(`
+    return (
+        await sql.query(`
         SELECT d.id as id, c.name as category, r.name as restaurant, r.id as restaurant_id, rl.language_id as language, d.name as name, d.price as price, d.description as description, d.link as link, d.image as image
         FROM Dishes d
         JOIN Categories c ON d.category_id = c.id
         JOIN Rest_Languages rl ON c.rest_language_id = rl.id
         JOIN Restaurantes r ON rl.restaurante_id = r.id
         WHERE d.id = (${id})
-    `)).rows[0] as DishTable;
+    `)
+    ).rows[0] as DishTable;
 }
 
 const fieldMap = {

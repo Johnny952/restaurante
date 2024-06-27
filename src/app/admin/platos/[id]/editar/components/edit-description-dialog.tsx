@@ -33,22 +33,20 @@ export default function EditDescriptionDialog({
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
 
-
-    const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = async (
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
-    }
+    };
 
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            await updateDescription(
-                id,
-                formData.description,
-            )
+            await updateDescription(id, formData.description);
             setFormData({
                 description: "",
-            })
+            });
             onClose();
             snackSuccess("Descripción cambiada");
         } catch (error) {
@@ -61,9 +59,7 @@ export default function EditDescriptionDialog({
         <Dialog open={open} aria-labelledby="edit-dialog-title">
             <DialogTitle id="edit-dialog-title">Editar Descripción</DialogTitle>
             <DialogContent>
-                <InputLabel htmlFor="description-input">
-                    Descripción
-                </InputLabel>
+                <InputLabel htmlFor="description-input">Descripción</InputLabel>
                 <FormControl fullWidth>
                     <TextField
                         id="description-input"
@@ -82,7 +78,7 @@ export default function EditDescriptionDialog({
                         onClick={() => {
                             setFormData({
                                 description: "",
-                            })
+                            });
                             onClose();
                         }}
                         color="error"
@@ -90,10 +86,7 @@ export default function EditDescriptionDialog({
                     >
                         Cancelar
                     </Button>
-                    <Button
-                        onClick={handleSubmit}
-                        autoFocus
-                    >
+                    <Button onClick={handleSubmit} autoFocus>
                         Confirmar
                     </Button>
                 </DialogActions>

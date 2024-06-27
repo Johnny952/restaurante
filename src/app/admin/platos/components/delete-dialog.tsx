@@ -46,7 +46,7 @@ export default function DeleteDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await deleteDish((selected || "").toString())
+                            await deleteDish((selected || "").toString());
                             snackSuccess(`Plato ${selected} eliminada`);
                         } catch (error) {
                             snackError(`Ocurrió un error: ${error}`);

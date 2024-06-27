@@ -47,15 +47,15 @@ export default function EditPriceDialog({
     const validateForm = () => {
         let newErrors: FormErrors = {};
 
-        if (!formData.price)
-            newErrors.price = "El precio es requerido";
+        if (!formData.price) newErrors.price = "El precio es requerido";
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
-
-    const handleChange = async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = async (
+        e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
         const { name, value } = e.target;
         const regex = /^[0-9]*$/;
         const deformattedValue = value.replaceAll(".", "");
@@ -64,8 +64,8 @@ export default function EditPriceDialog({
                 ? formatPrice(parseInt(deformattedValue, 10)).slice(1)
                 : "";
             setFormData({ ...formData, [name]: formattedValue });
-        };
-    }
+        }
+    };
 
     const handleSubmit = async () => {
         if (!validateForm()) {
@@ -74,13 +74,10 @@ export default function EditPriceDialog({
         }
         setLoading(true);
         try {
-            await updatePrice(
-                id,
-                formData.price.replaceAll('.', ''),
-            )
+            await updatePrice(id, formData.price.replaceAll(".", ""));
             setFormData({
                 price: "",
-            })
+            });
             setErrors({});
             onClose();
             snackSuccess("Precio cambiado");
@@ -95,9 +92,7 @@ export default function EditPriceDialog({
             <DialogTitle id="edit-dialog-title">Editar Precio</DialogTitle>
             <DialogContent>
                 <FormControl error={!!errors.price} fullWidth>
-                    <InputLabel htmlFor="price-input">
-                        Precio
-                    </InputLabel>
+                    <InputLabel htmlFor="price-input">Precio</InputLabel>
                     <Input
                         id="price-input"
                         aria-describedby="price-error-text"
@@ -121,7 +116,7 @@ export default function EditPriceDialog({
                         onClick={() => {
                             setFormData({
                                 price: "",
-                            })
+                            });
                             setErrors({});
                             onClose();
                         }}
@@ -130,10 +125,7 @@ export default function EditPriceDialog({
                     >
                         Cancelar
                     </Button>
-                    <Button
-                        onClick={handleSubmit}
-                        autoFocus
-                    >
+                    <Button onClick={handleSubmit} autoFocus>
                         Confirmar
                     </Button>
                 </DialogActions>

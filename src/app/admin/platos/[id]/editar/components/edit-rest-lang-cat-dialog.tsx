@@ -101,7 +101,7 @@ export default function EditRestLangDialog({
         }
         setLoading(true);
         try {
-            await updateCategory(id, formData.category)
+            await updateCategory(id, formData.category);
             setFormData({
                 restaurant: "",
                 language: "",
@@ -237,10 +237,7 @@ export default function EditRestLangDialog({
                     >
                         Cancelar
                     </Button>
-                    <Button
-                        onClick={handleSubmit}
-                        autoFocus
-                    >
+                    <Button onClick={handleSubmit} autoFocus>
                         Confirmar
                     </Button>
                 </DialogActions>

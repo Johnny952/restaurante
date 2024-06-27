@@ -1,5 +1,8 @@
+"use server";
 import { sql } from "@vercel/postgres";
-import { DishInterface } from "./index.types";
+import { DishInterface, DishTable } from "./index.types";
+import { TableParams } from "../helpers/index.types";
+import baseQuery from "../helpers/base-query";
 
 /**
  * Get the dishes of the given restaurante, language and category
@@ -50,4 +53,69 @@ export async function getDish(
         AND c.link = (${categoryLink})
         AND d.link = (${dishLink});
     `;
+}
+
+export async function getDishById(id: string) {
+    return (await sql.query(`
+        SELECT d.id as id, c.name as category, r.name as restaurant, r.id as restaurant_id, rl.language_id as language, d.name as name, d.price as price, d.description as description, d.link as link, d.image as image
+        FROM Dishes d
+        JOIN Categories c ON d.category_id = c.id
+        JOIN Rest_Languages rl ON c.rest_language_id = rl.id
+        JOIN Restaurantes r ON rl.restaurante_id = r.id
+        WHERE d.id = (${id})
+    `)).rows[0] as DishTable;
+}
+
+const fieldMap = {
+    id: "d.id",
+    category: "c.name",
+    restaurante: "r.name",
+    name: "d.name",
+    price: "d.price",
+    description: "d.description",
+    link: "d.link",
+    image: "d.image",
+};
+
+export async function listDishes({
+    page = 0,
+    size = 25,
+    sortBy = "id",
+    sortOrder = "ASC",
+    filterField,
+    filterOperator,
+    filterValue,
+}: TableParams) {
+    const orderByDirection =
+        sortOrder.toLowerCase() === "desc" ? "DESC" : "ASC";
+    const res = (
+        await sql.query(`
+        SELECT d.id as id, c.name as category, r.name as restaurant, rl.language_id as language, d.name as name, d.price as price, d.description as description, d.link as link, d.image as image
+        FROM Dishes d
+        JOIN Categories c ON d.category_id = c.id
+        JOIN Rest_Languages rl ON c.rest_language_id = rl.id
+        JOIN Restaurantes r ON rl.restaurante_id = r.id
+        ${baseQuery(fieldMap[filterField as keyof typeof fieldMap], filterOperator, filterValue)}
+        ORDER BY (${sortBy}) ${orderByDirection}
+        LIMIT (${size}) OFFSET (${page * size})
+        `)
+    ).rows;
+    return res as DishTable[];
+}
+
+export async function getCountDishes(
+    filterField?: string,
+    filterOperator?: string,
+    filterValue?: string
+) {
+    return (
+        await sql.query(`
+        SELECT COUNT(d.id)
+        FROM Dishes d
+        JOIN Categories c ON d.category_id = c.id
+        JOIN Rest_Languages rl ON c.rest_language_id = rl.id
+        JOIN Restaurantes r ON rl.restaurante_id = r.id
+        ${baseQuery(fieldMap[filterField as keyof typeof fieldMap], filterOperator, filterValue)}
+    `)
+    ).rows[0] as { count: string };
 }

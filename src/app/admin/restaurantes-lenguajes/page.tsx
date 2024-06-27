@@ -1,19 +1,19 @@
 "use client";
 import { Paper } from "@mui/material";
 import LinkBreadcrumbs from "@/components/link-breadcrumbs";
-import { GridColDef } from "@mui/x-data-grid";
-import filterOperators from "../components/base-table/filter-operators";
+import BaseTable from "../components/base-table";
 import { useEffect, useState } from "react";
-import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackStore from "@/store/snackbar-store";
-import {
-    getCountRestaurantes,
-    listRestaurantes,
-} from "@/app/api/restaurantes/get-restaurante";
 import pathWithQueries from "@/helpers/path-with-queries";
-import BaseTable from "../components/base-table";
-import DeleteRestauranteDialog from "./components/delete-restaurante-dialog";
+import { GridColDef } from "@mui/x-data-grid";
+import filterOperators from "../components/base-table/filter-operators";
+import { RestauranteLanguageInterface } from "@/app/api/restaurantes-languages/index.types";
+import {
+    getCountRestLangs,
+    listRestLangs,
+} from "@/app/api/restaurantes-languages/get-restaurantes-languages";
+import DeleteRestLangDialog from "./components/delete-rest-lang-dialog";
 
 const breadcrumbs = [
     {
@@ -21,32 +21,32 @@ const breadcrumbs = [
         link: "/admin",
     },
     {
-        name: "Restaurantes",
+        name: "Restaurantes-Lenguajes",
     },
 ];
 
 const columns: GridColDef[] = [
     {
-        field: "name",
-        headerName: "Nombre",
+        field: "id",
+        headerName: "ID",
+        width: 100,
+        filterOperators,
+    },
+    {
+        field: "rest_name",
+        headerName: "Restaurante",
         width: 150,
         filterOperators,
     },
     {
-        field: "link",
-        headerName: "Enlace",
+        field: "lang_name",
+        headerName: "Lenguaje",
         width: 150,
         filterOperators,
-    },
-    {
-        field: "image",
-        headerName: "Imagen",
-        width: 300,
-        filterable: false,
     },
 ];
 
-export default function AdminRestaurantePage(props: {
+export default function AdminRestLanguagesPage(props: {
     searchParams: {
         page?: string;
         size?: string;
@@ -74,7 +74,7 @@ export default function AdminRestaurantePage(props: {
     } = props.searchParams;
 
     const [rowCount, setRowCount] = useState<number>(0);
-    const [rows, setRows] = useState<RestauranteInterface[]>([]);
+    const [rows, setRows] = useState<RestauranteLanguageInterface[]>([]);
     const [tableLoading, setTableLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
@@ -84,7 +84,7 @@ export default function AdminRestaurantePage(props: {
         const fetchData = async () => {
             setTableLoading(true);
             return Promise.all([
-                listRestaurantes({
+                listRestLangs({
                     page,
                     size,
                     sortBy,
@@ -93,7 +93,7 @@ export default function AdminRestaurantePage(props: {
                     filterOperator,
                     filterValue,
                 }),
-                getCountRestaurantes(filterField, filterOperator, filterValue),
+                getCountRestLangs(filterField, filterOperator, filterValue),
             ]);
         };
 
@@ -148,7 +148,7 @@ export default function AdminRestaurantePage(props: {
                 }}
             >
                 <BaseTable
-                    tableName="Lenguajes"
+                    tableName="Restaurante Lenguajes"
                     rowCount={rowCount}
                     columns={columns}
                     rows={rows}
@@ -160,11 +160,11 @@ export default function AdminRestaurantePage(props: {
                     size={size}
                     sortBy={sortBy}
                     sortOrder={sortOrder}
-                    filterField={filterField || "name"}
+                    filterField={filterField || "id"}
                     filterOperator={filterOperator || "contains"}
                     filterValue={filterValue}
                 />
-                <DeleteRestauranteDialog
+                <DeleteRestLangDialog
                     open={Boolean(del) && del !== ""}
                     onClose={() => redirectLoadData({})}
                     selected={del || ""}

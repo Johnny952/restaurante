@@ -75,3 +75,13 @@ export async function getCountRestaurantes(
     `)
     ).rows[0] as { count: string };
 }
+
+export async function getAllRestaurants() {
+    const res = (
+        await sql.query(`
+            SELECT id, name, link
+            FROM Restaurantes
+        `)
+    ).rows;
+    return res as { id: string; name: string; link: string }[];
+}

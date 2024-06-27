@@ -1,19 +1,19 @@
 "use client";
 import { Paper } from "@mui/material";
 import LinkBreadcrumbs from "@/components/link-breadcrumbs";
-import { GridColDef } from "@mui/x-data-grid";
-import filterOperators from "../components/base-table/filter-operators";
+import BaseTable from "../components/base-table";
 import { useEffect, useState } from "react";
-import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackStore from "@/store/snackbar-store";
-import {
-    getCountRestaurantes,
-    listRestaurantes,
-} from "@/app/api/restaurantes/get-restaurante";
 import pathWithQueries from "@/helpers/path-with-queries";
-import BaseTable from "../components/base-table";
-import DeleteRestauranteDialog from "./components/delete-restaurante-dialog";
+import { GridColDef } from "@mui/x-data-grid";
+import filterOperators from "../components/base-table/filter-operators";
+import { CategoryTable } from "@/app/api/categories/index.types";
+import {
+    getCountCategories,
+    listCategories,
+} from "@/app/api/categories/get-categories";
+import DeleteCategoryDialog from "./components/delete-dialog";
 
 const breadcrumbs = [
     {
@@ -21,14 +21,32 @@ const breadcrumbs = [
         link: "/admin",
     },
     {
-        name: "Restaurantes",
+        name: "Categorías",
     },
 ];
 
 const columns: GridColDef[] = [
     {
+        field: "id",
+        headerName: "ID",
+        width: 100,
+        filterOperators,
+    },
+    {
         field: "name",
         headerName: "Nombre",
+        width: 150,
+        filterOperators,
+    },
+    {
+        field: "restaurant_name",
+        headerName: "Restaurante",
+        width: 150,
+        filterOperators,
+    },
+    {
+        field: "language",
+        headerName: "Lenguaje",
         width: 150,
         filterOperators,
     },
@@ -39,14 +57,20 @@ const columns: GridColDef[] = [
         filterOperators,
     },
     {
+        field: "parent",
+        headerName: "Categoría Padre",
+        width: 150,
+        filterOperators,
+    },
+    {
         field: "image",
         headerName: "Imagen",
-        width: 300,
-        filterable: false,
+        width: 150,
+        filterOperators: [],
     },
 ];
 
-export default function AdminRestaurantePage(props: {
+export default function AdminCategoriesPage(props: {
     searchParams: {
         page?: string;
         size?: string;
@@ -74,7 +98,7 @@ export default function AdminRestaurantePage(props: {
     } = props.searchParams;
 
     const [rowCount, setRowCount] = useState<number>(0);
-    const [rows, setRows] = useState<RestauranteInterface[]>([]);
+    const [rows, setRows] = useState<CategoryTable[]>([]);
     const [tableLoading, setTableLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
@@ -84,7 +108,7 @@ export default function AdminRestaurantePage(props: {
         const fetchData = async () => {
             setTableLoading(true);
             return Promise.all([
-                listRestaurantes({
+                listCategories({
                     page,
                     size,
                     sortBy,
@@ -93,7 +117,7 @@ export default function AdminRestaurantePage(props: {
                     filterOperator,
                     filterValue,
                 }),
-                getCountRestaurantes(filterField, filterOperator, filterValue),
+                getCountCategories(filterField, filterOperator, filterValue),
             ]);
         };
 
@@ -148,7 +172,7 @@ export default function AdminRestaurantePage(props: {
                 }}
             >
                 <BaseTable
-                    tableName="Lenguajes"
+                    tableName="Categorías"
                     rowCount={rowCount}
                     columns={columns}
                     rows={rows}
@@ -160,11 +184,11 @@ export default function AdminRestaurantePage(props: {
                     size={size}
                     sortBy={sortBy}
                     sortOrder={sortOrder}
-                    filterField={filterField || "name"}
+                    filterField={filterField || "id"}
                     filterOperator={filterOperator || "contains"}
                     filterValue={filterValue}
                 />
-                <DeleteRestauranteDialog
+                <DeleteCategoryDialog
                     open={Boolean(del) && del !== ""}
                     onClose={() => redirectLoadData({})}
                     selected={del || ""}

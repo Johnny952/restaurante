@@ -26,7 +26,7 @@ import {
     listRestaurantes,
 } from "@/app/api/restaurantes/get-restaurante";
 import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
-import DeleteRestauranteDialog from "./delete-restaurante";
+import DeleteRestauranteDialog from "./delete-restaurante-dialog";
 
 const filterOperators: GridFilterOperator[] = [
     {

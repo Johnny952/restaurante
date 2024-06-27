@@ -1,6 +1,4 @@
 import { deleteLanguage } from "@/app/api/languages/delete-language";
-import { getLanguage } from "@/app/api/languages/get-languages";
-import { LanguageTableInterface } from "@/app/api/languages/index.types";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -11,7 +9,6 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 
 export default function DeleteLanguageDialog({
     open,
@@ -25,27 +22,6 @@ export default function DeleteLanguageDialog({
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
-    const [oldData, setOldData] = useState<LanguageTableInterface | null>(null);
-
-    useEffect(() => {
-        if (selected && selected !== "") {
-            const fetchData = async () => {
-                setLoading(true);
-                return getLanguage((selected || "").toString());
-            };
-
-            fetchData()
-                .then((data) => {
-                    setOldData(data);
-                    setLoading(false);
-                })
-                .catch((error) => {
-                    snackError(`Ocurrió un error: ${error.toString()}`);
-                    setLoading(false);
-                });
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selected]);
 
     return (
         <Dialog

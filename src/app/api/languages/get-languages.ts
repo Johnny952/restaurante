@@ -77,3 +77,12 @@ export async function getCountLanguages(
     `)
     ).rows[0] as { count: string };
 }
+
+export async function getAllLanguages() {
+    return (
+        await sql.query(`
+        SELECT id, name
+        FROM Languages
+    `)
+    ).rows;
+}

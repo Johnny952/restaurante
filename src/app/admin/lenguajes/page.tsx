@@ -11,7 +11,7 @@ import {
     listLanguages,
 } from "@/app/api/languages/get-languages";
 import pathWithQueries from "@/helpers/path-with-queries";
-import DeleteLanguageDialog from "./components/delete-language";
+import DeleteLanguageDialog from "./components/delete-language-dialog";
 import { GridColDef } from "@mui/x-data-grid";
 import filterOperators from "../components/base-table/filter-operators";
 

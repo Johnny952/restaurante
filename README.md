@@ -37,4 +37,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## TODO
 
--   Componets useEffect call API to get own data
+-   Delete root category and add base image to restaurant, this is used when no other image provided
+-   Standard Categories layouts and others
+-   Multiple filters on table

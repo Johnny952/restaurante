@@ -81,7 +81,7 @@ export default function MenuButton() {
         {
             label: "Favoritos",
             icon: <FavoriteIcon />,
-            onClick: () => {},
+            onClick: () => { },
         },
         // {
         //     label: 'Promociones',
@@ -100,7 +100,7 @@ export default function MenuButton() {
                 {open ? <CloseIcon /> : <MenuIcon />}
             </CustomIconButton>
 
-            <Popper id={id} open={open} anchorEl={anchorEl} transition>
+            <Popper id={id} open={open} anchorEl={anchorEl} transition sx={{ zIndex: 1 }}>
                 {({ TransitionProps }) => (
                     <Fade {...TransitionProps} timeout={350}>
                         <CustomBox>

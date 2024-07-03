@@ -4,6 +4,7 @@ import {
     Card,
     CardActionArea,
     CardContent,
+    IconButton,
     Typography,
 } from "@mui/material";
 import toTitle from "@/helpers/to-title";
@@ -12,8 +13,14 @@ import { usePathname, useRouter } from "next/navigation";
 import { DishInterface } from "@/app/api/dishes/index.types";
 import defaultDishImg from "@/../public/default-dish.png";
 import { ImageAsync } from "@/components/image-async";
+import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
+import RemoveIcon from '@mui/icons-material/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import useFavStore from "@/store/fav-store";
+import { useCallback, useEffect } from "react";
 
 export default function Dish({
+    id,
     image,
     name,
     description,
@@ -23,6 +30,17 @@ export default function Dish({
     const router = useRouter();
     const pathname = usePathname();
     const img = !image || image === "" ? defaultDishImg.src : image;
+
+    const addToFav = useCallback(() => {
+        useFavStore.getState().addProduct({ id, name: toTitle(name), link, price });
+    }, [id, name, link, price]);
+
+    const removeFromFav = useCallback(() => {
+        useFavStore.getState().subProduct(id);
+    }, [id]);
+
+    const quantity = useFavStore(useCallback(state => state.products[id]?.quantity || 0, [id]));
+
     return (
         <Card
             sx={{
@@ -32,6 +50,7 @@ export default function Dish({
                 borderWidth: "1px",
                 px: "10px",
                 height: "100%",
+                position: "relative",
             }}
             elevation={0}
         >
@@ -62,7 +81,7 @@ export default function Dish({
                         />
                     </div>
                 </Box>
-                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                <Box sx={{ display: "flex", flexDirection: "column", flexGrow: 1 }}>
                     <CardContent sx={{ flex: "0 1 auto", color: "white" }}>
                         <Box sx={{ flexDirection: "column" }}>
                             <Box>
@@ -82,7 +101,6 @@ export default function Dish({
                                     {description}
                                 </Typography>
                             </Box>
-
                             <Box alignSelf="flex-end">
                                 <Typography component="div" variant="h6">
                                     {formatPrice(price)}
@@ -92,6 +110,66 @@ export default function Dish({
                     </CardContent>
                 </Box>
             </CardActionArea>
+
+            <Box
+                sx={{
+                    position: 'absolute',
+                    bottom: 8,
+                    right: 8,
+                    display: 'flex',
+                    alignItems: 'center',
+                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    borderRadius: '16px',
+                    padding: '2px',
+                }}
+            >
+                {quantity > 0 ? (
+                    <>
+                        <IconButton
+                            size="small"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                removeFromFav()
+                            }}
+                            sx={{ color: 'primary.main' }}
+                        >
+                            <RemoveIcon fontSize="small" />
+                        </IconButton>
+                        <Typography
+                            sx={{
+                                color: 'primary.main',
+                                mx: 1,
+                                minWidth: '20px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            {quantity}
+                        </Typography>
+                        <IconButton
+                            size="small"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                addToFav();
+                            }}
+                            sx={{ color: 'primary.main' }}
+                        >
+                            <AddIcon fontSize="small" />
+                        </IconButton>
+                    </>
+                ) : (
+                    <IconButton
+                        color="primary"
+                        aria-label="add to cart"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            addToFav();
+                        }}
+                        sx={{ color: 'primary.main' }}
+                    >
+                        <AddShoppingCartIcon fontSize="small" />
+                    </IconButton>
+                )}
+            </Box>
         </Card>
     );
 }

@@ -17,7 +17,7 @@ export async function getByCategory(
     categoryLink: string
 ) {
     return sql<DishInterface>`
-        SELECT d.name as name, d.link as link, d.image as image, d.description as description, d.price as price
+        SELECT d.id, d.name as name, d.link as link, d.image as image, d.description as description, d.price as price
         FROM Dishes d
         JOIN Categories c ON d.category_id = c.id
         JOIN Restaurant_Languages rl ON c.restaurant_language_id = rl.id

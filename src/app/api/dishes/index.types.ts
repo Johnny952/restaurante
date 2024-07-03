@@ -1,4 +1,5 @@
 export interface DishInterface {
+    id: string;
     name: string;
     image: string;
     link: string;

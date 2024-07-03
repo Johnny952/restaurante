@@ -1,6 +1,6 @@
 export default function toTitle(str: string | undefined) {
     if (!str) {
-        return str;
+        return "";
     }
     const words = str
         .split(" ")

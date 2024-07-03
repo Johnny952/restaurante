@@ -1,4 +1,4 @@
-import { updateRestauranteLogo } from "@/app/api/restaurantes/update-restaurante";
+import { updateLogo } from "@/app/api/restaurants/update";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";
@@ -13,20 +13,19 @@ import {
 import { useState } from "react";
 import Uploader from "../../../../../../components/uploader";
 
-export default function EditRestauranteLogoDialog({
+export default function EditRestaurantLogoDialog({
     open,
     id,
     onClose,
-    oldLink,
+    oldLogo,
     restaurant,
 }: {
     open: boolean;
     id: string;
     onClose: () => void;
-    oldLink: string;
+    oldLogo: string;
     restaurant: string;
 }) {
-    const [logoValue, setLogoValue] = useState("");
     const [file, setfile] = useState<File | null>(null);
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
@@ -38,17 +37,16 @@ export default function EditRestauranteLogoDialog({
             try {
                 const tryAwait = async () => {
                     try {
-                        await deleteImage(oldLink);
+                        await deleteImage(oldLogo);
                     } catch (error) {}
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,
-                    putImage(file, `restaurante/${restaurant}/logo.png`),
+                    putImage(file, `restaurant/${restaurant}/logo.png`),
                 ]);
 
-                await updateRestauranteLogo(id, url);
+                await updateLogo(id, url);
                 snackSuccess("Logo actualizado");
-                setLogoValue("");
                 setfile(null);
                 onClose();
             } catch (error) {
@@ -61,13 +59,12 @@ export default function EditRestauranteLogoDialog({
     }
     return (
         <Dialog open={open} aria-labelledby="edit-dialog-title">
-            <DialogTitle id="edit-dialog-title">Editar nombre/link</DialogTitle>
+            <DialogTitle id="edit-dialog-title">Editar Logo</DialogTitle>
             <DialogContent>
                 <Uploader setFile={setfile} />
                 <DialogActions>
                     <Button
                         onClick={() => {
-                            setLogoValue("");
                             setfile(null);
                             onClose();
                         }}
@@ -79,7 +76,7 @@ export default function EditRestauranteLogoDialog({
                     <Button
                         onClick={onConfirmLogo}
                         autoFocus
-                        disabled={logoValue === ""}
+                        disabled={file === null}
                     >
                         Confirmar
                     </Button>

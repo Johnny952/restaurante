@@ -13,11 +13,10 @@ import {
     MenuItem,
     Select,
     SelectChangeEvent,
-    TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllLanguages } from "@/app/api/restaurantes-languages/get-restaurantes-languages";
-import { getAllRestaurants } from "@/app/api/restaurantes/get-restaurante";
+import { getAllByRestaurant } from "@/app/api/languages/get";
+import { getAll } from "@/app/api/restaurants/get";
 import { updateRestLang } from "@/app/api/categories/update";
 
 interface FormData {
@@ -51,7 +50,7 @@ export default function EditRestLangDialog({
     const handleChange = async (e: SelectChangeEvent) => {
         if (e.target.name === "restaurant") {
             setLoading(true);
-            const languages = await getAllLanguages(e.target.value);
+            const languages = await getAllByRestaurant(e.target.value);
 
             setAllLanguages(languages);
             setLoading(false);
@@ -65,6 +64,10 @@ export default function EditRestLangDialog({
         setLoading(true);
         try {
             await updateRestLang(id, formData.restaurant, formData.language);
+            setFormData({
+                restaurant: "",
+                language: "",
+            });
             onClose();
             snackSuccess("Categoría editada");
         } catch (error) {
@@ -75,7 +78,7 @@ export default function EditRestLangDialog({
 
     useEffect(() => {
         const fetchData = async () => {
-            return getAllRestaurants();
+            return getAll();
         };
 
         fetchData()
@@ -86,7 +89,7 @@ export default function EditRestLangDialog({
                 snackError(`Ocurrió un error: ${error.toString()}`);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, onClose]);
+    }, [id]);
 
     return (
         <Dialog open={open} aria-labelledby="edit-dialog-title">

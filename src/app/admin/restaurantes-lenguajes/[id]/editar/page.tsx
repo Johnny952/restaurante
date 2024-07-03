@@ -6,10 +6,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
-import { RestauranteLanguageInterface } from "@/app/api/restaurantes-languages/index.types";
-import { getRestLang } from "@/app/api/restaurantes-languages/get-restaurantes-languages";
+import { RestaurantLanguageInterface } from "@/app/api/restaurants-languages/index.types";
+import { get } from "@/app/api/restaurants-languages/get";
 import EditRestaurantDialog from "./components/edit-restaurant-dialog";
 import EditLanguageDialog from "./components/edit-language-dialog";
+import EditLayout from "@/app/admin/components/layouts/edit";
 
 const breadcrumbs = [
     {
@@ -35,9 +36,8 @@ export default function EditRestaurantePage({
         editLanguage?: string;
     };
 }) {
-    const [oldData, setOldData] = useState<RestauranteLanguageInterface | null>(
-        null
-    );
+    const [oldData, setOldData] =
+        useState<RestaurantLanguageInterface | null>();
     const router = useRouter();
     const pathname = usePathname();
 
@@ -51,7 +51,7 @@ export default function EditRestaurantePage({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getRestLang(id);
+            return get(id);
         };
 
         fetchData()
@@ -67,99 +67,35 @@ export default function EditRestaurantePage({
     }, [id, editRestaurant, editLanguage]);
 
     return (
-        <div>
-            <LinkBreadcrumbs breadcrumbs={breadcrumbs} />
-
-            <Paper
-                elevation={0}
-                sx={{
-                    mt: "20px",
-                    p: "20px",
-                    border: "1px solid rgba(0, 0, 0, 0.12)",
-                    color: "rgb(114, 119, 122)",
-                }}
-            >
-                <Grid container rowSpacing={2}>
-                    <Grid item xs={12}>
-                        <Button
-                            variant="text"
-                            startIcon={<ArrowBackIcon />}
-                            onClick={goBack}
-                        >
-                            Atrás
-                        </Button>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Typography variant="h6">
-                            Editar lenguage de restaurante
-                        </Typography>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Grid container rowSpacing={2}>
-                            <Grid item xs={12} md={6}>
-                                <Typography variant="body1">
-                                    Lenguaje: {oldData?.lang_name}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Box
-                                    display="flex"
-                                    alignItems="center"
-                                    sx={{ height: "100%" }}
-                                >
-                                    <Box flexGrow={1} />
-                                    <Button
-                                        variant="contained"
-                                        onClick={() =>
-                                            router.push(
-                                                `${pathname}?editLanguage=1`
-                                            )
-                                        }
-                                    >
-                                        Cambiar
-                                    </Button>
-                                    <EditLanguageDialog
-                                        id={id}
-                                        open={Boolean(editLanguage)}
-                                        onClose={() => router.push(pathname)}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Typography variant="body1">
-                                    Restaurante: {oldData?.rest_name}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Box
-                                    display="flex"
-                                    alignItems="center"
-                                    sx={{ height: "100%" }}
-                                >
-                                    <Box flexGrow={1} />
-                                    <Button
-                                        variant="contained"
-                                        onClick={() =>
-                                            router.push(
-                                                `${pathname}?editRestaurant=1`
-                                            )
-                                        }
-                                    >
-                                        Cambiar
-                                    </Button>
-                                    <EditRestaurantDialog
-                                        id={id}
-                                        open={Boolean(editRestaurant)}
-                                        onClose={() => router.push(pathname)}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Paper>
-        </div>
+        <EditLayout
+            pathname={pathname}
+            redirect={(link: string) => router.push(link)}
+            breadcrumbs={breadcrumbs}
+            goBack={() => router.push("/admin/restaurantes-lenguajes")}
+            title={`Editar lenguage de restaurante`}
+            data={[
+                {
+                    value: oldData?.restaurant_name,
+                    name: "Restaurante",
+                    link: "editRestaurant",
+                },
+                {
+                    value: oldData?.language_name,
+                    name: "Lenguaje",
+                    link: "editLanguage",
+                },
+            ]}
+        >
+            <EditLanguageDialog
+                id={id}
+                open={Boolean(editLanguage)}
+                onClose={() => router.push(pathname)}
+            />
+            <EditRestaurantDialog
+                id={id}
+                open={Boolean(editRestaurant)}
+                onClose={() => router.push(pathname)}
+            />
+        </EditLayout>
     );
 }

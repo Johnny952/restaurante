@@ -37,6 +37,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## TODO
 
+# Admin
+
 -   Delete root category and add base image to restaurant, this is used when no other image provided
 -   Standard Categories layouts and others (validations/errors)
--   Multiple filters on table
+-   Multiple filters on table (Pay pro plan or use external filter buttons with logic)

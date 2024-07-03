@@ -9,7 +9,7 @@ import pathWithQueries from "@/helpers/path-with-queries";
 import { GridColDef } from "@mui/x-data-grid";
 import filterOperators from "../components/base-table/filter-operators";
 import { DishTable } from "@/app/api/dishes/index.types";
-import { getCountDishes, listDishes } from "@/app/api/dishes/get-dishes";
+import { getCount, list } from "@/app/api/dishes/get";
 import DeleteDialog from "./components/delete-dialog";
 
 const breadcrumbs = [
@@ -117,7 +117,7 @@ export default function AdminDishesPage(props: {
         const fetchData = async () => {
             setTableLoading(true);
             return Promise.all([
-                listDishes({
+                list({
                     page,
                     size,
                     sortBy,
@@ -126,7 +126,7 @@ export default function AdminDishesPage(props: {
                     filterOperator,
                     filterValue,
                 }),
-                getCountDishes(filterField, filterOperator, filterValue),
+                getCount(filterField, filterOperator, filterValue),
             ]);
         };
 

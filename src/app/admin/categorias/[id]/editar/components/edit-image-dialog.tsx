@@ -1,4 +1,3 @@
-import { updateRestauranteLogo } from "@/app/api/restaurantes/update-restaurante";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";
@@ -13,7 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { CategoryTable } from "@/app/api/categories/index.types";
 import { notFound } from "next/navigation";
-import { getCategoryById } from "@/app/api/categories/get-categories";
+import { getById } from "@/app/api/categories/get";
 import UploaderWithCrop from "@/components/uploader-with-crop";
 import { updateImage } from "@/app/api/categories/update";
 
@@ -37,7 +36,7 @@ export default function EditImageDialog({
 
     useEffect(() => {
         const fetchData = async () => {
-            return getCategoryById(id);
+            return getById(id);
         };
 
         fetchData()

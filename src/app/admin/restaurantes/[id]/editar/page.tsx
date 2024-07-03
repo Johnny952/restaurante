@@ -1,16 +1,14 @@
 "use client";
-import LinkBreadcrumbs from "@/components/link-breadcrumbs";
-import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
+import { RestaurantInterface } from "@/app/api/restaurants/index.types";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
-import { getRestauranteByID } from "@/app/api/restaurantes/get-restaurante";
-import { ImageAsync } from "@/components/image-async";
-import EditRestauranteNameDialog from "./components/edit-name-dialog";
-import EditRestauranteLogoDialog from "./components/edit-logo-dialog";
+import { getByID } from "@/app/api/restaurants/get";
+import EditRestaurantNameDialog from "./components/edit-name-dialog";
+import EditRestaurantLogoDialog from "./components/edit-logo-dialog";
+import EditLayout from "@/app/admin/components/layouts/edit";
+import EditRestaurantBGDialog from "./components/edit-bg-dialog";
 
 const breadcrumbs = [
     {
@@ -26,31 +24,28 @@ const breadcrumbs = [
     },
 ];
 
-export default function EditRestaurantePage({
+export default function EditRestaurantPage({
     params: { id },
-    searchParams: { editName, editLogo },
+    searchParams: { editName, editLogo, editBackground },
 }: {
     params: { id: string };
     searchParams: {
         editName?: string;
         editLogo?: string;
+        editBackground?: string;
     };
 }) {
-    const [oldData, setOldData] = useState<RestauranteInterface | null>(null);
+    const [oldData, setOldData] = useState<RestaurantInterface | null>(null);
     const router = useRouter();
     const pathname = usePathname();
 
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackError = useSnackStore((state) => state.setOpenError);
 
-    const goBack = () => {
-        router.push("/admin/restaurantes");
-    };
-
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getRestauranteByID(id);
+            return getByID(id);
         };
 
         fetchData()
@@ -63,130 +58,54 @@ export default function EditRestaurantePage({
                 setLoading(false);
             });
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, editName, editLogo]);
+    }, [id, editName, editLogo, editBackground]);
 
     return (
-        <div>
-            <LinkBreadcrumbs breadcrumbs={breadcrumbs} />
-
-            <Paper
-                elevation={0}
-                sx={{
-                    mt: "20px",
-                    p: "20px",
-                    border: "1px solid rgba(0, 0, 0, 0.12)",
-                    color: "rgb(114, 119, 122)",
-                }}
-            >
-                <Grid container rowSpacing={2}>
-                    <Grid item xs={12}>
-                        <Button
-                            variant="text"
-                            startIcon={<ArrowBackIcon />}
-                            onClick={goBack}
-                        >
-                            Atrás
-                        </Button>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Typography variant="h6">{`Editar restaurante: ${oldData?.name}`}</Typography>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Grid container>
-                            <Grid item xs={12} md={6}>
-                                <Typography variant="body1">
-                                    Nombre: {oldData?.name}
-                                </Typography>
-                                <Typography variant="body1">
-                                    Link: {oldData?.link}
-                                </Typography>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Box
-                                    display="flex"
-                                    alignItems="center"
-                                    sx={{ height: "100%" }}
-                                >
-                                    <Box flexGrow={1} />
-                                    <Button
-                                        sx={{ my: "10px" }}
-                                        variant="contained"
-                                        onClick={() =>
-                                            router.push(
-                                                `${pathname}?editName=1`
-                                            )
-                                        }
-                                    >
-                                        Cambiar
-                                    </Button>
-                                    <EditRestauranteNameDialog
-                                        id={id}
-                                        open={Boolean(editName)}
-                                        onClose={() => router.push(pathname)}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Divider />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                        <Grid container>
-                            <Grid item xs={12} md={6}>
-                                <Box height={300} width={300}>
-                                    <ImageAsync
-                                        alt="logo"
-                                        src={oldData?.image || ""}
-                                        loadingImg={
-                                            !oldData?.image ||
-                                            oldData.image === ""
-                                        }
-                                        sizes="100vw"
-                                        width="100"
-                                        height="100"
-                                        style={{
-                                            width: "100%",
-                                            height: "auto",
-                                        }}
-                                    />
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Box
-                                    display="flex"
-                                    alignItems="center"
-                                    sx={{ height: "100%" }}
-                                >
-                                    <Box flexGrow={1} />
-                                    <Button
-                                        sx={{ my: "10px" }}
-                                        variant="contained"
-                                        onClick={() =>
-                                            router.push(
-                                                `${pathname}?editLogo=1`
-                                            )
-                                        }
-                                    >
-                                        Cambiar
-                                    </Button>
-                                    <EditRestauranteLogoDialog
-                                        open={Boolean(editLogo)}
-                                        id={id}
-                                        onClose={() => router.push(pathname)}
-                                        oldLink={oldData?.link || ""}
-                                        restaurant={oldData?.link || ""}
-                                    />
-                                </Box>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                </Grid>
-            </Paper>
-        </div>
+        <EditLayout
+            pathname={pathname}
+            redirect={(link: string) => router.push(link)}
+            breadcrumbs={breadcrumbs}
+            goBack={() => router.push("/admin/restaurantes")}
+            title={`Editar restaurante: ${oldData?.name}`}
+            data={[
+                {
+                    value: oldData?.name,
+                    name: "Nombre",
+                    link: "editName",
+                },
+            ]}
+            images={[
+                {
+                    src: oldData?.image,
+                    link: "editLogo",
+                    name: "Logo",
+                },
+                {
+                    src: oldData?.background,
+                    link: "editBackground",
+                    name: "Fondo",
+                },
+            ]}
+        >
+            <EditRestaurantNameDialog
+                id={id}
+                open={Boolean(editName)}
+                onClose={() => router.push(pathname)}
+            />
+            <EditRestaurantLogoDialog
+                open={Boolean(editLogo)}
+                id={id}
+                onClose={() => router.push(pathname)}
+                oldLogo={oldData?.image || ""}
+                restaurant={oldData?.link || ""}
+            />
+            <EditRestaurantBGDialog
+                open={Boolean(editBackground)}
+                id={id}
+                onClose={() => router.push(pathname)}
+                oldBG={oldData?.background || ""}
+                restaurant={oldData?.link || ""}
+            />
+        </EditLayout>
     );
 }

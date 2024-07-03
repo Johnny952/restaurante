@@ -6,10 +6,7 @@ import { useEffect, useState } from "react";
 import { LanguageTableInterface } from "@/app/api/languages/index.types";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackStore from "@/store/snackbar-store";
-import {
-    getCountLanguages,
-    listLanguages,
-} from "@/app/api/languages/get-languages";
+import { getCount, list } from "@/app/api/languages/get";
 import pathWithQueries from "@/helpers/path-with-queries";
 import DeleteLanguageDialog from "./components/delete-language-dialog";
 import { GridColDef } from "@mui/x-data-grid";
@@ -78,7 +75,7 @@ export default function AdminLanguagesPage(props: {
         const fetchData = async () => {
             setTableLoading(true);
             return Promise.all([
-                listLanguages({
+                list({
                     page,
                     size,
                     sortBy,
@@ -87,7 +84,7 @@ export default function AdminLanguagesPage(props: {
                     filterOperator,
                     filterValue,
                 }),
-                getCountLanguages(filterField, filterOperator, filterValue),
+                getCount(filterField, filterOperator, filterValue),
             ]);
         };
 

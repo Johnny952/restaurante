@@ -1,4 +1,4 @@
-import { deleteCategory } from "@/app/api/categories/delete";
+import { del } from "@/app/api/categories/delete";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -46,7 +46,7 @@ export default function DeleteCategoryDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await deleteCategory((selected || "").toString());
+                            await del((selected || "").toString());
                             snackSuccess(`Categoría ${selected} eliminada`);
                         } catch (error) {
                             snackError(`Ocurrió un error: ${error}`);

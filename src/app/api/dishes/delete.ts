@@ -1,7 +1,7 @@
 "use server";
 import { sql } from "@vercel/postgres";
 
-export async function deleteDish(id: string) {
+export async function del(id: string) {
     await sql.query(`
         DELETE FROM Dishes
         WHERE id = '${id}';

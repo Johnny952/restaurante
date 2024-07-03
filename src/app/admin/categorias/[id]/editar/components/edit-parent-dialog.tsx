@@ -14,10 +14,7 @@ import {
     SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import {
-    getAllParents,
-    getCategoryById,
-} from "@/app/api/categories/get-categories";
+import { getAllParents, getById } from "@/app/api/categories/get";
 import { notFound } from "next/navigation";
 import { updateParent } from "@/app/api/categories/update";
 import { CategoryTable } from "@/app/api/categories/index.types";
@@ -58,7 +55,7 @@ export default function EditParentDialog({
         }
         setLoading(true);
         try {
-            await updateParent(id, formData.parent, category.restlang);
+            await updateParent(id, formData.parent);
             setFormData({
                 parent: "",
             });
@@ -72,11 +69,11 @@ export default function EditParentDialog({
 
     useEffect(() => {
         const fetchData = async () => {
-            const cat = await getCategoryById(id);
+            const cat = await getById(id);
             if (!cat) {
                 notFound();
             }
-            const categories = await getAllParents(cat.restlang);
+            const categories = await getAllParents(cat.restlang, id);
             return {
                 categories,
                 category: cat,
@@ -117,7 +114,7 @@ export default function EditParentDialog({
                                 required
                                 fullWidth
                             >
-                                <MenuItem value={""}>root</MenuItem>
+                                <MenuItem value={""}>No padre</MenuItem>
                                 {allCategories.map((cat) => (
                                     <MenuItem key={cat.id} value={cat.id}>
                                         {cat.name}

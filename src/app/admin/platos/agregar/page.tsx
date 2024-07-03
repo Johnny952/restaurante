@@ -21,10 +21,10 @@ import { ChangeEvent, useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import { useRouter } from "next/navigation";
-import { getAllLanguages } from "@/app/api/restaurantes-languages/get-restaurantes-languages";
-import { getAllRestaurants } from "@/app/api/restaurantes/get-restaurante";
+import { getAllByRestaurant } from "@/app/api/languages/get";
+import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
 import toKebabCase from "@/helpers/to-kebab-case";
-import { getAllChildrenByRestLang as getAllCats } from "@/app/api/categories/get-categories";
+import { getAllAvailableToDishByRestLang as getAllCats } from "@/app/api/categories/get";
 import UploaderWithCrop from "@/components/uploader-with-crop";
 import { putImage } from "@/app/api/upload/put-image";
 import formatPrice from "@/helpers/format-price";
@@ -97,7 +97,7 @@ export default function AddCategoryPage() {
         setErrors({});
         if (name === "restaurant") {
             setLoading(true);
-            const languages = await getAllLanguages(value);
+            const languages = await getAllByRestaurant(value);
 
             setAllLanguages(languages);
             setLoading(false);

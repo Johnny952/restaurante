@@ -13,7 +13,7 @@ export default function EditLayout({
     goBack,
     title,
     data,
-    image,
+    images,
 }: {
     pathname: string;
     redirect: (link: string) => void;
@@ -21,7 +21,7 @@ export default function EditLayout({
     goBack: () => void;
     title: string;
     data: { value?: string; name: string; link: string }[];
-    image?: { src?: string; link: string };
+    images?: { src?: string; link: string; name: string }[];
 } & LinkBreadcrumbsProps) {
     return (
         <div>
@@ -86,57 +86,65 @@ export default function EditLayout({
                         </Grid>
                     </Grid>
 
-                    {image ? (
-                        <>
-                            <Grid item xs={12}>
-                                <Divider />
-                            </Grid>
+                    {images
+                        ? images.map((image) => (
+                              <>
+                                  <Grid item xs={12}>
+                                      <Divider />
+                                  </Grid>
 
-                            <Grid item xs={12}>
-                                <Grid container>
-                                    <Grid item xs={12} md={6}>
-                                        <Box height={300} width={300}>
-                                            <ImageAsync
-                                                alt="logo"
-                                                src={image.src || ""}
-                                                loadingImg={
-                                                    !image.src ||
-                                                    image.src === ""
-                                                }
-                                                sizes="100vw"
-                                                width="100"
-                                                height="100"
-                                                style={{
-                                                    width: "100%",
-                                                    height: "auto",
-                                                }}
-                                            />
-                                        </Box>
-                                    </Grid>
-                                    <Grid item xs={12} md={6}>
-                                        <Box
-                                            display="flex"
-                                            alignItems="center"
-                                            sx={{ height: "100%" }}
-                                        >
-                                            <Box flexGrow={1} />
-                                            <Button
-                                                sx={{ my: "10px" }}
-                                                variant="contained"
-                                                onClick={() =>
-                                                    redirect(
-                                                        `${pathname}?${image.link}=1`
-                                                    )
-                                                }
-                                            >
-                                                Cambiar
-                                            </Button>
-                                        </Box>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                        </>
-                    ) : null}
+                                  <Grid item xs={12}>
+                                      <Typography variant="body2">
+                                          {image.name}
+                                      </Typography>
+                                  </Grid>
+
+                                  <Grid item xs={12}>
+                                      <Grid container>
+                                          <Grid item xs={12} md={6}>
+                                              <Box height={300} width={300}>
+                                                  <ImageAsync
+                                                      alt="logo"
+                                                      src={image.src || ""}
+                                                      loadingImg={
+                                                          !image.src ||
+                                                          image.src === ""
+                                                      }
+                                                      sizes="100vw"
+                                                      width="100"
+                                                      height="100"
+                                                      style={{
+                                                          width: "100%",
+                                                          height: "auto",
+                                                      }}
+                                                  />
+                                              </Box>
+                                          </Grid>
+                                          <Grid item xs={12} md={6}>
+                                              <Box
+                                                  display="flex"
+                                                  alignItems="center"
+                                                  sx={{ height: "100%" }}
+                                              >
+                                                  <Box flexGrow={1} />
+                                                  <Button
+                                                      sx={{ my: "10px" }}
+                                                      variant="contained"
+                                                      onClick={() =>
+                                                          redirect(
+                                                              `${pathname}?${image.link}=1`
+                                                          )
+                                                      }
+                                                  >
+                                                      Cambiar
+                                                  </Button>
+                                              </Box>
+                                          </Grid>
+                                      </Grid>
+                                  </Grid>
+                              </>
+                          ))
+                        : null}
                 </Grid>
                 {children}
             </Paper>

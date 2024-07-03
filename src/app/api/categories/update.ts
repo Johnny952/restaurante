@@ -15,10 +15,10 @@ export async function updateRestLang(
 ) {
     return sql`
     UPDATE Categories
-    SET rest_language_id=(
+    SET restaurant_language_id=(
         SELECT id
-        FROM Rest_Languages
-        WHERE restaurante_id=(${restaurant}) AND language_id=(${language})
+        FROM Restaurant_Languages
+        WHERE restaurant_id=(${restaurant}) AND language_id=(${language})
     )
     WHERE id=(${id})`;
 }
@@ -26,17 +26,11 @@ export async function updateRestLang(
 export async function updateParent(
     id: string,
     parent: string,
-    restaurantLanguage: string
 ) {
     if (!parent) {
         return sql`
         UPDATE Categories
-        SET parent_id=(
-            SELECT parent.id
-            FROM Categories child
-            JOIN Categories parent ON child.parent_id = parent.id
-            WHERE child.rest_language_id=(${restaurantLanguage}) AND parent.parent_id IS NULL
-        )
+        SET parent_id=NULL
         WHERE id=(${id})`;
     }
     return sql`

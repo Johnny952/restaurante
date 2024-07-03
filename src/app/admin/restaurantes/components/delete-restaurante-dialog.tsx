@@ -1,6 +1,6 @@
-import { deleteRestaurante } from "@/app/api/restaurantes/delete-restaurante";
-import { getRestauranteByID } from "@/app/api/restaurantes/get-restaurante";
-import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
+import { del } from "@/app/api/restaurants/delete";
+import { getByID } from "@/app/api/restaurants/get";
+import { RestaurantInterface } from "@/app/api/restaurants/index.types";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
@@ -26,13 +26,19 @@ export default function DeleteRestauranteDialog({
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
-    const [oldData, setOldData] = useState<RestauranteInterface | null>(null);
+    const [oldData, setOldData] = useState<RestaurantInterface | null>(null);
+
+    async function tryDeleteImg(img: string | undefined | null) {
+        if (img) {
+            deleteImage(img);
+        }
+    }
 
     useEffect(() => {
         if (selected && selected !== "") {
             const fetchData = async () => {
                 setLoading(true);
-                return getRestauranteByID((selected || "").toString());
+                return getByID((selected || "").toString());
             };
 
             fetchData()
@@ -71,12 +77,11 @@ export default function DeleteRestauranteDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            if (oldData && oldData.image) {
-                                await deleteImage(oldData?.image);
-                            }
-                            await deleteRestaurante(
-                                (selected || "").toString()
-                            );
+                            await Promise.all([
+                                tryDeleteImg(oldData?.image),
+                                tryDeleteImg(oldData?.background),
+                                del((selected || "").toString()),
+                            ]);
                             snackSuccess(`Restaurante ${selected} eliminado`);
                         } catch (error) {
                             snackError(`Ocurrió un error: ${error}`);

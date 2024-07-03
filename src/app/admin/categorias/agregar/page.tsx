@@ -20,10 +20,10 @@ import { ChangeEvent, useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import { useRouter } from "next/navigation";
-import { getAllLanguages } from "@/app/api/restaurantes-languages/get-restaurantes-languages";
-import { getAllRestaurants } from "@/app/api/restaurantes/get-restaurante";
+import { getAllByRestaurant } from "@/app/api/languages/get";
+import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
 import toKebabCase from "@/helpers/to-kebab-case";
-import { getAllParentsByRestLang as getAllCats } from "@/app/api/categories/get-categories";
+import { getAllParentsByRestLang as getAllCats } from "@/app/api/categories/get";
 import UploaderWithCrop from "@/components/uploader-with-crop";
 import { putImage } from "@/app/api/upload/put-image";
 import { put } from "@/app/api/categories/put";
@@ -64,7 +64,7 @@ export default function AddCategoryPage() {
         restaurant: "",
         language: "",
         link: "",
-        parent: "root",
+        parent: "",
     });
     const [file, setFile] = useState<File | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
@@ -87,7 +87,7 @@ export default function AddCategoryPage() {
     ) => {
         if (e.target.name === "restaurant") {
             setLoading(true);
-            const languages = await getAllLanguages(e.target.value);
+            const languages = await getAllByRestaurant(e.target.value);
 
             setAllLanguages(languages);
             setLoading(false);
@@ -141,7 +141,7 @@ export default function AddCategoryPage() {
             );
             const url = await putImage(
                 file,
-                `restaurante/${restaurantLink[0].link}/categories/${formData.link}/.png`
+                `restaurante/${restaurantLink[0].link}/categories/${formData.link}.png`
             );
             if (url === null) {
                 throw Error("La imagen no tiene enlace");

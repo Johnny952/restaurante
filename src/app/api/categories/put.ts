@@ -11,24 +11,18 @@ export async function put(
 ) {
     if (!parent) {
         return sql`
-        INSERT INTO Categories (name, link, parent_id, image, rest_language_id)
-        VALUES ((${name}), (${link}), (
-            SELECT parent.id
-            FROM Categories child
-            JOIN Rest_Languages rl ON child.rest_language_id = rl.id
-            JOIN Categories parent ON child.parent_id = parent.id
-            WHERE rl.restaurante_id = (${restaurant}) AND rl.language_id = (${language}) AND parent.parent_id IS NULL;
-        ), (${image}), (
+        INSERT INTO Categories (name, link, parent_id, image, restaurant_language_id)
+        VALUES ((${name}), (${link}), NULL, (${image}), (
             SELECT id
-            FROM Rest_Languages
-            WHERE language_id=(${language}) AND restaurante_id=(${restaurant})
+            FROM Restaurant_Languages
+            WHERE language_id=(${language}) AND restaurant_id=(${restaurant})
         ));`;
     }
     return sql`
-    INSERT INTO Categories (name, link, parent_id, image, rest_language_id)
+    INSERT INTO Categories (name, link, parent_id, image, restaurant_language_id)
     VALUES ((${name}), (${link}), (${parent}), (${image}), (
         SELECT id
-        FROM Rest_Languages
-        WHERE language_id = (${language}) AND restaurante_id = (${restaurant})
+        FROM Restaurant_Languages
+        WHERE language_id = (${language}) AND restaurant_id = (${restaurant})
     ));`;
 }

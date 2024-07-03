@@ -1,7 +1,4 @@
-import {
-    updateLanguageID,
-    updateLangugeName,
-} from "@/app/api/languages/update-language";
+import { updateID } from "@/app/api/languages/update";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -37,7 +34,7 @@ export default function EditIDDialog({
     async function onConfirmName() {
         setLoading(true);
         try {
-            await updateLanguageID(id, idValue);
+            await updateID(id, idValue);
             snackSuccess("ID de Lenguage cambiado");
             setIdValue("");
             onClose(idValue);

@@ -1,4 +1,4 @@
-import { deleteDish } from "@/app/api/dishes/delete";
+import { del } from "@/app/api/dishes/delete";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -46,7 +46,7 @@ export default function DeleteDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await deleteDish((selected || "").toString());
+                            await del((selected || "").toString());
                             snackSuccess(`Plato ${selected} eliminada`);
                         } catch (error) {
                             snackError(`Ocurrió un error: ${error}`);

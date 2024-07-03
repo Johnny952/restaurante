@@ -9,10 +9,7 @@ import pathWithQueries from "@/helpers/path-with-queries";
 import { GridColDef } from "@mui/x-data-grid";
 import filterOperators from "../components/base-table/filter-operators";
 import { CategoryTable } from "@/app/api/categories/index.types";
-import {
-    getCountCategories,
-    listCategories,
-} from "@/app/api/categories/get-categories";
+import { getCount, list } from "@/app/api/categories/get";
 import DeleteCategoryDialog from "./components/delete-dialog";
 
 const breadcrumbs = [
@@ -108,7 +105,7 @@ export default function AdminCategoriesPage(props: {
         const fetchData = async () => {
             setTableLoading(true);
             return Promise.all([
-                listCategories({
+                list({
                     page,
                     size,
                     sortBy,
@@ -117,7 +114,7 @@ export default function AdminCategoriesPage(props: {
                     filterOperator,
                     filterValue,
                 }),
-                getCountCategories(filterField, filterOperator, filterValue),
+                getCount(filterField, filterOperator, filterValue),
             ]);
         };
 

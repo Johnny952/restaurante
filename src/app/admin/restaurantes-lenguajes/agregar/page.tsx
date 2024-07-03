@@ -15,9 +15,9 @@ import { useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import { useRouter } from "next/navigation";
-import { getAllRestaurants } from "@/app/api/restaurantes/get-restaurante";
-import { getAllLanguages } from "@/app/api/languages/get-languages";
-import { putRestLang } from "@/app/api/restaurantes-languages/put";
+import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
+import { getAll as getAllLanguages } from "@/app/api/languages/get";
+import { put } from "@/app/api/restaurants-languages/put";
 
 const breadcrumbs = [
     {
@@ -75,7 +75,7 @@ export default function AddRestLanguagePage() {
     async function onConfirmAdd() {
         setLoading(true);
         try {
-            await putRestLang(restaurant, language);
+            await put(restaurant, language);
             goBack();
             snackSuccess("Restaurante creado");
         } catch (error) {

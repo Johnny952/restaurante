@@ -1,5 +1,5 @@
-import { getAllLanguages } from "@/app/api/languages/get-languages";
-import { updateRestLangLanguage } from "@/app/api/restaurantes-languages/update";
+import { getAll as getAllLanguages } from "@/app/api/languages/get";
+import { updateLanguage } from "@/app/api/restaurants-languages/update";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -8,6 +8,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormControl,
     InputLabel,
     MenuItem,
     Select,
@@ -34,7 +35,7 @@ export default function EditLanguageDialog({
     async function onConfirmLanguage() {
         setLoading(true);
         try {
-            await updateRestLangLanguage(id, languageValue);
+            await updateLanguage(id, languageValue);
             snackSuccess("Lenguaje cambiado");
             setLanguageValue("");
             onClose();
@@ -66,20 +67,23 @@ export default function EditLanguageDialog({
         <Dialog open={open} aria-labelledby="edit-language-title">
             <DialogTitle id="edit-language-title">Editar Lenguaje</DialogTitle>
             <DialogContent>
-                <InputLabel id="language-selector-label">Lenguaje</InputLabel>
-                <Select
-                    labelId="language-selector-label"
-                    id="language-selector"
-                    value={languageValue}
-                    label="Restaurante"
-                    onChange={(e) => setLanguageValue(e.target.value)}
-                >
-                    {allLanguages.map((rest) => (
-                        <MenuItem key={rest.id} value={rest.id}>
-                            {rest.name}
-                        </MenuItem>
-                    ))}
-                </Select>
+                <FormControl sx={{ width: '100%' }}>
+                    <InputLabel id="language-selector-label">Lenguaje</InputLabel>
+                    <Select
+                        labelId="language-selector-label"
+                        id="language-selector"
+                        value={languageValue}
+                        label="Restaurante"
+                        onChange={(e) => setLanguageValue(e.target.value)}
+                        fullWidth
+                    >
+                        {allLanguages.map((rest) => (
+                            <MenuItem key={rest.id} value={rest.id}>
+                                {rest.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <DialogActions>
                     <Button
                         onClick={() => {

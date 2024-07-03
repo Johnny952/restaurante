@@ -1,7 +1,5 @@
 import { updatePrice } from "@/app/api/dishes/update";
-import { updateRestauranteName } from "@/app/api/restaurantes/update-restaurante";
 import formatPrice from "@/helpers/format-price";
-import toKebabCase from "@/helpers/to-kebab-case";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -14,8 +12,6 @@ import {
     FormHelperText,
     Input,
     InputLabel,
-    SelectChangeEvent,
-    TextField,
 } from "@mui/material";
 import { ChangeEvent, useState } from "react";
 

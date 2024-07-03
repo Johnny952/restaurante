@@ -6,7 +6,7 @@ import { ChangeEvent, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import { useRouter } from "next/navigation";
-import { putLanguage } from "@/app/api/languages/put-language";
+import { put } from "@/app/api/languages/put";
 
 const breadcrumbs = [
     {
@@ -45,7 +45,7 @@ export default function AddLanguagePage() {
     async function onConfirmAdd() {
         setLoading(true);
         try {
-            await putLanguage(idValue, nameValue);
+            await put(idValue, nameValue);
             goBack();
             snackSuccess("Lenguaje creado");
         } catch (error) {

@@ -4,13 +4,10 @@ import LinkBreadcrumbs from "@/components/link-breadcrumbs";
 import { GridColDef } from "@mui/x-data-grid";
 import filterOperators from "../components/base-table/filter-operators";
 import { useEffect, useState } from "react";
-import { RestauranteInterface } from "@/app/api/restaurantes/index.types";
+import { RestaurantInterface } from "@/app/api/restaurants/index.types";
 import { usePathname, useRouter } from "next/navigation";
 import useSnackStore from "@/store/snackbar-store";
-import {
-    getCountRestaurantes,
-    listRestaurantes,
-} from "@/app/api/restaurantes/get-restaurante";
+import { getCount, list } from "@/app/api/restaurants/get";
 import pathWithQueries from "@/helpers/path-with-queries";
 import BaseTable from "../components/base-table";
 import DeleteRestauranteDialog from "./components/delete-restaurante-dialog";
@@ -44,6 +41,12 @@ const columns: GridColDef[] = [
         width: 300,
         filterable: false,
     },
+    {
+        field: "background",
+        headerName: "Fondo",
+        width: 300,
+        filterable: false,
+    },
 ];
 
 export default function AdminRestaurantePage(props: {
@@ -74,7 +77,7 @@ export default function AdminRestaurantePage(props: {
     } = props.searchParams;
 
     const [rowCount, setRowCount] = useState<number>(0);
-    const [rows, setRows] = useState<RestauranteInterface[]>([]);
+    const [rows, setRows] = useState<RestaurantInterface[]>([]);
     const [tableLoading, setTableLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
@@ -84,7 +87,7 @@ export default function AdminRestaurantePage(props: {
         const fetchData = async () => {
             setTableLoading(true);
             return Promise.all([
-                listRestaurantes({
+                list({
                     page,
                     size,
                     sortBy,
@@ -93,7 +96,7 @@ export default function AdminRestaurantePage(props: {
                     filterOperator,
                     filterValue,
                 }),
-                getCountRestaurantes(filterField, filterOperator, filterValue),
+                getCount(filterField, filterOperator, filterValue),
             ]);
         };
 
@@ -148,7 +151,7 @@ export default function AdminRestaurantePage(props: {
                 }}
             >
                 <BaseTable
-                    tableName="Lenguajes"
+                    tableName="Restaurantes"
                     rowCount={rowCount}
                     columns={columns}
                     rows={rows}

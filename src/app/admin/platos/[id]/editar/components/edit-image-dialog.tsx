@@ -1,4 +1,3 @@
-import { updateRestauranteLogo } from "@/app/api/restaurantes/update-restaurante";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";
@@ -14,7 +13,7 @@ import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import UploaderWithCrop from "@/components/uploader-with-crop";
 import { DishTable } from "@/app/api/dishes/index.types";
-import { getDishById } from "@/app/api/dishes/get-dishes";
+import { getById } from "@/app/api/dishes/get";
 import { generateDishLink } from "@/app/api/helpers/image-links";
 import { updateImage } from "@/app/api/dishes/update";
 
@@ -35,7 +34,7 @@ export default function EditImageDialog({
 
     useEffect(() => {
         const fetchData = async () => {
-            return getDishById(id);
+            return getById(id);
         };
 
         fetchData()
@@ -58,7 +57,7 @@ export default function EditImageDialog({
                 const tryAwait = async () => {
                     try {
                         await deleteImage(dish.image);
-                    } catch (error) {}
+                    } catch (error) { }
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,

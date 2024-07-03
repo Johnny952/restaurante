@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import EditLayout from "@/app/admin/components/layouts/edit";
-import { getDishById } from "@/app/api/dishes/get-dishes";
+import { getById } from "@/app/api/dishes/get";
 import { DishTable } from "@/app/api/dishes/index.types";
 import EditNameDialog from "./components/edit-name-dialog";
 import EditImageDialog from "./components/edit-image-dialog";
@@ -61,7 +61,7 @@ export default function EditRestaurantePage({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getDishById(id);
+            return getById(id);
         };
 
         fetchData()
@@ -128,10 +128,11 @@ export default function EditRestaurantePage({
                     link: "editDescription",
                 },
             ]}
-            image={{
+            images={[{
                 src: oldData?.image,
                 link: "editImage",
-            }}
+                name: "Imagen"
+            }]}
         >
             <EditNameDialog
                 open={Boolean(editName)}

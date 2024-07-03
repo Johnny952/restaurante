@@ -8,11 +8,8 @@ import useSnackStore from "@/store/snackbar-store";
 import pathWithQueries from "@/helpers/path-with-queries";
 import { GridColDef } from "@mui/x-data-grid";
 import filterOperators from "../components/base-table/filter-operators";
-import { RestauranteLanguageInterface } from "@/app/api/restaurantes-languages/index.types";
-import {
-    getCountRestLangs,
-    listRestLangs,
-} from "@/app/api/restaurantes-languages/get-restaurantes-languages";
+import { RestaurantLanguageInterface } from "@/app/api/restaurants-languages/index.types";
+import { getCount, list } from "@/app/api/restaurants-languages/get";
 import DeleteRestLangDialog from "./components/delete-rest-lang-dialog";
 
 const breadcrumbs = [
@@ -33,13 +30,13 @@ const columns: GridColDef[] = [
         filterOperators,
     },
     {
-        field: "rest_name",
+        field: "restaurant_name",
         headerName: "Restaurante",
         width: 150,
         filterOperators,
     },
     {
-        field: "lang_name",
+        field: "language_name",
         headerName: "Lenguaje",
         width: 150,
         filterOperators,
@@ -74,7 +71,7 @@ export default function AdminRestLanguagesPage(props: {
     } = props.searchParams;
 
     const [rowCount, setRowCount] = useState<number>(0);
-    const [rows, setRows] = useState<RestauranteLanguageInterface[]>([]);
+    const [rows, setRows] = useState<RestaurantLanguageInterface[]>([]);
     const [tableLoading, setTableLoading] = useState(true);
     const router = useRouter();
     const pathname = usePathname();
@@ -84,7 +81,7 @@ export default function AdminRestLanguagesPage(props: {
         const fetchData = async () => {
             setTableLoading(true);
             return Promise.all([
-                listRestLangs({
+                list({
                     page,
                     size,
                     sortBy,
@@ -93,7 +90,7 @@ export default function AdminRestLanguagesPage(props: {
                     filterOperator,
                     filterValue,
                 }),
-                getCountRestLangs(filterField, filterOperator, filterValue),
+                getCount(filterField, filterOperator, filterValue),
             ]);
         };
 

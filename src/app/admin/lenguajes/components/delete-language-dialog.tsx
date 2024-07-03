@@ -1,4 +1,4 @@
-import { deleteLanguage } from "@/app/api/languages/delete-language";
+import { del } from "@/app/api/languages/delete";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -46,7 +46,7 @@ export default function DeleteLanguageDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await deleteLanguage((selected || "").toString());
+                            await del((selected || "").toString());
                             snackSuccess(`Restaurante ${selected} eliminado`);
                         } catch (error) {
                             snackError(`Ocurrió un error: ${error}`);

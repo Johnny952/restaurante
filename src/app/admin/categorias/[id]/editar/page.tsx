@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import { CategoryTable } from "@/app/api/categories/index.types";
-import { getCategoryById } from "@/app/api/categories/get-categories";
+import { getById } from "@/app/api/categories/get";
 import EditLayout from "@/app/admin/components/layouts/edit";
 import EditNameDialog from "./components/edit-name-dialog";
 import EditRestLangDialog from "./components/edit-rest-lang-dialog";
@@ -25,7 +25,7 @@ const breadcrumbs = [
     },
 ];
 
-export default function EditRestaurantePage({
+export default function EditRestaurantPage({
     params: { id },
     searchParams: { editName, editLang, editRestaurant, editParent, editImage },
 }: {
@@ -38,7 +38,7 @@ export default function EditRestaurantePage({
         editImage?: string;
     };
 }) {
-    const [oldData, setOldData] = useState<CategoryTable | null>(null);
+    const [oldData, setOldData] = useState<CategoryTable | null>();
     const router = useRouter();
     const pathname = usePathname();
 
@@ -48,7 +48,7 @@ export default function EditRestaurantePage({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getCategoryById(id);
+            return getById(id);
         };
 
         fetchData()
@@ -95,10 +95,11 @@ export default function EditRestaurantePage({
                     link: "editParent",
                 },
             ]}
-            image={{
+            images={[{
                 src: oldData?.image,
                 link: "editImage",
-            }}
+                name: "Imagen"
+            }]}
         >
             <EditNameDialog
                 open={Boolean(editName)}

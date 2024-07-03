@@ -1,7 +1,7 @@
 "use server";
 import { sql } from "@vercel/postgres";
 
-export async function deleteCategory(id: string) {
+export async function del(id: string) {
     await sql.query(`
         START TRANSACTION;
 

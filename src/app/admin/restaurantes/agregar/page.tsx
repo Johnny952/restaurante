@@ -1,15 +1,24 @@
 "use client";
 import LinkBreadcrumbs from "@/components/link-breadcrumbs";
-import { Box, Button, Grid, Paper, TextField, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    Divider,
+    Grid,
+    Paper,
+    TextField,
+    Typography,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { ChangeEvent, useState } from "react";
 import toKebabCase from "@/helpers/to-kebab-case";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import { putImage } from "@/app/api/upload/put-image";
-import { putRestaurante } from "@/app/api/restaurantes/put-restaurante";
+import { put } from "@/app/api/restaurants/put";
 import Uploader from "../../../../components/uploader";
 import { useRouter } from "next/navigation";
+import UploaderWithCrop from "@/components/uploader-with-crop";
 
 const breadcrumbs = [
     {
@@ -25,10 +34,11 @@ const breadcrumbs = [
     },
 ];
 
-export default function AddRestaurantePage() {
+export default function AddRestaurantPage() {
     const [nameValue, setNameValue] = useState("");
     const [linkValue, setLinkValue] = useState("");
-    const [file, setfile] = useState<File | null>(null);
+    const [file, setFile] = useState<File | null>(null);
+    const [background, setBackground] = useState<File | null>(null);
     const router = useRouter();
 
     function onNameValueChange(
@@ -49,15 +59,24 @@ export default function AddRestaurantePage() {
         if (file) {
             setLoading(true);
             try {
-                const url = await putImage(
-                    file,
-                    `restaurante/${linkValue}/logo.png`
-                );
+                let logoUrl;
+                let bgUrl;
+                if (background) {
+                    [logoUrl, bgUrl] = await Promise.all([
+                        putImage(file, `restaurant/${linkValue}/logo.png`),
+                        putImage(background, `restaurant/${linkValue}/bg.png`),
+                    ]);
+                } else {
+                    logoUrl = await putImage(
+                        file,
+                        `restaurant/${linkValue}/logo.png`
+                    );
+                }
 
-                if (url === null) {
+                if (logoUrl === null) {
                     throw Error("La imagen no tiene enlace");
                 }
-                await putRestaurante(nameValue, linkValue, url);
+                await put(nameValue, linkValue, logoUrl, bgUrl);
                 goBack();
                 snackSuccess("Restaurante creado");
             } catch (error) {
@@ -119,7 +138,19 @@ export default function AddRestaurantePage() {
                     </Grid>
 
                     <Grid item xs={12}>
-                        <Uploader setFile={setfile} />
+                        <Uploader setFile={setFile} />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <Divider />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Typography variant="body1">
+                            Seleccionar Fondo
+                        </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <UploaderWithCrop setCroppedFile={setBackground} />
                     </Grid>
                     <Grid item xs={12}>
                         <Box display="flex">

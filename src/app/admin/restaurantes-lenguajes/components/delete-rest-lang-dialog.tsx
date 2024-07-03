@@ -1,4 +1,4 @@
-import { deleteRestLang } from "@/app/api/restaurantes-languages/delete-rest-lang";
+import { del } from "@/app/api/restaurants-languages/delete";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -46,7 +46,7 @@ export default function DeleteRestLangDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await deleteRestLang((selected || "").toString());
+                            await del((selected || "").toString());
                             snackSuccess(
                                 `Lenguaje de restaurante ${selected} eliminado`
                             );

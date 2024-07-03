@@ -1,5 +1,5 @@
-import { updateRestLangRestaurant } from "@/app/api/restaurantes-languages/update";
-import { getAllRestaurants } from "@/app/api/restaurantes/get-restaurante";
+import { updateRestaurant } from "@/app/api/restaurants-languages/update";
+import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -8,6 +8,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    FormControl,
     InputLabel,
     MenuItem,
     Select,
@@ -34,7 +35,7 @@ export default function EditRestaurantDialog({
     async function onConfirmRestaurant() {
         setLoading(true);
         try {
-            await updateRestLangRestaurant(id, restaurantValue);
+            await updateRestaurant(id, restaurantValue);
             snackSuccess("Restaurante cambiado");
             setRestaurantValue("");
             onClose();
@@ -68,22 +69,25 @@ export default function EditRestaurantDialog({
                 Editar Restaurante
             </DialogTitle>
             <DialogContent>
-                <InputLabel id="restaurant-selector-label">
-                    Restaurante
-                </InputLabel>
-                <Select
-                    labelId="restaurant-selector-label"
-                    id="restaurant-selector"
-                    value={restaurantValue}
-                    label="Restaurante"
-                    onChange={(e) => setRestaurantValue(e.target.value)}
-                >
-                    {allRestaurants.map((rest) => (
-                        <MenuItem key={rest.id} value={rest.id}>
-                            {rest.name}
-                        </MenuItem>
-                    ))}
-                </Select>
+                <FormControl sx={{ width: '100%' }}>
+                    <InputLabel id="restaurant-selector-label">
+                        Restaurante
+                    </InputLabel>
+                    <Select
+                        labelId="restaurant-selector-label"
+                        id="restaurant-selector"
+                        value={restaurantValue}
+                        label="Restaurante"
+                        fullWidth
+                        onChange={(e) => setRestaurantValue(e.target.value)}
+                    >
+                        {allRestaurants.map((rest) => (
+                            <MenuItem key={rest.id} value={rest.id}>
+                                {rest.name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <DialogActions>
                     <Button
                         onClick={() => {

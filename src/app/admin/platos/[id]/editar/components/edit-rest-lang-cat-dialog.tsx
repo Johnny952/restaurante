@@ -15,9 +15,9 @@ import {
     SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllLanguages } from "@/app/api/restaurantes-languages/get-restaurantes-languages";
-import { getAllRestaurants } from "@/app/api/restaurantes/get-restaurante";
-import { getAllChildrenByRestLang as getAllCats } from "@/app/api/categories/get-categories";
+import { getAllByRestaurant } from "@/app/api/languages/get";
+import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
+import { getAllAvailableToDishByRestLang as getAllCats } from "@/app/api/categories/get";
 import { updateCategory } from "@/app/api/dishes/update";
 
 interface FormData {
@@ -77,7 +77,7 @@ export default function EditRestLangDialog({
         const { name, value } = e.target;
         if (name === "restaurant") {
             setLoading(true);
-            const languages = await getAllLanguages(value);
+            const languages = await getAllByRestaurant(value);
             setAllLanguages(languages);
             setLoading(false);
             setFormData({ restaurant: value, language: "", category: "" });

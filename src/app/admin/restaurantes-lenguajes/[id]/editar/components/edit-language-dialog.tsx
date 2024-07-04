@@ -67,8 +67,10 @@ export default function EditLanguageDialog({
         <Dialog open={open} aria-labelledby="edit-language-title">
             <DialogTitle id="edit-language-title">Editar Lenguaje</DialogTitle>
             <DialogContent>
-                <FormControl sx={{ width: '100%' }}>
-                    <InputLabel id="language-selector-label">Lenguaje</InputLabel>
+                <FormControl sx={{ width: "100%" }}>
+                    <InputLabel id="language-selector-label">
+                        Lenguaje
+                    </InputLabel>
                     <Select
                         labelId="language-selector-label"
                         id="language-selector"

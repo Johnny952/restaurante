@@ -57,7 +57,7 @@ export default function EditImageDialog({
                 const tryAwait = async () => {
                     try {
                         await deleteImage(dish.image);
-                    } catch (error) { }
+                    } catch (error) {}
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,

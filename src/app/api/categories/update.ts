@@ -23,10 +23,7 @@ export async function updateRestLang(
     WHERE id=(${id})`;
 }
 
-export async function updateParent(
-    id: string,
-    parent: string,
-) {
+export async function updateParent(id: string, parent: string) {
     if (!parent) {
         return sql`
         UPDATE Categories

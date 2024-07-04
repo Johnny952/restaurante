@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import type { } from "@redux-devtools/extension";
+import type {} from "@redux-devtools/extension";
 
 interface LoadState {
     loading: boolean;

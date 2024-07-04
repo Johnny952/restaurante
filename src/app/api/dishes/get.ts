@@ -43,7 +43,7 @@ export async function getByLink(
     dishLink: string
 ) {
     return sql<DishInterface>`
-        SELECT d.name as name, d.link as link, d.image as image, d.description as description, d.price as price
+        SELECT d.id as id, d.name as name, d.link as link, d.image as image, d.description as description, d.price as price
         FROM Restaurants r
         JOIN Restaurant_Languages rl ON r.id = rl.restaurant_id
         JOIN Categories c ON rl.id = c.restaurant_language_id

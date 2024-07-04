@@ -2,13 +2,20 @@
 import { ImageAsync } from "@/components/image-async";
 import { motion } from "framer-motion";
 
-export default function LogoAnimated({ image }: { image: string }) {
+export default function LogoAnimated({
+    image,
+    loading = false,
+}: {
+    image: string;
+    loading?: boolean;
+}) {
     return (
         <motion.div
             animate={{ y: [-25, 0], opacity: [0, 1] }}
             transition={{ duration: 0.8 }}
         >
             <ImageAsync
+                loadingImg={loading}
                 src={image}
                 alt="Logo"
                 style={{

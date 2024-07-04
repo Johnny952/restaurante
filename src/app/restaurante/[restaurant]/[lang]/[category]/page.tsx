@@ -32,7 +32,12 @@ export default async function CategoryPage({
                 <Grid container spacing={2} rowSpacing={2}>
                     {dishes.map((dish, idx) => (
                         <Grid item xs={12} sm={6} md={4} key={idx}>
-                            <Dish {...dish} />
+                            <Dish
+                                {...dish}
+                                category={category}
+                                restaurant={restaurant}
+                                lang={lang}
+                            />
                         </Grid>
                     ))}
                 </Grid>

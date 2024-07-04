@@ -6,7 +6,7 @@ import { sql } from "@vercel/postgres";
  * @param id - The restaurant language identifier
  */
 export async function del(id: string) {
-  await sql.query(`
+    await sql.query(`
         START TRANSACTION;
 
         DELETE FROM Dishes

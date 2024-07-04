@@ -9,15 +9,16 @@ export const ImageAsync = ({
     alt,
     radius = "0",
     loadingImg,
+    objectFit,
     ...props
 }: ImageProps & { radius?: string; loadingImg?: boolean }) => {
     const [reveal, setReveal] = useState<boolean>(false);
-    const loading = reveal || loadingImg;
-    const loader = loading ? "none" : "inline-block";
+    const loading = !reveal || loadingImg;
+    const loader = !loading ? "none" : "inline-block";
 
     return (
         <Box>
-            <Collapse in={loading}>
+            <Collapse in={!loading}>
                 {src && src !== "" ? (
                     <Image
                         src={src}
@@ -30,6 +31,7 @@ export const ImageAsync = ({
                         onLoad={() => {
                             setReveal(true);
                         }}
+                        objectFit={objectFit}
                     />
                 ) : null}
             </Collapse>

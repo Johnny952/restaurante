@@ -11,7 +11,7 @@ import { TableParams } from "../helpers/index.types";
  */
 export async function getByLink(link: string) {
     return sql<RestaurantInterface>`
-        SELECT name, link, image
+        SELECT name, link, image, background
         FROM Restaurants
         WHERE link=(${link})
     `;

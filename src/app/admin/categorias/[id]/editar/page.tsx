@@ -95,11 +95,13 @@ export default function EditRestaurantPage({
                     link: "editParent",
                 },
             ]}
-            images={[{
-                src: oldData?.image,
-                link: "editImage",
-                name: "Imagen"
-            }]}
+            images={[
+                {
+                    src: oldData?.image,
+                    link: "editImage",
+                    name: "Imagen",
+                },
+            ]}
         >
             <EditNameDialog
                 open={Boolean(editName)}

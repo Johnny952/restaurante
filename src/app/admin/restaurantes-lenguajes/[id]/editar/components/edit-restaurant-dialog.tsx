@@ -69,7 +69,7 @@ export default function EditRestaurantDialog({
                 Editar Restaurante
             </DialogTitle>
             <DialogContent>
-                <FormControl sx={{ width: '100%' }}>
+                <FormControl sx={{ width: "100%" }}>
                     <InputLabel id="restaurant-selector-label">
                         Restaurante
                     </InputLabel>

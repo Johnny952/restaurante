@@ -10,6 +10,9 @@ import LanguageIcon from "@mui/icons-material/Language";
 import { purple } from "@mui/material/colors";
 import { usePathname, useRouter } from "next/navigation";
 import FavoriteIcon from "@mui/icons-material/Favorite";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import ShoppingCart from "./shopping-cart";
+import FeedbackDrawer from "./feedback";
 
 const CustomBox = styled(Box)<BoxProps>(({ theme }) => ({
     backgroundColor: "rgba(0, 0, 0, 0)",
@@ -55,6 +58,8 @@ export default function MenuButton() {
     const pathName = usePathname();
 
     const [open, setOpen] = React.useState(false);
+    const [openFav, setOpenFav] = React.useState(false);
+    const [openFeed, setOpenFeed] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -81,7 +86,12 @@ export default function MenuButton() {
         {
             label: "Favoritos",
             icon: <FavoriteIcon />,
-            onClick: () => { },
+            onClick: () => setOpenFav(true),
+        },
+        {
+            label: "Feedback",
+            icon: <FeedbackIcon />,
+            onClick: () => setOpenFeed(true),
         },
         // {
         //     label: 'Promociones',
@@ -100,7 +110,13 @@ export default function MenuButton() {
                 {open ? <CloseIcon /> : <MenuIcon />}
             </CustomIconButton>
 
-            <Popper id={id} open={open} anchorEl={anchorEl} transition sx={{ zIndex: 1 }}>
+            <Popper
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                transition
+                sx={{ zIndex: 1 }}
+            >
                 {({ TransitionProps }) => (
                     <Fade {...TransitionProps} timeout={350}>
                         <CustomBox>
@@ -111,6 +127,11 @@ export default function MenuButton() {
                     </Fade>
                 )}
             </Popper>
+            <ShoppingCart open={openFav} onClose={() => setOpenFav(false)} />
+            <FeedbackDrawer
+                open={openFeed}
+                onClose={() => setOpenFeed(false)}
+            />
         </Box>
     );
 }

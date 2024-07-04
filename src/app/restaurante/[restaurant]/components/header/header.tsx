@@ -1,21 +1,44 @@
-import { Box, Container, Divider, Grid, Typography } from "@mui/material";
+"use client";
+import { Box, Container, Divider, Grid } from "@mui/material";
 import { HeaderInterface } from "./header.d";
 import { getByLink } from "@/app/api/restaurants/get";
 import { notFound } from "next/navigation";
 import LogoAnimated from "./logo-animated";
 import TitleAnimated from "./title-animated";
+import { useEffect, useState } from "react";
+import { RestaurantInterface } from "@/app/api/restaurants/index.types";
+import useSnackStore from "@/store/snackbar-store";
+import ContentLoader from "react-content-loader";
 
 const logoWidth = 500;
 const logoHeight = 500;
 
-export default async function RestaurantHeader({
+export default function RestaurantHeader({
     title = "LANGUAGES",
-    restaurant,
+    restaurant: restaurantLink,
+    loading = false,
 }: HeaderInterface) {
-    const restauranteInformation = (await getByLink(restaurant)).rows;
-    if (restauranteInformation.length === 0) {
-        notFound();
-    }
+    const [restaurant, setRestaurant] = useState<RestaurantInterface>();
+    const snackError = useSnackStore((state) => state.setOpenError);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            return getByLink(restaurantLink);
+        };
+
+        fetchData()
+            .then((data) => {
+                if (data.rows.length === 0) {
+                    notFound();
+                }
+                setRestaurant(data.rows[0]);
+            })
+            .catch((error) => {
+                snackError(`Ocurrió un error: ${error.toString()}`);
+            });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [restaurantLink]);
+
     return (
         <div
             style={{
@@ -31,7 +54,8 @@ export default async function RestaurantHeader({
                                 height={Math.floor(logoHeight / 2)}
                             >
                                 <LogoAnimated
-                                    image={restauranteInformation[0].image}
+                                    loading={loading}
+                                    image={restaurant?.image || ""}
                                 />
                             </Box>
                         </Box>
@@ -42,7 +66,27 @@ export default async function RestaurantHeader({
                             justifyContent="center"
                             textAlign="center"
                         >
-                            <TitleAnimated title={title} />
+                            {loading ? (
+                                <ContentLoader
+                                    speed={2}
+                                    width={440}
+                                    height={32}
+                                    viewBox="0 0 440 32"
+                                    backgroundColor="#000000"
+                                    foregroundColor="#ecebeb"
+                                >
+                                    <rect
+                                        x="0"
+                                        y="0"
+                                        rx="8"
+                                        ry="8"
+                                        width="440"
+                                        height="32"
+                                    />
+                                </ContentLoader>
+                            ) : (
+                                <TitleAnimated title={title} />
+                            )}
                         </Box>
                     </Grid>
                 </Grid>

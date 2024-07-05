@@ -1,18 +1,27 @@
-import { Box, Container, Grid, Typography } from "@mui/material";
-import Background from "../../components/background/background";
-import RestaurantHeader from "../../components/header/header";
-import MenuButton from "../components/menu-button";
-import BackButton from "./components/back-button";
+import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import Background from "../../../components/background/background";
+import RestaurantHeader from "../../../components/header/header";
+import MenuButton from "../../components/menu-button";
+import BackButton from "./back-button";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { purple } from "@mui/material/colors";
 import notFoundImg from "@/../public/not-found-dish.png";
+import Link from "next/link";
 
-export default function NotFound() {
+export default function NotFound({
+    restaurant,
+    backLink,
+    bgImage,
+}: {
+    restaurant: string;
+    backLink: string;
+    bgImage?: string;
+}) {
     return (
-        <Background image={notFoundImg.src}>
+        <Background image={bgImage || notFoundImg.src}>
             <RestaurantHeader
                 title="Categoría sin platos"
-                restaurant="johnny"
+                restaurant={restaurant}
                 loading={false}
             />
             <Container sx={{ paddingY: "60px" }}>
@@ -40,9 +49,22 @@ export default function NotFound() {
                                 ¡Ups! Categoría sin platos
                             </Typography>
                             <Typography variant="body1" sx={{ mb: 3 }}>
-                                Lo sentimos, los platos asociados a esta categoría no están
-                                disponible o no existen aún.
+                                Lo sentimos, los platos asociados a esta
+                                categoría no están disponible o no existen aún.
                             </Typography>
+                            <Link href={backLink} passHref>
+                                <Button
+                                    variant="contained"
+                                    sx={{
+                                        backgroundColor: purple[500],
+                                        ":hover": {
+                                            backgroundColor: purple[700],
+                                        },
+                                    }}
+                                >
+                                    Volver al menú
+                                </Button>
+                            </Link>
                         </Box>
                     </Grid>
                 </Grid>

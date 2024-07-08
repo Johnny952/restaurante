@@ -12,15 +12,19 @@ export default function NotFound({
     restaurant,
     backLink,
     bgImage,
+    title,
+    description,
 }: {
     restaurant: string;
     backLink: string;
     bgImage?: string;
+    title: string;
+    description?: string;
 }) {
     return (
         <Background image={bgImage || notFoundImg.src}>
             <RestaurantHeader
-                title="Categoría sin platos"
+                title={title}
                 restaurant={restaurant}
                 loading={false}
             />
@@ -46,11 +50,10 @@ export default function NotFound({
                                 sx={{ fontSize: 80, color: purple[500], mb: 2 }}
                             />
                             <Typography variant="h4" gutterBottom>
-                                ¡Ups! Categoría sin platos
+                                ¡Ups! {title}
                             </Typography>
                             <Typography variant="body1" sx={{ mb: 3 }}>
-                                Lo sentimos, los platos asociados a esta
-                                categoría no están disponible o no existen aún.
+                                {description}
                             </Typography>
                             <Link href={backLink} passHref>
                                 <Button

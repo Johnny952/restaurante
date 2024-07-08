@@ -9,8 +9,8 @@ import "@fontsource/roboto/700.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "Johnny pe",
-    description: "Restaurante de comida peruana",
+    title: "VirtualTable",
+    description: "Menús digitales y automatización para restaurantes",
 };
 
 export default function RootLayout({

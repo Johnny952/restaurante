@@ -9,17 +9,17 @@ import { purple } from "@mui/material/colors";
 import notFoundImg from "@/../public/not-found-dish.png";
 
 export default function NotFound({
-    restaurant,
+    image,
     backLink,
 }: {
-    restaurant: string;
+    image: string;
     backLink: string;
 }) {
     return (
         <Background image={notFoundImg.src}>
             <RestaurantHeader
                 title="Plato no encontrado"
-                restaurant={restaurant}
+                image={image}
                 loading={false}
             />
             <Container sx={{ paddingY: "60px" }}>

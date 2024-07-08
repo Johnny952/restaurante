@@ -9,23 +9,23 @@ import notFoundImg from "@/../public/not-found-dish.png";
 import Link from "next/link";
 
 export default function NotFound({
-    restaurant,
     backLink,
     bgImage,
     title,
     description,
+    image,
 }: {
-    restaurant: string;
     backLink: string;
     bgImage?: string;
     title: string;
     description?: string;
+    image: string;
 }) {
     return (
         <Background image={bgImage || notFoundImg.src}>
             <RestaurantHeader
                 title={title}
-                restaurant={restaurant}
+                image={image}
                 loading={false}
             />
             <Container sx={{ paddingY: "60px" }}>

@@ -9,25 +9,32 @@ import RestaurantHeader from "../../components/header/header";
 import MenuButton from "../components/menu-button";
 import BackButton from "./components/back-button";
 import NotFound from "./components/not-found-category";
+import { getBackground } from "@/app/api/restaurants/get";
 
 export default async function CategoryPage({
     params: { category, restaurant, lang },
 }: CategoryPageProps) {
-    const ds = await getByCategory(restaurant, lang, category);
-    const cat = await getByLink(restaurant, lang, category);
+    const [ds, cat, restaurantImages] = await Promise.all([
+        getByCategory(restaurant, lang, category),
+        getByLink(restaurant, lang, category),
+        getBackground(restaurant),
+    ])
+    const logo = restaurantImages[0].image
     if (cat.rows.length === 0) {
-        return (<NotFound
-            restaurant={restaurant}
-            backLink={`/restaurante/${restaurant}/${lang}`}
-            title="Categoría no encontrada"
-            description={"Lo sentimos, esta categoría aún no existe."}
-        />)
+        return (
+            <NotFound
+                image={logo}
+                backLink={`/restaurante/${restaurant}/${lang}`}
+                title="Categoría no encontrada"
+                description={"Lo sentimos, esta categoría aún no existe."}
+            />
+        )
     }
     const categoryInfo = cat.rows[0];
     if (ds.rows.length === 0) {
         return (
             <NotFound
-                restaurant={restaurant}
+                image={logo}
                 backLink={`/restaurante/${restaurant}/${lang}`}
                 bgImage={categoryInfo?.image}
                 title="Categoría sin platos"
@@ -41,7 +48,7 @@ export default async function CategoryPage({
         <Background image={categoryInfo?.image || ""}>
             <RestaurantHeader
                 title={toTitle(category)}
-                restaurant={restaurant}
+                image={logo}
             />
             <Container sx={{ paddingY: "60px" }}>
                 <Grid container spacing={2} rowSpacing={2}>

@@ -11,8 +11,10 @@ export default function LogoAnimated({
 }) {
     return (
         <motion.div
-            animate={{ y: [-25, 0], opacity: [0, 1] }}
-            transition={{ duration: 0.8 }}
+            animate={{
+                y: [-25, 0],
+                opacity: [0, 1],
+            }}
         >
             <ImageAsync
                 loadingImg={loading}

@@ -7,6 +7,7 @@ import { RestaurantPageProps } from "./page.d";
 import IdiomButton from "@/app/restaurante/[restaurant]/components/idiom-button";
 import toTitle from "@/helpers/to-title";
 import { getBackground } from "@/app/api/restaurants/get";
+import IdiomContainerWrapper from "./components/animation/idiom-container-wrapper";
 
 export default async function RestaurantPage({
     params: { restaurant },
@@ -20,22 +21,25 @@ export default async function RestaurantPage({
         notFound();
     }
     const mainBg = responses[1][0].background;
+    const logo = responses[1][0].image
 
     return (
         <Background image={mainBg}>
-            <RestaurantHeader restaurant={restaurant} />
+            <RestaurantHeader image={logo} />
             <Container>
-                <Box display="flex" justifyContent="center">
-                    <List sx={{ width: "100%" }}>
-                        {languages.map((idiom, idx) => (
-                            <IdiomButton
-                                key={idx}
-                                link={`${restaurant}/${idiom.link}`}
-                                name={toTitle(idiom.name) || ""}
-                            />
-                        ))}
-                    </List>
-                </Box>
+                <IdiomContainerWrapper>
+                    <Box display="flex" justifyContent="center">
+                        <List sx={{ width: "100%" }}>
+                            {languages.map((idiom, idx) => (
+                                <IdiomButton
+                                    key={idx}
+                                    link={`${restaurant}/${idiom.link}`}
+                                    name={toTitle(idiom.name) || ""}
+                                />
+                            ))}
+                        </List>
+                    </Box>
+                </IdiomContainerWrapper>
             </Container>
         </Background>
     );

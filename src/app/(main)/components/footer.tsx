@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
     Box,
     Container,
@@ -7,30 +7,30 @@ import {
     TextField,
     Button,
     Link,
-    IconButton
-} from '@mui/material';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import TwitterIcon from '@mui/icons-material/Twitter';
-import InstagramIcon from '@mui/icons-material/Instagram';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import { motion } from 'framer-motion';
+    IconButton,
+} from "@mui/material";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import { motion } from "framer-motion";
 
 const MotionBox = motion(Box);
 
 const Footer: React.FC = () => {
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log('Newsletter subscription submitted');
+        console.log("Newsletter subscription submitted");
     };
 
     return (
         <Box
             component="footer"
             sx={{
-                bgcolor: 'background.paper',
-                color: 'text.primary',
+                bgcolor: "background.paper",
+                color: "text.primary",
                 py: 6,
-                mt: 'auto',
+                mt: "auto",
             }}
         >
             <Container maxWidth="lg">
@@ -45,19 +45,24 @@ const Footer: React.FC = () => {
                                 Enlaces Rápidos
                             </Typography>
                             <Box>
-                                {['Inicio', 'Características', 'Precios', 'Contáctanos'].map((text) => (
+                                {[
+                                    "Inicio",
+                                    "Características",
+                                    "Precios",
+                                    "Contáctanos",
+                                ].map((text) => (
                                     <Link
                                         key={text}
                                         href="#"
                                         color="inherit"
                                         sx={{
-                                            display: 'block',
+                                            display: "block",
                                             mb: 1,
-                                            textDecoration: 'none',
-                                            '&:hover': {
-                                                color: 'primary.main',
-                                                textDecoration: 'underline'
-                                            }
+                                            textDecoration: "none",
+                                            "&:hover": {
+                                                color: "primary.main",
+                                                textDecoration: "underline",
+                                            },
                                         }}
                                     >
                                         {text}
@@ -76,7 +81,11 @@ const Footer: React.FC = () => {
                             <Typography variant="h6" gutterBottom>
                                 Suscríbete al Newsletter
                             </Typography>
-                            <Box component="form" onSubmit={handleSubmit} noValidate>
+                            <Box
+                                component="form"
+                                onSubmit={handleSubmit}
+                                noValidate
+                            >
                                 <TextField
                                     fullWidth
                                     margin="normal"
@@ -87,17 +96,17 @@ const Footer: React.FC = () => {
                                     autoComplete="email"
                                     variant="outlined"
                                     sx={{
-                                        bgcolor: 'background.default',
+                                        bgcolor: "background.default",
                                         borderRadius: 1,
-                                        '& .MuiOutlinedInput-root': {
-                                            '& fieldset': {
-                                                borderColor: 'primary.main',
+                                        "& .MuiOutlinedInput-root": {
+                                            "& fieldset": {
+                                                borderColor: "primary.main",
                                             },
-                                            '&:hover fieldset': {
-                                                borderColor: 'primary.light',
+                                            "&:hover fieldset": {
+                                                borderColor: "primary.light",
                                             },
-                                            '&.Mui-focused fieldset': {
-                                                borderColor: 'primary.main',
+                                            "&.Mui-focused fieldset": {
+                                                borderColor: "primary.main",
                                             },
                                         },
                                     }}
@@ -108,10 +117,10 @@ const Footer: React.FC = () => {
                                     variant="contained"
                                     sx={{
                                         mt: 2,
-                                        bgcolor: 'primary.main',
-                                        color: 'background.default',
-                                        '&:hover': {
-                                            bgcolor: 'primary.dark',
+                                        bgcolor: "primary.main",
+                                        color: "background.default",
+                                        "&:hover": {
+                                            bgcolor: "primary.dark",
                                         },
                                     }}
                                 >
@@ -132,20 +141,30 @@ const Footer: React.FC = () => {
                             </Typography>
                             <Box>
                                 {[
-                                    { icon: <FacebookIcon />, name: 'Facebook' },
-                                    { icon: <TwitterIcon />, name: 'Twitter' },
-                                    { icon: <InstagramIcon />, name: 'Instagram' },
-                                    { icon: <LinkedInIcon />, name: 'LinkedIn' },
+                                    {
+                                        icon: <FacebookIcon />,
+                                        name: "Facebook",
+                                    },
+                                    { icon: <TwitterIcon />, name: "Twitter" },
+                                    {
+                                        icon: <InstagramIcon />,
+                                        name: "Instagram",
+                                    },
+                                    {
+                                        icon: <LinkedInIcon />,
+                                        name: "LinkedIn",
+                                    },
                                 ].map((network) => (
                                     <IconButton
                                         key={network.name}
                                         aria-label={`${network.name} link`}
                                         sx={{
-                                            color: 'text.primary',
-                                            '&:hover': {
-                                                color: 'primary.main',
-                                                bgcolor: 'rgba(255, 107, 53, 0.1)'
-                                            }
+                                            color: "text.primary",
+                                            "&:hover": {
+                                                color: "primary.main",
+                                                bgcolor:
+                                                    "rgba(255, 107, 53, 0.1)",
+                                            },
                                         }}
                                     >
                                         {network.icon}
@@ -157,7 +176,8 @@ const Footer: React.FC = () => {
                 </Grid>
 
                 <Typography variant="body2" align="center" sx={{ mt: 4 }}>
-                    © {new Date().getFullYear()} Tu Empresa de Menús Digitales. Todos los derechos reservados.
+                    © {new Date().getFullYear()} Tu Empresa de Menús Digitales.
+                    Todos los derechos reservados.
                 </Typography>
             </Container>
         </Box>

@@ -7,7 +7,7 @@ export default function CategoryWrapper({ children }: { children: ReactNode }) {
         <motion.div
             variants={{
                 hidden: { opacity: 0, y: 20 },
-                visible: { opacity: 1, y: 0 }
+                visible: { opacity: 1, y: 0 },
             }}
         >
             {children}

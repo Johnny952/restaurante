@@ -1,15 +1,26 @@
-import React from 'react';
-import { Box, Container, Grid, Typography, Card, CardContent } from '@mui/material';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import PaymentIcon from '@mui/icons-material/Payment';
-import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
+import React from "react";
+import {
+    Box,
+    Container,
+    Grid,
+    Typography,
+    Card,
+    CardContent,
+} from "@mui/material";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+import RestaurantMenuIcon from "@mui/icons-material/RestaurantMenu";
+import PaymentIcon from "@mui/icons-material/Payment";
+import TableRestaurantIcon from "@mui/icons-material/TableRestaurant";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 
 const MotionCard = motion(Card);
 
-const FeatureCard: React.FC<{ title: string; description: string; icon: React.ReactNode }> = ({ title, description, icon }) => {
+const FeatureCard: React.FC<{
+    title: string;
+    description: string;
+    icon: React.ReactNode;
+}> = ({ title, description, icon }) => {
     const [ref, inView] = useInView({
         triggerOnce: true,
         threshold: 0.1,
@@ -22,20 +33,35 @@ const FeatureCard: React.FC<{ title: string; description: string; icon: React.Re
                 animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
                 transition={{ duration: 0.8 }}
                 sx={{
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    borderRadius: '15px',
-                    overflow: 'hidden',
-                    bgcolor: 'background.paper',
-                    '&:hover': {
-                        boxShadow: '0 8px 16px 0 rgba(255,107,53,0.2)',
+                    height: "100%",
+                    display: "flex",
+                    flexDirection: "column",
+                    borderRadius: "15px",
+                    overflow: "hidden",
+                    bgcolor: "background.paper",
+                    "&:hover": {
+                        boxShadow: "0 8px 16px 0 rgba(255,107,53,0.2)",
                     },
                 }}
             >
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-                    <Box sx={{ color: 'primary.main', fontSize: 60, mb: 2 }}>{icon}</Box>
-                    <Typography variant="h5" component="h3" gutterBottom sx={{ color: 'text.primary', fontWeight: 600 }}>
+                <CardContent
+                    sx={{
+                        flexGrow: 1,
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        textAlign: "center",
+                    }}
+                >
+                    <Box sx={{ color: "primary.main", fontSize: 60, mb: 2 }}>
+                        {icon}
+                    </Box>
+                    <Typography
+                        variant="h5"
+                        component="h3"
+                        gutterBottom
+                        sx={{ color: "text.primary", fontWeight: 600 }}
+                    >
                         {title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
@@ -49,13 +75,19 @@ const FeatureCard: React.FC<{ title: string; description: string; icon: React.Re
 
 const Features: React.FC = () => {
     return (
-        <Box sx={{ py: 8, bgcolor: 'background.default' }}>
+        <Box sx={{ py: 8, bgcolor: "background.default" }}>
             <Container maxWidth="lg">
-                <Typography variant="h4" component="h4" align="center" gutterBottom sx={{
-                    color: 'primary.main',
-                    fontWeight: 700,
-                    mb: 6
-                }}>
+                <Typography
+                    variant="h4"
+                    component="h4"
+                    align="center"
+                    gutterBottom
+                    sx={{
+                        color: "primary.main",
+                        fontWeight: 700,
+                        mb: 6,
+                    }}
+                >
                     Características Principales
                 </Typography>
                 <Grid container spacing={4}>

@@ -11,8 +11,8 @@ export default function TitleAnimated({ title }: { title: string }) {
                 visible: { transition: { staggerChildren: 0.1 } },
             }}
         >
-            <Typography variant="h5">{
-                title.split("").map((char, index) => (
+            <Typography variant="h5">
+                {title.split("").map((char, index) => (
                     <motion.span
                         key={index}
                         variants={{
@@ -22,8 +22,8 @@ export default function TitleAnimated({ title }: { title: string }) {
                     >
                         {char}
                     </motion.span>
-                ))
-            }</Typography>
+                ))}
+            </Typography>
         </motion.div>
     );
 }

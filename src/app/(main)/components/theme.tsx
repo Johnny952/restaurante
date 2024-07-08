@@ -1,21 +1,21 @@
-import { createTheme } from '@mui/material/styles';
+import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
     palette: {
-        mode: 'dark',
+        mode: "dark",
         primary: {
-            main: '#FF6B35', // Naranja vibrante
+            main: "#FF6B35", // Naranja vibrante
         },
         secondary: {
-            main: '#4ECB71', // Verde vibrante
+            main: "#4ECB71", // Verde vibrante
         },
         background: {
-            default: '#121212', // Negro elegante
-            paper: '#1E1E1E', // Gris muy oscuro
+            default: "#121212", // Negro elegante
+            paper: "#1E1E1E", // Gris muy oscuro
         },
         text: {
-            primary: '#FFFFFF',
-            secondary: '#B0B0B0',
+            primary: "#FFFFFF",
+            secondary: "#B0B0B0",
         },
     },
     typography: {
@@ -55,16 +55,16 @@ const theme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    borderRadius: '50px',
-                    textTransform: 'none',
+                    borderRadius: "50px",
+                    textTransform: "none",
                 },
             },
         },
         MuiCard: {
             styleOverrides: {
                 root: {
-                    backgroundColor: '#1E1E1E',
-                    borderRadius: '15px',
+                    backgroundColor: "#1E1E1E",
+                    borderRadius: "15px",
                 },
             },
         },

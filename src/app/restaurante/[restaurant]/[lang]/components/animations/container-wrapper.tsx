@@ -2,7 +2,11 @@
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
-export default function ContainerWrapper({ children }: { children: ReactNode }) {
+export default function ContainerWrapper({
+    children,
+}: {
+    children: ReactNode;
+}) {
     return (
         <motion.div
             initial="hidden"
@@ -10,9 +14,9 @@ export default function ContainerWrapper({ children }: { children: ReactNode }) 
             variants={{
                 visible: {
                     transition: {
-                        staggerChildren: 0.1
-                    }
-                }
+                        staggerChildren: 0.1,
+                    },
+                },
             }}
         >
             {children}

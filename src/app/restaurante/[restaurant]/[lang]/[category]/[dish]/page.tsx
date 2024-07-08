@@ -21,15 +21,15 @@ export default async function DishPage({
     const responses = await Promise.all([
         getByLink(restaurant, lang, category, dishLink),
         getBackground(restaurant),
-    ])
-    const logo = responses[1][0].image
+    ]);
+    const logo = responses[1][0].image;
     if (responses[0].rows.length === 0) {
         return (
             <NotFound
                 image={logo}
                 backLink={`/restaurante/${restaurant}/${lang}`}
             />
-        )
+        );
     }
     const dish = responses[0].rows[0];
 

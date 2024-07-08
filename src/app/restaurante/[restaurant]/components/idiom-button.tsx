@@ -25,7 +25,7 @@ export default function IdiomButton({
                 transition={{
                     type: "spring",
                     stiffness: 260,
-                    damping: 20
+                    damping: 20,
                 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}

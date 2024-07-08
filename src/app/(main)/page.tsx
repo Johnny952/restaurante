@@ -1,9 +1,9 @@
-"use client"
+"use client";
 import styles from "./page.module.css";
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Header from './components/header';
-import HeroSection from './components/hero-section';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import Header from "./components/header";
+import HeroSection from "./components/hero-section";
 import Features from "./components/features-section";
 import InteractiveDemo from "./components/interactive-demo-section";
 import Testimonials from "./components/testimonials-section";
@@ -14,15 +14,15 @@ import Footer from "./components/footer";
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#2196f3',
+            main: "#2196f3",
         },
         background: {
-            default: '#f5f5f5',
-            paper: '#ffffff',
+            default: "#f5f5f5",
+            paper: "#ffffff",
         },
         text: {
-            primary: '#333333',
-            secondary: '#666666',
+            primary: "#333333",
+            secondary: "#666666",
         },
     },
     typography: {
@@ -35,8 +35,8 @@ const theme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: {
-                    borderRadius: '50px',
-                    textTransform: 'none',
+                    borderRadius: "50px",
+                    textTransform: "none",
                 },
             },
         },

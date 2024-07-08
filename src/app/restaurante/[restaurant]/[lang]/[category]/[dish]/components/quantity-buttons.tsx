@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Box, IconButton, Typography } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import RemoveIcon from "@mui/icons-material/Remove";
@@ -48,8 +48,7 @@ export default function QuantityButtons({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor:
-                    "rgba(255, 255, 255, 0.1)",
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
                 borderRadius: "24px",
                 maxWidth: "140px",
                 margin: "0 auto",
@@ -66,8 +65,7 @@ export default function QuantityButtons({
                         sx={{
                             color: "primary.main",
                             "&:hover": {
-                                backgroundColor:
-                                    "rgba(156, 39, 176, 0.04)",
+                                backgroundColor: "rgba(156, 39, 176, 0.04)",
                             },
                         }}
                     >
@@ -93,8 +91,7 @@ export default function QuantityButtons({
                         sx={{
                             color: "primary.main",
                             "&:hover": {
-                                backgroundColor:
-                                    "rgba(156, 39, 176, 0.04)",
+                                backgroundColor: "rgba(156, 39, 176, 0.04)",
                             },
                         }}
                     >
@@ -112,8 +109,7 @@ export default function QuantityButtons({
                     sx={{
                         color: "primary.main",
                         "&:hover": {
-                            backgroundColor:
-                                "rgba(156, 39, 176, 0.04)",
+                            backgroundColor: "rgba(156, 39, 176, 0.04)",
                         },
                     }}
                 >
@@ -121,5 +117,5 @@ export default function QuantityButtons({
                 </IconButton>
             )}
         </Box>
-    )
+    );
 }

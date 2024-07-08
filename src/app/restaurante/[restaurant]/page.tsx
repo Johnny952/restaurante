@@ -21,7 +21,7 @@ export default async function RestaurantPage({
         notFound();
     }
     const mainBg = responses[1][0].background;
-    const logo = responses[1][0].image
+    const logo = responses[1][0].image;
 
     return (
         <Background image={mainBg}>

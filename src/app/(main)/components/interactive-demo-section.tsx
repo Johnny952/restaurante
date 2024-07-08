@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { Box, Container, Typography, Paper, Tabs, Tab, useTheme } from '@mui/material';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import {
+    Box,
+    Container,
+    Typography,
+    Paper,
+    Tabs,
+    Tab,
+    useTheme,
+} from "@mui/material";
+import Image from "next/image";
+import { motion } from "framer-motion";
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -38,19 +46,22 @@ function TabPanel(props: TabPanelProps) {
 
 const demoContent = [
     {
-        label: 'Menú Digital',
-        image: '/menu-demo.png',
-        description: 'Explora nuestros menús digitales interactivos y personalizables.'
+        label: "Menú Digital",
+        image: "/menu-demo.png",
+        description:
+            "Explora nuestros menús digitales interactivos y personalizables.",
     },
     {
-        label: 'Pedidos en Línea',
-        image: '/order-demo.png',
-        description: 'Procesa pedidos en línea de manera eficiente y sin complicaciones.'
+        label: "Pedidos en Línea",
+        image: "/order-demo.png",
+        description:
+            "Procesa pedidos en línea de manera eficiente y sin complicaciones.",
     },
     {
-        label: 'Análisis',
-        image: '/analytics-demo.png',
-        description: 'Obtén insights valiosos con nuestras herramientas de análisis en tiempo real.'
+        label: "Análisis",
+        image: "/analytics-demo.png",
+        description:
+            "Obtén insights valiosos con nuestras herramientas de análisis en tiempo real.",
     },
 ];
 
@@ -63,48 +74,70 @@ const InteractiveDemo: React.FC = () => {
     };
 
     return (
-        <Box sx={{ py: 8, backgroundColor: 'background.paper' }}>
+        <Box sx={{ py: 8, backgroundColor: "background.paper" }}>
             <Container maxWidth="lg">
-                <Typography variant="h4" component="h4" align="center" gutterBottom sx={{
-                    color: 'primary.main',
-                    fontWeight: 700,
-                    mb: 6
-                }}>
+                <Typography
+                    variant="h4"
+                    component="h4"
+                    align="center"
+                    gutterBottom
+                    sx={{
+                        color: "primary.main",
+                        fontWeight: 700,
+                        mb: 6,
+                    }}
+                >
                     Explora Nuestras Funcionalidades
                 </Typography>
-                <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center', mt: 4 }}>
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: { xs: "column", md: "row" },
+                        alignItems: "center",
+                        mt: 4,
+                    }}
+                >
                     <MotionBox
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        sx={{ width: { xs: '100%', md: '50%' }, mb: { xs: 4, md: 0 } }}
+                        sx={{
+                            width: { xs: "100%", md: "50%" },
+                            mb: { xs: 4, md: 0 },
+                        }}
                     >
                         <Paper
                             elevation={6}
                             sx={{
-                                position: 'relative',
-                                width: '280px',
-                                height: '560px',
-                                margin: 'auto',
-                                borderRadius: '36px',
-                                overflow: 'hidden',
-                                backgroundColor: 'background.paper',
-                                '&::before': {
+                                position: "relative",
+                                width: "280px",
+                                height: "560px",
+                                margin: "auto",
+                                borderRadius: "36px",
+                                overflow: "hidden",
+                                backgroundColor: "background.paper",
+                                "&::before": {
                                     content: '""',
-                                    position: 'absolute',
-                                    top: '0',
-                                    left: '50%',
-                                    transform: 'translateX(-50%)',
-                                    width: '150px',
-                                    height: '20px',
-                                    backgroundColor: '#000',
-                                    borderBottomLeftRadius: '10px',
-                                    borderBottomRightRadius: '10px',
+                                    position: "absolute",
+                                    top: "0",
+                                    left: "50%",
+                                    transform: "translateX(-50%)",
+                                    width: "150px",
+                                    height: "20px",
+                                    backgroundColor: "#000",
+                                    borderBottomLeftRadius: "10px",
+                                    borderBottomRightRadius: "10px",
                                     zIndex: 2,
-                                }
+                                },
                             }}
                         >
-                            <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
+                            <Box
+                                sx={{
+                                    position: "relative",
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                            >
                                 <Image
                                     src={demoContent[value].image}
                                     alt={demoContent[value].label}
@@ -118,7 +151,7 @@ const InteractiveDemo: React.FC = () => {
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
-                        sx={{ width: { xs: '100%', md: '50%' } }}
+                        sx={{ width: { xs: "100%", md: "50%" } }}
                     >
                         <Tabs
                             value={value}
@@ -126,13 +159,13 @@ const InteractiveDemo: React.FC = () => {
                             aria-label="demo tabs"
                             centered
                             sx={{
-                                '& .MuiTabs-indicator': {
-                                    backgroundColor: 'primary.main',
+                                "& .MuiTabs-indicator": {
+                                    backgroundColor: "primary.main",
                                 },
-                                '& .MuiTab-root': {
-                                    color: 'text.secondary',
-                                    '&.Mui-selected': {
-                                        color: 'primary.main',
+                                "& .MuiTab-root": {
+                                    color: "text.secondary",
+                                    "&.Mui-selected": {
+                                        color: "primary.main",
                                     },
                                 },
                             }}
@@ -143,7 +176,10 @@ const InteractiveDemo: React.FC = () => {
                         </Tabs>
                         {demoContent.map((content, index) => (
                             <TabPanel value={value} index={index} key={index}>
-                                <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+                                <Typography
+                                    variant="body1"
+                                    sx={{ color: "text.secondary" }}
+                                >
                                     {content.description}
                                 </Typography>
                             </TabPanel>

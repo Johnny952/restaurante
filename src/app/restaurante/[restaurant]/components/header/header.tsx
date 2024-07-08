@@ -13,7 +13,6 @@ export default function RestaurantHeader({
     image,
     loading = false,
 }: HeaderInterface) {
-
     return (
         <AnimatedWrapper>
             <div

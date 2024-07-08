@@ -18,8 +18,8 @@ export default async function CategoryPage({
         getByCategory(restaurant, lang, category),
         getByLink(restaurant, lang, category),
         getBackground(restaurant),
-    ])
-    const logo = restaurantImages[0].image
+    ]);
+    const logo = restaurantImages[0].image;
     if (cat.rows.length === 0) {
         return (
             <NotFound
@@ -28,7 +28,7 @@ export default async function CategoryPage({
                 title="Categoría no encontrada"
                 description={"Lo sentimos, esta categoría aún no existe."}
             />
-        )
+        );
     }
     const categoryInfo = cat.rows[0];
     if (ds.rows.length === 0) {
@@ -38,7 +38,9 @@ export default async function CategoryPage({
                 backLink={`/restaurante/${restaurant}/${lang}`}
                 bgImage={categoryInfo?.image}
                 title="Categoría sin platos"
-                description={"Lo sentimos, los platos asociados a esta categoría no están disponible o no existen aún."}
+                description={
+                    "Lo sentimos, los platos asociados a esta categoría no están disponible o no existen aún."
+                }
             />
         );
     }
@@ -46,10 +48,7 @@ export default async function CategoryPage({
 
     return (
         <Background image={categoryInfo?.image || ""}>
-            <RestaurantHeader
-                title={toTitle(category)}
-                image={logo}
-            />
+            <RestaurantHeader title={toTitle(category)} image={logo} />
             <Container sx={{ paddingY: "60px" }}>
                 <Grid container spacing={2} rowSpacing={2}>
                     {dishes?.map((dish, idx) => (

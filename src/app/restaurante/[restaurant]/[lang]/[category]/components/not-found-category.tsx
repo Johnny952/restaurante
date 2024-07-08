@@ -23,11 +23,7 @@ export default function NotFound({
 }) {
     return (
         <Background image={bgImage || notFoundImg.src}>
-            <RestaurantHeader
-                title={title}
-                image={image}
-                loading={false}
-            />
+            <RestaurantHeader title={title} image={image} loading={false} />
             <Container sx={{ paddingY: "60px" }}>
                 <Grid
                     container

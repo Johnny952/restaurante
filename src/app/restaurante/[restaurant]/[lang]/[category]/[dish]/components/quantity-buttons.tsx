@@ -6,6 +6,7 @@ import AddIcon from "@mui/icons-material/Add";
 import useFavStore from "@/store/fav-store";
 import { useCallback } from "react";
 import { DishInterface } from "@/app/api/dishes/index.types";
+import { motion } from "framer-motion";
 
 export default function QuantityButtons({
     dish,
@@ -18,6 +19,7 @@ export default function QuantityButtons({
     lang: string;
     category: string;
 }) {
+    const AnimatedIconButton = motion(IconButton);
     const addProduct = useFavStore((state) => state.addProduct);
     const subProduct = useFavStore((state) => state.subProduct);
 
@@ -48,15 +50,24 @@ export default function QuantityButtons({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                backgroundColor: "rgba(156, 39, 176, 0.1)",
                 borderRadius: "24px",
-                maxWidth: "140px",
+                maxWidth: "160px",
                 margin: "0 auto",
+                padding: "4px",
+                boxShadow: "0 2px 10px rgba(156, 39, 176, 0.2)",
+                transition: "all 0.3s ease-in-out",
+                "&:hover": {
+                    backgroundColor: "rgba(156, 39, 176, 0.2)",
+                    boxShadow: "0 4px 20px rgba(156, 39, 176, 0.3)",
+                },
             }}
         >
             {quantity > 0 ? (
                 <>
-                    <IconButton
+                    <AnimatedIconButton
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                         size="small"
                         onClick={(e) => {
                             e.stopPropagation();
@@ -70,19 +81,29 @@ export default function QuantityButtons({
                         }}
                     >
                         <RemoveIcon fontSize="small" />
-                    </IconButton>
-                    <Typography
-                        sx={{
-                            color: "primary.main",
-                            mx: 2,
-                            minWidth: "30px",
-                            textAlign: "center",
-                            fontWeight: "bold",
-                        }}
+                    </AnimatedIconButton>
+                    <motion.div
+                        key={quantity}
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 20 }}
+                        transition={{ duration: 0.2 }}
                     >
-                        {quantity}
-                    </Typography>
-                    <IconButton
+                        <Typography
+                            sx={{
+                                color: "primary.main",
+                                mx: 2,
+                                minWidth: "30px",
+                                textAlign: "center",
+                                fontWeight: "bold",
+                            }}
+                        >
+                            {quantity}
+                        </Typography>
+                    </motion.div>
+                    <AnimatedIconButton
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
                         size="small"
                         onClick={(e) => {
                             e.stopPropagation();
@@ -96,10 +117,12 @@ export default function QuantityButtons({
                         }}
                     >
                         <AddIcon fontSize="small" />
-                    </IconButton>
+                    </AnimatedIconButton>
                 </>
             ) : (
-                <IconButton
+                <AnimatedIconButton
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     color="primary"
                     aria-label="add to cart"
                     onClick={(e) => {
@@ -114,7 +137,7 @@ export default function QuantityButtons({
                     }}
                 >
                     <AddShoppingCartIcon fontSize="small" />
-                </IconButton>
+                </AnimatedIconButton>
             )}
         </Box>
     );

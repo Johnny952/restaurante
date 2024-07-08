@@ -13,6 +13,9 @@ import ContentLoader from "react-content-loader";
 import NotFound from "./components/not-found-dish";
 import QuantityButtons from "./components/quantity-buttons";
 import { getBackground } from "@/app/api/restaurants/get";
+import MainWrapper from "./components/animations/main-wrapper";
+import ImageWrapper from "./components/animations/image-wrapper";
+import PriceWrapper from "./components/animations/price-wrapper";
 
 export default async function DishPage({
     params: { dish: dishLink, restaurant, lang, category },
@@ -36,126 +39,130 @@ export default async function DishPage({
     const image = !dish || !dish.image ? defaultDishImg.src : dish?.image;
 
     return (
-        <Background image={image}>
-            <RestaurantHeader
-                title={toTitle(dish?.name || "")}
-                image={logo}
-                loading={loading}
-            />
-            <Container sx={{ paddingY: "60px" }}>
-                <Grid container spacing={2} rowSpacing={2}>
-                    <Grid
-                        item
-                        xs={12}
-                        sm={6}
-                        display="flex"
-                        justifyContent="center"
-                    >
-                        <div
-                            style={{
-                                borderRadius: "5%",
-                                border: "3px solid #9c27b0",
-                                display: "inline-block",
-                            }}
+        <MainWrapper>
+            <Background image={image}>
+                <RestaurantHeader
+                    title={toTitle(dish?.name || "")}
+                    image={logo}
+                    loading={loading}
+                />
+                <Container sx={{ paddingY: "60px" }}>
+                    <Grid container spacing={2} rowSpacing={2}>
+                        <Grid
+                            item
+                            xs={12}
+                            sm={6}
+                            display="flex"
+                            justifyContent="center"
                         >
-                            <ImageAsync
-                                alt="plato"
-                                loadingImg={loading}
-                                src={image}
-                                sizes="100vw"
-                                width="100"
-                                height="100"
-                                style={{
-                                    width: "100%",
-                                    height: "auto",
-                                    borderRadius: "5%",
-                                    maxWidth: "300px",
-                                }}
-                            />
-                        </div>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Grid container rowSpacing={2}>
-                            <Grid item xs={12} textAlign="center">
-                                {loading ? (
-                                    <ContentLoader
-                                        speed={2}
-                                        width={300}
-                                        height={72}
-                                        viewBox="0 0 300 72"
-                                        backgroundColor="#000000"
-                                        foregroundColor="#ecebeb"
-                                    >
-                                        <rect
-                                            x="0"
-                                            y="2"
-                                            rx="8"
-                                            ry="8"
-                                            width="300"
-                                            height="20"
-                                        />
-                                        <rect
-                                            x="0"
-                                            y="26"
-                                            rx="8"
-                                            ry="8"
-                                            width="300"
-                                            height="20"
-                                        />
-                                        <rect
-                                            x="0"
-                                            y="50"
-                                            rx="8"
-                                            ry="8"
-                                            width="300"
-                                            height="20"
-                                        />
-                                    </ContentLoader>
-                                ) : (
-                                    <Typography variant="body1">
-                                        {dish?.description || ""}
-                                    </Typography>
-                                )}
-                            </Grid>
-                            <Grid item xs={12} textAlign="center">
-                                {loading ? (
-                                    <ContentLoader
-                                        speed={2}
-                                        width={200}
-                                        height={42}
-                                        viewBox="0 0 200 42"
-                                        backgroundColor="#000000"
-                                        foregroundColor="#ecebeb"
-                                    >
-                                        <rect
-                                            x="0"
-                                            y="0"
-                                            rx="8"
-                                            ry="8"
-                                            width="200"
-                                            height="42"
-                                        />
-                                    </ContentLoader>
-                                ) : (
-                                    <Typography variant="h4">
-                                        {formatPrice(dish?.price || -1)}
-                                    </Typography>
-                                )}
-                            </Grid>
-                            <Grid item xs={12}>
-                                <QuantityButtons
-                                    dish={dish}
-                                    restaurant={restaurant}
-                                    lang={lang}
-                                    category={category}
+                            <ImageWrapper
+                            >
+                                <ImageAsync
+                                    alt="plato"
+                                    loadingImg={loading}
+                                    src={image}
+                                    sizes="100vw"
+                                    width="100"
+                                    height="100"
+                                    style={{
+                                        width: "100%",
+                                        height: "auto",
+                                        borderRadius: "5%",
+                                        maxWidth: "300px",
+                                    }}
                                 />
+                            </ImageWrapper>
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <Grid container rowSpacing={2}>
+                                <Grid item xs={12} textAlign="center">
+                                    {loading ? (
+                                        <ContentLoader
+                                            speed={2}
+                                            width={300}
+                                            height={72}
+                                            viewBox="0 0 300 72"
+                                            backgroundColor="#000000"
+                                            foregroundColor="#ecebeb"
+                                        >
+                                            <rect
+                                                x="0"
+                                                y="2"
+                                                rx="8"
+                                                ry="8"
+                                                width="300"
+                                                height="20"
+                                            />
+                                            <rect
+                                                x="0"
+                                                y="26"
+                                                rx="8"
+                                                ry="8"
+                                                width="300"
+                                                height="20"
+                                            />
+                                            <rect
+                                                x="0"
+                                                y="50"
+                                                rx="8"
+                                                ry="8"
+                                                width="300"
+                                                height="20"
+                                            />
+                                        </ContentLoader>
+                                    ) : (
+                                        <Typography variant="body1">
+                                            {dish?.description || ""}
+                                        </Typography>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12} textAlign="center">
+                                    {loading ? (
+                                        <ContentLoader
+                                            speed={2}
+                                            width={200}
+                                            height={42}
+                                            viewBox="0 0 200 42"
+                                            backgroundColor="#000000"
+                                            foregroundColor="#ecebeb"
+                                        >
+                                            <rect
+                                                x="0"
+                                                y="0"
+                                                rx="8"
+                                                ry="8"
+                                                width="200"
+                                                height="42"
+                                            />
+                                        </ContentLoader>
+                                    ) : (
+                                        <PriceWrapper>
+                                            <Typography variant="h4" sx={{
+                                                background: "linear-gradient(45deg, #9c27b0, #673ab7)",
+                                                WebkitBackgroundClip: "text",
+                                                WebkitTextFillColor: "transparent",
+                                                fontWeight: "bold",
+                                            }}>
+                                                {formatPrice(dish?.price || -1)}
+                                            </Typography>
+                                        </PriceWrapper>
+                                    )}
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <QuantityButtons
+                                        dish={dish}
+                                        restaurant={restaurant}
+                                        lang={lang}
+                                        category={category}
+                                    />
+                                </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
-                </Grid>
-            </Container>
-            <MenuButton />
-            <BackButton />
-        </Background>
+                </Container>
+                <MenuButton />
+                <BackButton />
+            </Background>
+        </MainWrapper>
     );
 }

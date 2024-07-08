@@ -44,10 +44,8 @@ const FeedbackDrawer = ({
     const isMobile = useMediaQuery(darkTheme.breakpoints.down("sm"));
 
     const handleSubmit = () => {
-        // Aquí puedes manejar el envío del feedback
         console.log({ feedbackType, rating, comment });
         onClose();
-        // Reiniciar los campos
         setFeedbackType("");
         setRating(0);
         setComment("");

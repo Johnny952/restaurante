@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import toTitle from "@/helpers/to-title";
 import Link from "next/link";
@@ -13,15 +13,21 @@ export function SubCategory({
 }: CategoryAPI & { link: string }) {
     return (
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Card elevation={3} sx={{ backgroundColor: "rgba(0,0,0,0.7)", borderRadius: '15px' }}>
+            <Card
+                elevation={3}
+                sx={{
+                    backgroundColor: "rgba(0,0,0,0.7)",
+                    borderRadius: "15px",
+                }}
+            >
                 <Link href={link}>
                     <CardActionArea>
                         <div
                             style={{
                                 borderRadius: "15%",
                                 border: "2px solid #9c27b0",
-                                overflow: 'hidden',
-                                margin: '10px',
+                                overflow: "hidden",
+                                margin: "10px",
                             }}
                         >
                             <ImageAsync
@@ -35,7 +41,7 @@ export function SubCategory({
                                     width: "100%",
                                     height: "auto",
                                     borderRadius: "15%",
-                                    transition: 'transform 0.3s ease-in-out',
+                                    transition: "transform 0.3s ease-in-out",
                                 }}
                             />
                         </div>
@@ -47,7 +53,7 @@ export function SubCategory({
                                 sx={{
                                     fontWeight: 600,
                                     letterSpacing: 0.5,
-                                    textShadow: '1px 1px 2px rgba(0,0,0,0.8)',
+                                    textShadow: "1px 1px 2px rgba(0,0,0,0.8)",
                                 }}
                             >
                                 {toTitle(name)}

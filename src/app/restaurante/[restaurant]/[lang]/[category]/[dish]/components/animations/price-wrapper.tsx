@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import { ReactNode } from "react";
 
@@ -11,5 +11,5 @@ export default function PriceWrapper({ children }: { children: ReactNode }) {
         >
             {children}
         </motion.div>
-    )
+    );
 }

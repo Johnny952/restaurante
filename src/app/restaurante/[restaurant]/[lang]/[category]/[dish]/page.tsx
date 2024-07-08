@@ -55,8 +55,7 @@ export default async function DishPage({
                             display="flex"
                             justifyContent="center"
                         >
-                            <ImageWrapper
-                            >
+                            <ImageWrapper>
                                 <ImageAsync
                                     alt="plato"
                                     loadingImg={loading}
@@ -137,12 +136,18 @@ export default async function DishPage({
                                         </ContentLoader>
                                     ) : (
                                         <PriceWrapper>
-                                            <Typography variant="h4" sx={{
-                                                background: "linear-gradient(45deg, #9c27b0, #673ab7)",
-                                                WebkitBackgroundClip: "text",
-                                                WebkitTextFillColor: "transparent",
-                                                fontWeight: "bold",
-                                            }}>
+                                            <Typography
+                                                variant="h4"
+                                                sx={{
+                                                    background:
+                                                        "linear-gradient(45deg, #9c27b0, #673ab7)",
+                                                    WebkitBackgroundClip:
+                                                        "text",
+                                                    WebkitTextFillColor:
+                                                        "transparent",
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
                                                 {formatPrice(dish?.price || -1)}
                                             </Typography>
                                         </PriceWrapper>

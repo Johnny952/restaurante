@@ -55,7 +55,8 @@ const ShoppingCart = ({
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-    const { products, addOneProduct, subProduct, removeProduct } = useFavStore();
+    const { products, addOneProduct, subProduct, removeProduct } =
+        useFavStore();
 
     const dishes = Object.values(products);
     const totalCost = dishes.reduce(
@@ -64,12 +65,14 @@ const ShoppingCart = ({
     );
 
     const cartContent = (
-        <Box sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            flexDirection: "column"
-        }}>
+        <Box
+            sx={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+            }}
+        >
             <Box
                 sx={{
                     display: "flex",
@@ -80,12 +83,14 @@ const ShoppingCart = ({
                     borderColor: "divider",
                 }}
             >
-                <Typography variant="h5" fontWeight="bold">Favoritos</Typography>
+                <Typography variant="h5" fontWeight="bold">
+                    Favoritos
+                </Typography>
                 <IconButton onClick={onClose} sx={{ color: "primary.main" }}>
                     <CloseIcon />
                 </IconButton>
             </Box>
-            <List sx={{ flexGrow: 1, overflowY: "auto", width: '100%', p: 0 }}>
+            <List sx={{ flexGrow: 1, overflowY: "auto", width: "100%", p: 0 }}>
                 {dishes.map((dish) => (
                     <motion.div
                         key={dish.id}
@@ -93,7 +98,10 @@ const ShoppingCart = ({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <Paper elevation={3} sx={{ m: 2, borderRadius: 2, overflow: "hidden" }}>
+                        <Paper
+                            elevation={3}
+                            sx={{ m: 2, borderRadius: 2, overflow: "hidden" }}
+                        >
                             <ListItem
                                 sx={{
                                     flexDirection: "column",
@@ -101,8 +109,21 @@ const ShoppingCart = ({
                                     p: 2,
                                 }}
                             >
-                                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                                    <Box sx={{ flexShrink: 0, mr: 2, width: 60, height: 60 }}>
+                                <Box
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        mb: 2,
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            flexShrink: 0,
+                                            mr: 2,
+                                            width: 60,
+                                            height: 60,
+                                        }}
+                                    >
                                         <Image
                                             src={dish.image}
                                             alt={dish.name}
@@ -112,7 +133,13 @@ const ShoppingCart = ({
                                             style={{ borderRadius: "8px" }}
                                         />
                                     </Box>
-                                    <Box sx={{ flexGrow: 1, minWidth: 0, width: 'calc(100% - 76px)' }}>
+                                    <Box
+                                        sx={{
+                                            flexGrow: 1,
+                                            minWidth: 0,
+                                            width: "calc(100% - 76px)",
+                                        }}
+                                    >
                                         <Link
                                             href={`/restaurante/${dish.restaurant}/${dish.language}/${dish.category}/${dish.link}`}
                                             passHref
@@ -124,13 +151,14 @@ const ShoppingCart = ({
                                                     color: "primary.main",
                                                     textDecoration: "none",
                                                     "&:hover": {
-                                                        textDecoration: "underline",
+                                                        textDecoration:
+                                                            "underline",
                                                     },
-                                                    display: 'block',
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                    maxWidth: '100%',
+                                                    display: "block",
+                                                    overflow: "hidden",
+                                                    textOverflow: "ellipsis",
+                                                    whiteSpace: "nowrap",
+                                                    maxWidth: "100%",
                                                 }}
                                             >
                                                 {dish.name}
@@ -140,9 +168,9 @@ const ShoppingCart = ({
                                             variant="body2"
                                             color="text.secondary"
                                             sx={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                whiteSpace: "nowrap",
                                             }}
                                         >
                                             Precio: {formatPrice(dish.price)}
@@ -163,27 +191,47 @@ const ShoppingCart = ({
                                         sx={{
                                             mb: 1,
                                             width: "100%",
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            whiteSpace: "nowrap",
                                         }}
                                     >
-                                        Subtotal: {formatPrice(dish.price * dish.quantity)}
+                                        Subtotal:{" "}
+                                        {formatPrice(
+                                            dish.price * dish.quantity
+                                        )}
                                     </Typography>
-                                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
+                                    <Box
+                                        sx={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                            width: "100%",
+                                        }}
+                                    >
                                         <Box>
                                             <IconButton
-                                                onClick={() => subProduct(dish.id)}
+                                                onClick={() =>
+                                                    subProduct(dish.id)
+                                                }
                                                 size="small"
                                                 sx={{ color: "primary.main" }}
                                             >
                                                 <RemoveIcon />
                                             </IconButton>
-                                            <Typography component="span" sx={{ mx: 1, fontWeight: "bold" }}>
+                                            <Typography
+                                                component="span"
+                                                sx={{
+                                                    mx: 1,
+                                                    fontWeight: "bold",
+                                                }}
+                                            >
                                                 {dish.quantity}
                                             </Typography>
                                             <IconButton
-                                                onClick={() => addOneProduct(dish.id)}
+                                                onClick={() =>
+                                                    addOneProduct(dish.id)
+                                                }
                                                 size="small"
                                                 sx={{ color: "primary.main" }}
                                             >
@@ -191,7 +239,9 @@ const ShoppingCart = ({
                                             </IconButton>
                                         </Box>
                                         <IconButton
-                                            onClick={() => removeProduct(dish.id)}
+                                            onClick={() =>
+                                                removeProduct(dish.id)
+                                            }
                                             size="small"
                                             sx={{ color: "error.main" }}
                                         >

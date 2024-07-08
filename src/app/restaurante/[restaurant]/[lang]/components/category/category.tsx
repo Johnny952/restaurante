@@ -1,8 +1,5 @@
 import toTitle from "@/helpers/to-title";
-import {
-    ImageListItem,
-    ImageListItemBar,
-} from "@mui/material";
+import { ImageListItem, ImageListItemBar } from "@mui/material";
 import genericImage from "@/../public/root.png";
 import style from "./category.module.css";
 import React from "react";
@@ -31,7 +28,12 @@ export default async function Category(
 
     return (
         <ImageListWithStyle
-            drawer={<SubCategoriesDrawer subcategories={subcategories} language={language} />}
+            drawer={
+                <SubCategoriesDrawer
+                    subcategories={subcategories}
+                    language={language}
+                />
+            }
             hasSubcategories={subcategories.length > 0}
             link={`${language}/${link}`}
         >

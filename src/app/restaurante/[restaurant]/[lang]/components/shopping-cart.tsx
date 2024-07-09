@@ -22,6 +22,7 @@ import { purple } from "@mui/material/colors";
 import useFavStore from "@/store/fav-store";
 import formatPrice from "@/helpers/format-price";
 import { motion } from "framer-motion";
+import defaultDishImg from "@/../public/default-dish.png";
 
 const darkTheme = createTheme({
     palette: {
@@ -84,7 +85,7 @@ const ShoppingCart = ({
                 }}
             >
                 <Typography variant="h5" fontWeight="bold">
-                    Favoritos
+                    Carrito
                 </Typography>
                 <IconButton onClick={onClose} sx={{ color: "primary.main" }}>
                     <CloseIcon />
@@ -125,7 +126,11 @@ const ShoppingCart = ({
                                         }}
                                     >
                                         <Image
-                                            src={dish.image}
+                                            src={
+                                                !dish || !dish.image
+                                                    ? defaultDishImg.src
+                                                    : dish.image
+                                            }
                                             alt={dish.name}
                                             width={60}
                                             height={60}

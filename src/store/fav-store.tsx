@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import type {} from "@redux-devtools/extension";
+import type { } from "@redux-devtools/extension";
 
 interface IncompleteProduct {
     id: string;
@@ -23,6 +23,7 @@ interface FavState {
     addOneProduct: (id: string) => void;
     subProduct: (id: string) => void;
     removeProduct: (id: string) => void;
+    clear: () => void;
 }
 
 const useFavStore = create<FavState>()(
@@ -38,9 +39,9 @@ const useFavStore = create<FavState>()(
                                 ...state.products,
                                 [product.id]: storedProduct
                                     ? {
-                                          ...storedProduct,
-                                          quantity: storedProduct.quantity + 1,
-                                      }
+                                        ...storedProduct,
+                                        quantity: storedProduct.quantity + 1,
+                                    }
                                     : { ...product, quantity: 1 },
                             },
                         };
@@ -85,6 +86,10 @@ const useFavStore = create<FavState>()(
                         const { [id]: _, ...rest } = state.products;
                         return { products: rest };
                     }),
+                clear: () =>
+                    set((state) => {
+                        return { products: {} }
+                    })
             }),
             {
                 name: "favorite-storage",

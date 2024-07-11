@@ -1,21 +1,19 @@
 "use client";
 import { Box, Button, Typography } from "@mui/material";
-import CustomIconButton from "./category/custom-icon-button";
+import CustomIconButton from "./custom-icon-button";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { ReactNode } from "react";
 import { styled } from "@mui/material/styles";
-import HomeIcon from "@mui/icons-material/Home";
 import LanguageIcon from "@mui/icons-material/Language";
 import { purple } from "@mui/material/colors";
 import { usePathname, useRouter } from "next/navigation";
 import FeedbackIcon from "@mui/icons-material/Feedback";
-import ShoppingCart from "./shopping-cart";
-import FeedbackDrawer from "./feedback";
 import useFavStore from "@/store/fav-store";
-import AnimatedBadge from "./animations/animated-badge";
+import AnimatedBadge from "./animated-badge";
 import CustomMenu from "./custom-menu";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import CategoryIcon from '@mui/icons-material/Category';
 
 const CustomOptionButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
@@ -37,29 +35,44 @@ function OptionButton({
     icon,
     label,
     onClick,
+    disabled = false,
 }: {
     icon: ReactNode;
     label: string;
     onClick: () => void;
+    disabled?: boolean;
 }) {
     return (
         <CustomOptionButton
             variant="contained"
             startIcon={icon}
             onClick={onClick}
+            disabled={disabled}
         >
             <Typography variant="subtitle2">{label}</Typography>
         </CustomOptionButton>
     );
 }
 
-export default function MenuButton() {
+export default function MenuButton({
+    setOpenFeed,
+    setOpenCart,
+    handleLanguageToggle,
+    handleListDrawerToggle,
+    disableCategories = false,
+    disableLanguage = false,
+}: {
+    setOpenFeed: (state: boolean) => void
+    setOpenCart: (state: boolean) => void
+    handleLanguageToggle: () => void
+    handleListDrawerToggle: () => void
+    disableCategories?: boolean;
+    disableLanguage?: boolean;
+}) {
     const router = useRouter();
     const pathName = usePathname();
 
     const [open, setOpen] = React.useState(false);
-    const [openFav, setOpenFav] = React.useState(false);
-    const [openFeed, setOpenFeed] = React.useState(false);
 
     const handleClick = () => {
         setOpen((prev) => !prev);
@@ -71,7 +84,6 @@ export default function MenuButton() {
             0
         )
     );
-
     const [prevCount, setPrevCount] = React.useState(0);
 
     React.useEffect(() => {
@@ -80,21 +92,22 @@ export default function MenuButton() {
 
     const options = [
         {
-            label: "Home",
-            icon: <HomeIcon />,
-            onClick: () =>
-                router.push(pathName?.split("/").slice(0, 4).join("/") || "/"),
+            label: "Categorías",
+            icon: <CategoryIcon />,
+            onClick: handleListDrawerToggle,
+            disabled: disableCategories,
         },
         {
             label: "Idiomas",
             icon: <LanguageIcon />,
-            onClick: () =>
-                router.push(pathName?.split("/").slice(0, 3).join("/") || "/"),
+            onClick: handleLanguageToggle,
+            disabled: disableLanguage,
         },
         {
             label: "Feedback",
             icon: <FeedbackIcon />,
             onClick: () => setOpenFeed(true),
+            disabled: false,
         },
         // {
         //     label: 'Promociones',
@@ -159,17 +172,11 @@ export default function MenuButton() {
                         <OptionButton
                             label="Carrito"
                             icon={<ShoppingCartIcon />}
-                            onClick={() => setOpenFav(true)}
+                            onClick={() => setOpenCart(true)}
                         />
                     </AnimatedBadge>
                 </CustomMenu>
             </Box>
-
-            <ShoppingCart open={openFav} onClose={() => setOpenFav(false)} />
-            <FeedbackDrawer
-                open={openFeed}
-                onClose={() => setOpenFeed(false)}
-            />
         </Box>
     );
 }

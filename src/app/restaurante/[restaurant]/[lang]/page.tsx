@@ -2,13 +2,13 @@ import Background from "../components/background/background";
 import RestaurantHeader from "../components/header/header";
 import { Container, Grid } from "@mui/material";
 import Category from "./components/category/category";
-import MenuButton from "./components/menu-button";
 import { getALlParentsByLink } from "@/app/api/categories/get";
 import { notFound } from "next/navigation";
 import { LanguagePageProps } from "./page.d";
 import { getBackground } from "@/app/api/restaurants/get";
 import ContainerWrapper from "./components/animations/container-wrapper";
 import CategoryWrapper from "./components/animations/category-wrapper";
+import ResponsiveNavigation from "../components/response-navigation";
 
 export default async function LanguagePage({
     params: { restaurant, lang },
@@ -26,7 +26,7 @@ export default async function LanguagePage({
 
     return (
         <Background image={mainBg}>
-            <RestaurantHeader title="BIENVENIDO/A" image={logo} />
+            <RestaurantHeader title="Categorías" image={logo} />
             <Container sx={{ paddingY: "60px" }}>
                 <ContainerWrapper>
                     <Grid container spacing={1} rowSpacing={1}>
@@ -35,8 +35,7 @@ export default async function LanguagePage({
                                 <CategoryWrapper>
                                     <Category
                                         {...category}
-                                        restaurante={restaurant}
-                                        language={lang}
+                                        link={`${lang}/${category.link}`}
                                     />
                                 </CategoryWrapper>
                             </Grid>
@@ -44,7 +43,7 @@ export default async function LanguagePage({
                     </Grid>
                 </ContainerWrapper>
             </Container>
-            <MenuButton />
+            <ResponsiveNavigation disableBack={true} />
         </Background>
     );
 }

@@ -5,9 +5,11 @@ import { motion } from "framer-motion";
 export default function LogoAnimated({
     image,
     loading = false,
+    isMobile,
 }: {
     image: string;
     loading?: boolean;
+    isMobile: boolean;
 }) {
     return (
         <motion.div
@@ -25,10 +27,10 @@ export default function LogoAnimated({
                     height: "auto",
                 }}
                 sizes="100vw"
-                width={100}
-                height={100}
+                width={isMobile ? 100 : 250}
+                height={isMobile ? 100 : 250}
                 priority={true}
-                radius="15"
+                radius={isMobile ? "10" : "15"}
             />
         </motion.div>
     );

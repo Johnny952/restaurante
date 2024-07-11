@@ -8,6 +8,7 @@ import IdiomButton from "@/app/restaurante/[restaurant]/components/idiom-button"
 import toTitle from "@/helpers/to-title";
 import { getBackground } from "@/app/api/restaurants/get";
 import IdiomContainerWrapper from "./components/animation/idiom-container-wrapper";
+import ResponsiveNavigation from "./components/response-navigation";
 
 export default async function RestaurantPage({
     params: { restaurant },
@@ -41,6 +42,11 @@ export default async function RestaurantPage({
                     </Box>
                 </IdiomContainerWrapper>
             </Container>
+            <ResponsiveNavigation
+                disableBack={true}
+                disableCategories={true}
+                disableLanguage={true}
+            />
         </Background>
     );
 }

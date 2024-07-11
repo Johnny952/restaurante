@@ -7,6 +7,7 @@ import {
     IconButton,
     Typography,
 } from "@mui/material";
+import { purple } from "@mui/material/colors";
 import toTitle from "@/helpers/to-title";
 import formatPrice from "@/helpers/format-price";
 import { usePathname, useRouter } from "next/navigation";
@@ -32,7 +33,6 @@ export default function Dish({
     lang,
 }: DishInterface & CategoryPageProps["params"]) {
     const router = useRouter();
-    const pathname = usePathname();
     const img = !image || image === "" ? defaultDishImg.src : image;
 
     const addToFav = useCallback(() => {
@@ -61,7 +61,7 @@ export default function Dish({
             sx={{
                 backgroundColor: "rgba(0, 0, 0, 0)",
                 border: "solid",
-                borderColor: "rgba(255, 255, 255, 0.7)",
+                borderColor: purple[200],
                 borderWidth: "1px",
                 px: "10px",
                 height: "100%",
@@ -71,13 +71,13 @@ export default function Dish({
         >
             <CardActionArea
                 sx={{ display: "flex", height: "100%" }}
-                onClick={() => router.push(`${pathname}/${link}`)}
+                onClick={() => router.push(link)}
             >
                 <Box sx={{ display: "flex", flexDirection: "column" }}>
                     <div
                         style={{
                             borderRadius: "10%",
-                            border: "2px solid #9c27b0",
+                            border: `2px solid ${purple[500]}`,
                             width: 93,
                         }}
                     >
@@ -139,7 +139,7 @@ export default function Dish({
                     right: 8,
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                    backgroundColor: purple[50],
                     borderRadius: "16px",
                     padding: "2px",
                 }}
@@ -152,13 +152,13 @@ export default function Dish({
                                 e.stopPropagation();
                                 removeFromFav();
                             }}
-                            sx={{ color: "primary.main" }}
+                            sx={{ color: purple[700] }}
                         >
                             <RemoveIcon fontSize="small" />
                         </IconButton>
                         <Typography
                             sx={{
-                                color: "primary.main",
+                                color: purple[700],
                                 mx: 1,
                                 minWidth: "20px",
                                 textAlign: "center",
@@ -172,7 +172,7 @@ export default function Dish({
                                 e.stopPropagation();
                                 addToFav();
                             }}
-                            sx={{ color: "primary.main" }}
+                            sx={{ color: purple[700] }}
                         >
                             <AddIcon fontSize="small" />
                         </IconButton>
@@ -185,7 +185,7 @@ export default function Dish({
                             e.stopPropagation();
                             addToFav();
                         }}
-                        sx={{ color: "primary.main" }}
+                        sx={{ color: purple[700] }}
                     >
                         <AddShoppingCartIcon fontSize="small" />
                     </IconButton>

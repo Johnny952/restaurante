@@ -1,12 +1,11 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
-import Background from "../../../../components/background/background";
-import RestaurantHeader from "../../../../components/header/header";
+import Background from "@/app/restaurante/[restaurant]/components/background/background";
+import RestaurantHeader from "@/app/restaurante/[restaurant]/components/header/header";
 import Link from "next/link";
-import MenuButton from "../../../components/menu-button";
-import BackButton from "../../components/back-button";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import { purple } from "@mui/material/colors";
 import notFoundImg from "@/../public/not-found-dish.png";
+import ResponsiveNavigation from "@/app/restaurante/[restaurant]/components/response-navigation";
 
 export default function NotFound({
     image,
@@ -67,8 +66,7 @@ export default function NotFound({
                     </Grid>
                 </Grid>
             </Container>
-            <MenuButton />
-            <BackButton />
+            <ResponsiveNavigation />
         </Background>
     );
 }

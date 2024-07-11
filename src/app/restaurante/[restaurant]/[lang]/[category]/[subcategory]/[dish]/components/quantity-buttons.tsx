@@ -7,6 +7,7 @@ import useFavStore from "@/store/fav-store";
 import { useCallback } from "react";
 import { DishInterface } from "@/app/api/dishes/index.types";
 import { motion } from "framer-motion";
+import { purple } from "@mui/material/colors";
 
 export default function QuantityButtons({
     dish,
@@ -50,7 +51,7 @@ export default function QuantityButtons({
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                backgroundColor: "rgba(156, 39, 176, 0.1)",
+                backgroundColor: "rgba(156, 39, 176, 0.4)",
                 borderRadius: "24px",
                 maxWidth: "160px",
                 margin: "0 auto",
@@ -74,7 +75,7 @@ export default function QuantityButtons({
                             removeFromFav();
                         }}
                         sx={{
-                            color: "primary.main",
+                            color: purple[200],
                             "&:hover": {
                                 backgroundColor: "rgba(156, 39, 176, 0.04)",
                             },
@@ -91,7 +92,7 @@ export default function QuantityButtons({
                     >
                         <Typography
                             sx={{
-                                color: "primary.main",
+                                color: purple[200],
                                 mx: 2,
                                 minWidth: "30px",
                                 textAlign: "center",
@@ -110,7 +111,7 @@ export default function QuantityButtons({
                             addToFav();
                         }}
                         sx={{
-                            color: "primary.main",
+                            color: purple[200],
                             "&:hover": {
                                 backgroundColor: "rgba(156, 39, 176, 0.04)",
                             },

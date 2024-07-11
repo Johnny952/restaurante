@@ -5,37 +5,21 @@ import style from "./category.module.css";
 import React from "react";
 import ImageListWithStyle from "./image-list-with-style";
 import { CategoryAPI } from "@/app/api/categories/index.types";
-import { getALlChildrenByLink } from "@/app/api/categories/get";
 import { ImageAsync } from "@/components/image-async";
-import SubCategoriesDrawer from "./subcategories-drawer";
 import CategoryWrapper from "./category-wrapper";
 
 export default async function Category(
-    props: CategoryAPI & { restaurante: string; language: string }
+    props: CategoryAPI
 ) {
     const {
         name,
         link,
         image = genericImage.src,
-        restaurante,
-        language,
     } = props;
-    const subcategories = await getALlChildrenByLink(
-        restaurante,
-        language,
-        link
-    );
 
     return (
         <ImageListWithStyle
-            drawer={
-                <SubCategoriesDrawer
-                    subcategories={subcategories}
-                    language={language}
-                />
-            }
-            hasSubcategories={subcategories.length > 0}
-            link={`${language}/${link}`}
+            link={link}
         >
             <CategoryWrapper>
                 <ImageListItem>

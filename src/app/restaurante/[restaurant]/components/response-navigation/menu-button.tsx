@@ -13,7 +13,7 @@ import useFavStore from "@/store/fav-store";
 import AnimatedBadge from "./animated-badge";
 import CustomMenu from "./custom-menu";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CategoryIcon from '@mui/icons-material/Category';
+import CategoryIcon from "@mui/icons-material/Category";
 
 const CustomOptionButton = styled(Button)(({ theme }) => ({
     color: theme.palette.getContrastText(purple[500]),
@@ -62,10 +62,10 @@ export default function MenuButton({
     disableCategories = false,
     disableLanguage = false,
 }: {
-    setOpenFeed: (state: boolean) => void
-    setOpenCart: (state: boolean) => void
-    handleLanguageToggle: () => void
-    handleListDrawerToggle: () => void
+    setOpenFeed: (state: boolean) => void;
+    setOpenCart: (state: boolean) => void;
+    handleLanguageToggle: () => void;
+    handleListDrawerToggle: () => void;
     disableCategories?: boolean;
     disableLanguage?: boolean;
 }) {

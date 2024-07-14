@@ -56,30 +56,28 @@ export default async function CategoryPage({
             <Container sx={{ paddingY: "60px" }}>
                 <ContainerWrapper>
                     <Grid container spacing={2} rowSpacing={2}>
-                        {
-                            hasSubcategories ?
-                                subcats.map((subcat, idx) => (
-                                    <Grid item xs={6} sm={4} md={2} key={idx}>
-                                        <CategoryWrapper>
-                                            <Category
-                                                {...subcat}
-                                                link={`${category}/${subcat.link}`}
-                                            />
-                                        </CategoryWrapper>
-                                    </Grid>
-                                ))
-                                : dishes?.map((dish, idx) => (
-                                    <Grid item xs={12} sm={6} md={4} key={idx}>
-                                        <Dish
-                                            {...dish}
-                                            category={category}
-                                            restaurant={restaurant}
-                                            lang={lang}
-                                            link={`${category}/${dish.link}`}
-                                        />
-                                    </Grid>
-                                ))
-                        }
+                        {hasSubcategories
+                            ? subcats.map((subcat, idx) => (
+                                  <Grid item xs={6} sm={4} md={2} key={idx}>
+                                      <CategoryWrapper>
+                                          <Category
+                                              {...subcat}
+                                              link={`${category}/${subcat.link}`}
+                                          />
+                                      </CategoryWrapper>
+                                  </Grid>
+                              ))
+                            : dishes?.map((dish, idx) => (
+                                  <Grid item xs={12} sm={6} md={4} key={idx}>
+                                      <Dish
+                                          {...dish}
+                                          category={category}
+                                          restaurant={restaurant}
+                                          lang={lang}
+                                          link={`${category}/${dish.link}`}
+                                      />
+                                  </Grid>
+                              ))}
                     </Grid>
                 </ContainerWrapper>
             </Container>

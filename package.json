@@ -11,6 +11,7 @@
         "format:fix": "prettier --write --ignore-path .gitignore ."
     },
     "dependencies": {
+        "@egjs/react-flicking": "^4.11.3",
         "@emotion/react": "^11.11.4",
         "@emotion/styled": "^11.11.5",
         "@fontsource/roboto": "^5.0.13",
@@ -21,6 +22,7 @@
         "@redux-devtools/extension": "^3.3.0",
         "@vercel/blob": "^0.23.3",
         "@vercel/postgres": "^0.8.0",
+        "date-fns": "^3.6.0",
         "framer-motion": "^11.2.10",
         "next": "14.2.3",
         "react": "^18",

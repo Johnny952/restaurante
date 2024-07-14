@@ -37,8 +37,34 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 ## TODO
 
+-Premios y descuentos a clientes registrados (envío de mails automáticos)
+
+# Ventas
+
+-   Clientes (link restaurante)
+
+# Restaurante
+
+-   Guardar feeback en backend
+-   Conectar pago a través de la plataforma (webpay, bancos, etc)
+-   Reservaciones
+-   Garzón IA virtual
+-   Garzón por voz
+-   Botón de llamado garzones
+-   Promociones
+-   Segundo y pedidos siguientes
+-   Modificación de pedidos????
+-   Cómo llegar
+-   Video promocional
+
 # Admin
 
--   Delete root category and add base image to restaurant, this is used when no other image provided
--   Standard Categories layouts and others (validations/errors)
--   Multiple filters on table (Pay pro plan or use external filter buttons with logic)
+# Cocina
+
+-   Agregar priority a orders con default 1, al hacer la consulta ordenar por prioridad primero, fecha creación segundo. Mostrar prioridad en el pedido.
+-   Completado parcial para bebestibles (quizás? no muy seguro)
+-   Conectar a backend
+
+# Owner
+
+# Waiter

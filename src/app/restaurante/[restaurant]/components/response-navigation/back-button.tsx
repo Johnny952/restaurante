@@ -6,15 +6,15 @@ import { useRouter } from "next/navigation";
 
 export default function BackButton({
     disabled = false,
-    onClickCallback = () => { },
+    onClickCallback = () => {},
 }: {
     disabled?: boolean;
     onClickCallback?: () => void;
 }) {
     const router = useRouter();
     function onClick() {
-        onClickCallback()
-        router.back()
+        onClickCallback();
+        router.back();
     }
     return (
         <Box sx={{ position: "fixed", bottom: "15px", left: "15px" }}>

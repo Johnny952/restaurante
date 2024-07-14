@@ -7,7 +7,6 @@ import { getByLink } from "@/app/api/dishes/get";
 import defaultDishImg from "@/../public/default-dish.png";
 import { DishPageProps } from "./page.d";
 import { ImageAsync } from "@/components/image-async";
-import ContentLoader from "react-content-loader";
 import NotFound from "./components/not-found-dish";
 import QuantityButtons from "./components/quantity-buttons";
 import { getBackground } from "@/app/api/restaurants/get";
@@ -82,8 +81,7 @@ export default async function DishPage({
                                             sx={{
                                                 background:
                                                     "linear-gradient(45deg, #9c27b0, #673ab7)",
-                                                WebkitBackgroundClip:
-                                                    "text",
+                                                WebkitBackgroundClip: "text",
                                                 WebkitTextFillColor:
                                                     "transparent",
                                                 fontWeight: "bold",

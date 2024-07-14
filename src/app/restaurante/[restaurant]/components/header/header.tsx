@@ -1,5 +1,12 @@
-"use client"
-import { Box, Container, Divider, Grid, useMediaQuery, useTheme } from "@mui/material";
+"use client";
+import {
+    Box,
+    Container,
+    Divider,
+    Grid,
+    useMediaQuery,
+    useTheme,
+} from "@mui/material";
 import { HeaderInterface } from "./header.d";
 import LogoAnimated from "./logo-animated";
 import TitleAnimated from "./title-animated";
@@ -17,7 +24,7 @@ export default function RestaurantHeader({
     loading = false,
 }: HeaderInterface) {
     const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     return (
         <AnimatedWrapper>
@@ -29,7 +36,11 @@ export default function RestaurantHeader({
                 <Container>
                     {isMobile ? (
                         <Box display="flex" alignItems="center" py={2}>
-                            <Box width={mobileLogoWidth} height={mobileLogoHeight} mr={2}>
+                            <Box
+                                width={mobileLogoWidth}
+                                height={mobileLogoHeight}
+                                mr={2}
+                            >
                                 <LogoAnimated
                                     loading={loading}
                                     image={image || ""}
@@ -46,15 +57,30 @@ export default function RestaurantHeader({
                                         backgroundColor="#000000"
                                         foregroundColor="#ecebeb"
                                     >
-                                        <rect x="0" y="0" rx="4" ry="4" width="180" height="24" />
+                                        <rect
+                                            x="0"
+                                            y="0"
+                                            rx="4"
+                                            ry="4"
+                                            width="180"
+                                            height="24"
+                                        />
                                     </ContentLoader>
                                 ) : (
-                                    <TitleAnimated title={title} isMobile={true} />
+                                    <TitleAnimated
+                                        title={title}
+                                        isMobile={true}
+                                    />
                                 )}
                             </Box>
                         </Box>
                     ) : (
-                        <Grid container direction="column" alignItems="center" spacing={3}>
+                        <Grid
+                            container
+                            direction="column"
+                            alignItems="center"
+                            spacing={3}
+                        >
                             <Grid item>
                                 <Box
                                     width={Math.floor(desktopLogoWidth / 2)}
@@ -78,10 +104,20 @@ export default function RestaurantHeader({
                                             backgroundColor="#000000"
                                             foregroundColor="#ecebeb"
                                         >
-                                            <rect x="0" y="0" rx="8" ry="8" width="440" height="32" />
+                                            <rect
+                                                x="0"
+                                                y="0"
+                                                rx="8"
+                                                ry="8"
+                                                width="440"
+                                                height="32"
+                                            />
                                         </ContentLoader>
                                     ) : (
-                                        <TitleAnimated title={title} isMobile={false} />
+                                        <TitleAnimated
+                                            title={title}
+                                            isMobile={false}
+                                        />
                                     )}
                                 </Box>
                             </Grid>

@@ -19,8 +19,8 @@ export async function getByLink(link: string) {
 
 export async function getBackground(link: string) {
     return (
-        await sql<{ background: string; image: string }>`
-        SELECT background, image
+        await sql<{ background: string; image: string; name: string }>`
+        SELECT background, image, name
         FROM Restaurants
         WHERE link=(${link})
     `

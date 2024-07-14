@@ -8,19 +8,11 @@ import { CategoryAPI } from "@/app/api/categories/index.types";
 import { ImageAsync } from "@/components/image-async";
 import CategoryWrapper from "./category-wrapper";
 
-export default async function Category(
-    props: CategoryAPI
-) {
-    const {
-        name,
-        link,
-        image = genericImage.src,
-    } = props;
+export default async function Category(props: CategoryAPI) {
+    const { name, link, image = genericImage.src } = props;
 
     return (
-        <ImageListWithStyle
-            link={link}
-        >
+        <ImageListWithStyle link={link}>
             <CategoryWrapper>
                 <ImageListItem>
                     <div className={style.outerBorder}>

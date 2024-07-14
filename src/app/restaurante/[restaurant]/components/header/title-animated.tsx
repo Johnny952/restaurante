@@ -2,7 +2,13 @@
 import { Typography } from "@mui/material";
 import { motion } from "framer-motion";
 
-export default function TitleAnimated({ title, isMobile }: { title: string; isMobile: boolean }) {
+export default function TitleAnimated({
+    title,
+    isMobile,
+}: {
+    title: string;
+    isMobile: boolean;
+}) {
     return (
         <motion.div
             initial="hidden"
@@ -11,7 +17,10 @@ export default function TitleAnimated({ title, isMobile }: { title: string; isMo
                 visible: { transition: { staggerChildren: 0.1 } },
             }}
         >
-            <Typography variant={isMobile ? "h6" : "h5"} sx={{ fontWeight: isMobile ? 500 : 400 }}>
+            <Typography
+                variant={isMobile ? "h6" : "h5"}
+                sx={{ fontWeight: isMobile ? 500 : 400 }}
+            >
                 {title.split("").map((char, index) => (
                     <motion.span
                         key={index}

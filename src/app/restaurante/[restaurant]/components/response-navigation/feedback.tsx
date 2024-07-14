@@ -52,7 +52,12 @@ const FeedbackDrawer = ({
 
     const feedbackContent = (
         <Box
-            sx={{ p: '15px', width: '90%', justifyContent: 'center', display: 'flex' }}
+            sx={{
+                p: "15px",
+                width: "90%",
+                justifyContent: "center",
+                display: "flex",
+            }}
         >
             <Box
                 sx={{

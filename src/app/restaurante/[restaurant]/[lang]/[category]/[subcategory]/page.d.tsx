@@ -5,5 +5,5 @@ export interface SubcategoryPageParams extends CategoryPageParams {
 }
 
 export interface SubcategoryPageProps {
-    params: SubcategoryPageParams
+    params: SubcategoryPageParams;
 }

@@ -47,15 +47,19 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 
 -   Guardar feeback en backend
 -   Conectar pago a través de la plataforma (webpay, bancos, etc)
--   Reservaciones
 -   Garzón IA virtual
 -   Garzón por voz
 -   Botón de llamado garzones
 -   Promociones
--   Segundo y pedidos siguientes
--   Modificación de pedidos????
--   Cómo llegar
--   Video promocional
+-   Mas de un pedido por mesa
+-   Modificación de pedidos solo hasta que no haya sido tomado
+-   Vista Restaurante antes de vista selección de lenguajes
+    -   Cómo llegar
+    -   Reservaciones
+    -   Video promocional
+-   Conectar QR con mesa
+-   Pedido y Pago cuentas separadas
+-   Login Invitado, guardado de pedidos en base de datos compartido para la mesa
 
 # Admin
 

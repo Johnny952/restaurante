@@ -1,12 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import { Box } from "@mui/material";
-import TableMap from "./components/table-map";
-import BottomNavigation from "./components/bottom-navigation";
+import TableMap from "../components/table-map";
+import BottomNavigation from "../components/bottom-navigation";
 
-export default function TablesViewPage() {
+export default function TablesEditPage() {
     const [showZoomControls, setShowZoomControls] = useState(false);
-
     const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
 
     const handleEditTable = () => {
@@ -23,7 +22,7 @@ export default function TablesViewPage() {
         <>
             <Box sx={{ flex: 1, overflow: "hidden", position: "relative" }}>
                 <TableMap
-                    mode="view"
+                    mode="edit"
                     showZoomControls={showZoomControls}
                     onSelectTable={setSelectedTableId}
                 />
@@ -31,7 +30,7 @@ export default function TablesViewPage() {
             <BottomNavigation
                 showZoomControls={showZoomControls}
                 setShowZoomControls={setShowZoomControls}
-                isEditMode={false}
+                isEditMode={true}
                 selectedTableId={selectedTableId}
                 onEditTable={handleEditTable}
                 onDeleteTable={handleDeleteTable}

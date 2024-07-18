@@ -1,6 +1,7 @@
 .tableWrapper {
     position: relative;
     transform-origin: top left;
+    transition: all 0.3s ease;
 }
 
 .theTable {
@@ -13,6 +14,7 @@
     box-shadow:
         0 3px 9pt rgba(0, 0, 0, 0.23),
         0 3px 9pt rgba(0, 0, 0, 0.16);
+    transition: all 0.3s ease;
 }
 
 .plate {
@@ -75,49 +77,6 @@
     left: 120px;
     top: 480px;
     transform: rotate(180deg);
-}
-
-.knife,
-.fork {
-    position: absolute;
-    width: 7px;
-    height: 70px;
-    background-color: #d2d3d5;
-    top: 15px;
-    box-shadow:
-        0 3px 9pt rgba(0, 0, 0, 0.23),
-        0 3px 9pt rgba(0, 0, 0, 0.16);
-}
-
-.knife {
-    border-radius: 0 0 100%/13px 0;
-    right: -17px;
-}
-
-.fork {
-    border-radius: 0px 0 9px 21px;
-    left: -17px;
-}
-
-.fork:before,
-.fork:after {
-    box-shadow: 0 8px 0 2px #5e4837;
-    position: absolute;
-    bottom: 0;
-    width: 3px;
-    height: 18px;
-    content: " ";
-    background-color: inherit;
-}
-
-.fork:before {
-    border-top-right-radius: 20px;
-    left: 7px;
-}
-
-.fork:after {
-    border-top-left-radius: 20px;
-    left: -3px;
 }
 
 .chair {

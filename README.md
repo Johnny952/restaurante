@@ -72,3 +72,11 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 # Owner
 
 # Waiter
+
+-   Agregar propiedades deleted: booleano
+-   Agregar front para cuando una mesa fue borrada (en modo edición no deberían crearse las mesas borradas, simiplemente se eliminan del store y las que ya fueron creadas y eliminadas en backend, deberían mostrarse de otra forma)
+-   Corregir tipos para las respuestas basados en la base de datos (ids seriales son number)
+-   Mostrar número de mesa
+-   Mostrar cuando una mesa llama a un mesero
+-   Mostrar cuando el pedido de una mesa está listo
+-   Mostrar el estado de los pedidos de cada mesa

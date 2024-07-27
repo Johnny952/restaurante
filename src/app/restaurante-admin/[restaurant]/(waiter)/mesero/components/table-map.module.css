@@ -1,3 +1,53 @@
+.mapContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.transformWrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.transformContent {
+    width: 100%;
+    height: 100%;
+}
+
+.tablesContainer {
+    width: 2000px;
+    height: 2000px;
+    position: relative;
+    background-color: #f5f5dc;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+    border: 2px solid #8b4513;
+}
+
+.mobileZoomControls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1200;
+    display: flex;
+    gap: 10px;
+}
+
+.mobileZoomControls button {
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
 .zoomControls {
     position: fixed;
     top: 50%;

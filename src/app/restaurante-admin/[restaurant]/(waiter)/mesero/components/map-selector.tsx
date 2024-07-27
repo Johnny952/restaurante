@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-    Box,
     Button,
     Popper,
     Grow,
@@ -13,7 +12,9 @@ import {
 } from "@mui/material";
 import { styled } from "@mui/system";
 import MapIcon from "@mui/icons-material/Map";
+import Add from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { MapInterface } from "@/app/api/maps/get";
 
 const FloatingButton = styled(Button)(({ theme }) => ({
     position: "absolute",
@@ -40,18 +41,25 @@ const StyledPopper = styled(Popper)(({ theme }) => ({
 }));
 
 interface MapSelectorProps {
-    maps: string[];
-    currentMap: number;
-    onMapChange: (index: number) => void;
+    maps: MapInterface[];
+    currentMap?: string;
+    onMapChange: (index: string) => void;
+    onMapAdd: () => void;
+    showAddMap: boolean;
 }
 
 const MapSelector: React.FC<MapSelectorProps> = ({
     maps,
     currentMap,
     onMapChange,
+    onMapAdd,
+    showAddMap,
 }) => {
     const [open, setOpen] = useState(false);
     const anchorRef = React.useRef<HTMLButtonElement>(null);
+
+    const selectedMap =
+        maps.find((map) => map.id.toString() === currentMap) || maps[0];
 
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
@@ -86,7 +94,7 @@ const MapSelector: React.FC<MapSelectorProps> = ({
                 variant="contained"
                 disableElevation
             >
-                {maps[currentMap]}
+                {maps.length >= 0 ? selectedMap?.name : "No hay mapas"}
             </FloatingButton>
             <StyledPopper
                 open={open}
@@ -115,18 +123,31 @@ const MapSelector: React.FC<MapSelectorProps> = ({
                                     {maps.map((map, index) => (
                                         <MenuItem
                                             key={index}
-                                            selected={index === currentMap}
+                                            selected={map.id === currentMap}
                                             onClick={() => {
-                                                onMapChange(index);
+                                                onMapChange(map.id);
                                                 setOpen(false);
                                             }}
                                         >
                                             <ListItemIcon>
                                                 <MapIcon fontSize="small" />
                                             </ListItemIcon>
-                                            <ListItemText primary={map} />
+                                            <ListItemText primary={map.name} />
                                         </MenuItem>
                                     ))}
+                                    {showAddMap ? (
+                                        <MenuItem
+                                            onClick={() => {
+                                                onMapAdd();
+                                                setOpen(false);
+                                            }}
+                                        >
+                                            <ListItemIcon>
+                                                <Add fontSize="small" />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Agregar" />
+                                        </MenuItem>
+                                    ) : null}
                                 </MenuList>
                             </ClickAwayListener>
                         </MapList>

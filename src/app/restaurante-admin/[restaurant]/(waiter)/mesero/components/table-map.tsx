@@ -1,56 +1,62 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import { Box, Slider } from "@mui/material";
+import { Box, Slider, useMediaQuery, useTheme } from "@mui/material";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import {
     DndContext,
     PointerSensor,
+    useDroppable,
     useSensor,
     useSensors,
 } from "@dnd-kit/core";
 import styles from "./table-map.module.css";
 import Table from "./table";
 import MapSelector from "./map-selector";
-
-interface TableData {
-    id: string;
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-}
-
-const initialTables: TableData[] = [
-    { id: "1", x: 200, y: 200, width: 90, height: 180 },
-    { id: "2", x: 400, y: 400, width: 90, height: 180 },
-    { id: "3", x: 600, y: 600, width: 90, height: 180 },
-];
+import { usePathname, useRouter } from "next/navigation";
+import { MapInterface } from "@/app/api/maps/get";
+import { MapTableInterface } from "@/app/api/maps-tables/get";
 
 interface TableMapProps {
     mode: "view" | "edit";
     showZoomControls: boolean;
     onSelectTable: (tableId: string | null) => void;
+    selectedTable?: string | null;
+    maps: MapInterface[];
+    initialTables: MapTableInterface[];
+    initialMap?: MapInterface;
+    showAddMap?: boolean;
+    handleDragEnd?: (props: { tableId: string; x: number; y: number }) => void;
+    selectedMap?: string;
 }
 
 const TableMap: React.FC<TableMapProps> = ({
     mode,
     showZoomControls,
     onSelectTable,
+    selectedTable,
+    maps,
+    initialTables,
+    initialMap,
+    showAddMap = false,
+    selectedMap,
+    handleDragEnd = () => {},
 }) => {
-    const [tables, setTables] = useState<TableData[]>(initialTables);
     const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
     const contentRef = useRef<HTMLDivElement>(null);
     const initialScale = 0.4;
-    const [currentMap, setCurrentMap] = useState(0);
-    const maps = [
-        "Planta baja",
-        "Primer piso",
-        "Terraza",
-        "Jardín",
-        "Salón VIP",
-    ];
     const [isDragging, setIsDragging] = useState(false);
-    const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
+    const width = initialMap ? initialMap.width : 2000;
+    const height = initialMap ? initialMap.height : 2000;
+
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const { setNodeRef } = useDroppable({
+        id: "map-droppable",
+        data: {
+            type: "map",
+        },
+    });
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -62,25 +68,6 @@ const TableMap: React.FC<TableMapProps> = ({
 
     const handleDragStart = () => {
         setIsDragging(true);
-    };
-
-    const handleDragEnd = (event: any) => {
-        setIsDragging(false);
-        const { active, over } = event;
-        if (active && over) {
-            setTables((prevTables) =>
-                prevTables.map((table) => {
-                    if (table.id === active.id) {
-                        return {
-                            ...table,
-                            x: over.x - table.width / 2,
-                            y: over.y - table.height / 2,
-                        };
-                    }
-                    return table;
-                })
-            );
-        }
     };
 
     useEffect(() => {
@@ -139,43 +126,64 @@ const TableMap: React.FC<TableMapProps> = ({
             setTransform(0, 0, scale / 50, 300, "easeOut");
         };
 
-    const handleMapChange = (newValue: number) => {
-        setCurrentMap(newValue);
-        // Aquí puedes cargar las mesas correspondientes al mapa seleccionado
-        // Por ejemplo:
-        // setTables(getTablesForMap(newValue));
+    const handleMapChange = (newValue: string) => {
+        router.push(`${pathname}?map=${newValue}`);
     };
 
     const handleMapClick = (event: React.MouseEvent) => {
         // Verifica si el clic fue directamente en el mapa
         if (event.target === event.currentTarget) {
-            setSelectedTableId(null);
             onSelectTable(null);
         }
     };
 
     const handleTableClick = (tableId: string) => {
-        if (mode === "edit") {
-            const newSelectedId = tableId === selectedTableId ? null : tableId;
-            setSelectedTableId(newSelectedId);
-            onSelectTable(newSelectedId);
-        }
+        const newSelectedId = tableId === selectedTable ? null : tableId;
+        onSelectTable(newSelectedId);
     };
+
+    const handleDragEndInternal = (event: any) => {
+        const { active, delta } = event;
+        if (active && delta) {
+            const currentTable = initialTables.find(
+                (table) => table.id === active.id
+            );
+            if (currentTable) {
+                const newX = currentTable.position_x + delta.x;
+                const newY = currentTable.position_y + delta.y;
+                handleDragEnd({
+                    tableId: active.id,
+                    x: newX,
+                    y: newY,
+                });
+            }
+        }
+        setIsDragging(false);
+    };
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     return (
         <Box
             className={styles.mapContainer}
-            sx={{ position: "relative", zIndex: 1000 }}
+            sx={{
+                position: "relative",
+                zIndex: 1000,
+                height: isMobile ? "calc(100vh - 120px)" : "100%",
+                overflow: "hidden",
+            }}
         >
             <MapSelector
                 maps={maps}
-                currentMap={currentMap}
+                currentMap={selectedMap}
                 onMapChange={handleMapChange}
+                onMapAdd={() => router.push("?agregarMapa=1")}
+                showAddMap={showAddMap}
             />
             <DndContext
                 sensors={sensors}
                 onDragStart={handleDragStart}
-                onDragEnd={handleDragEnd}
+                onDragEnd={handleDragEndInternal}
             >
                 <TransformWrapper
                     initialPositionX={initialPosition.x}
@@ -193,9 +201,9 @@ const TableMap: React.FC<TableMapProps> = ({
                     }}
                     pinch={{ disabled: false }}
                 >
-                    {({ setTransform }) => (
+                    {({ setTransform, zoomIn, zoomOut }) => (
                         <>
-                            {showZoomControls && (
+                            {showZoomControls && !isMobile && (
                                 <Box className={styles.zoomControls}>
                                     <Slider
                                         orientation="vertical"
@@ -220,32 +228,39 @@ const TableMap: React.FC<TableMapProps> = ({
                                     />
                                 </Box>
                             )}
+                            {isMobile && (
+                                <Box className={styles.mobileZoomControls}>
+                                    <button onClick={() => zoomIn()}>+</button>
+                                    <button onClick={() => zoomOut()}>-</button>
+                                </Box>
+                            )}
                             <TransformComponent
                                 wrapperClass={styles.transformWrapper}
                                 contentClass={styles.transformContent}
                             >
                                 <Box
+                                    ref={(node) => {
+                                        setNodeRef(node as HTMLElement);
+                                    }}
                                     className={styles.tablesContainer}
-                                    ref={contentRef}
                                     style={{
-                                        width: "2000px",
-                                        height: "2000px",
+                                        width: `${width}px`,
+                                        height: `${height}px`,
                                         position: "relative",
                                     }}
                                     onClick={handleMapClick}
                                 >
-                                    {tables.map((table) => (
+                                    {initialTables.map((table) => (
                                         <Table
+                                            typeId={table.table_id}
                                             key={table.id}
                                             id={table.id}
-                                            x={table.x}
-                                            y={table.y}
-                                            width={table.width}
-                                            height={table.height}
+                                            x={table.position_x}
+                                            y={table.position_y}
                                             isEditable={mode === "edit"}
                                             isDragging={isDragging}
                                             isSelected={
-                                                table.id === selectedTableId
+                                                table.id === selectedTable
                                             }
                                             onClick={() =>
                                                 handleTableClick(table.id)

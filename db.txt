@@ -48,7 +48,33 @@ CREATE INDEX idx_dishes_category_id ON Dishes(category_id);
 CREATE INDEX idx_dishes_price ON Dishes(price);
 
 
+CREATE TABLE Tables (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL
+);
 
+CREATE TABLE Maps (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  restaurant_id INTEGER NOT NULL,
+  width INTEGER NOT NULL,
+  height INTEGER NOT NULL,
+  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id)
+);
+
+CREATE TABLE Maps_Tables (
+  id SERIAL PRIMARY KEY,
+  number SERIAL UNIQUE,
+  map_id INTEGER NOT NULL,
+  table_id INTEGER NOT NULL,
+  position_x INTEGER,
+  position_y INTEGER,
+  qr_code_id VARCHAR(100) NOT NULL,
+  qr_code VARCHAR(255),
+
+  FOREIGN KEY (map_id) REFERENCES maps(id),
+  FOREIGN KEY (table_id) REFERENCES Tables(id)
+);
 
 
 

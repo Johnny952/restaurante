@@ -1,14 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import {
     BottomNavigation as MuiBottomNavigation,
     BottomNavigationAction,
     useMediaQuery,
     useTheme,
     Paper,
+    Box,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemText,
+    Drawer,
 } from "@mui/material";
 import { Delete, Edit, Visibility, ZoomIn } from "@mui/icons-material";
 import AddIcon from "@mui/icons-material/Add";
-import JoinFullIcon from "@mui/icons-material/JoinFull";
 import SaveIcon from "@mui/icons-material/Save";
 import MenuIcon from "@mui/icons-material/Menu";
 import FactCheckIcon from "@mui/icons-material/FactCheck";
@@ -23,6 +28,9 @@ interface BottomNavigationProps {
     onDeleteTable?: () => void;
     handleAddTable?: () => void;
     handleSave?: () => void;
+    handleMapDelete?: () => void;
+    editHref?: string;
+    viewHref?: string;
 }
 
 const BottomNavigation: React.FC<BottomNavigationProps> = ({
@@ -33,9 +41,46 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
     onDeleteTable = () => {},
     handleAddTable = () => {},
     handleSave = () => {},
+    handleMapDelete = () => {},
+    editHref = "/",
+    viewHref = "/",
 }) => {
     const theme = useTheme();
     const isDesktop = useMediaQuery(theme.breakpoints.up("md"));
+    const [openMenu, setOpenMenu] = useState(false);
+
+    const menuItems = [
+        {
+            name: "Eliminar Mapa",
+            onClick: handleMapDelete,
+        },
+        {
+            name: "Editar Mapa",
+            onClick: () => {},
+        },
+        {
+            name: "Unir Mesas",
+            onClick: () => {},
+        },
+    ];
+
+    const menuList = (
+        <Box
+            sx={{ width: "100%" }}
+            role="presentation"
+            onClick={() => setOpenMenu(false)}
+        >
+            <List>
+                {menuItems.map((item, index) => (
+                    <ListItem key={index} disablePadding>
+                        <ListItemButton onClick={item.onClick}>
+                            <ListItemText primary={item.name} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+            </List>
+        </Box>
+    );
 
     return (
         <Paper
@@ -84,20 +129,13 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
                             label="Ver"
                             icon={<Visibility />}
                             component={Link}
-                            href="../mesero"
+                            href={viewHref}
                         />,
                         <BottomNavigationAction
                             key={2}
                             label="Agregar Mesa"
                             icon={<AddIcon />}
                             onClick={handleAddTable}
-                        />,
-                        <BottomNavigationAction
-                            key={3}
-                            label="Unir mesas"
-                            icon={<JoinFullIcon />}
-                            component={Link}
-                            href="mesero/editar"
                         />,
                         <BottomNavigationAction
                             key={4}
@@ -109,7 +147,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
                             key={5}
                             label="Menu"
                             icon={<MenuIcon />}
-                            onClick={() => {}}
+                            onClick={() => setOpenMenu(true)}
                         />,
                     ]
                 ) : (
@@ -117,7 +155,7 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
                         label="Editar"
                         icon={<Edit />}
                         component={Link}
-                        href="mesero/editar"
+                        href={editHref}
                     />
                 )}
                 {!isEditMode && selectedTableId
@@ -137,6 +175,14 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({
                       ]
                     : null}
             </MuiBottomNavigation>
+
+            <Drawer
+                open={openMenu}
+                onClose={() => setOpenMenu(false)}
+                anchor="bottom"
+            >
+                {menuList}
+            </Drawer>
         </Paper>
     );
 };

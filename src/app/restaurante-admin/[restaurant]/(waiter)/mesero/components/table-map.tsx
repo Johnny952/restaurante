@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useRef, useState } from "react";
 import { Box, Slider, useMediaQuery, useTheme } from "@mui/material";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
@@ -12,7 +11,6 @@ import {
 import styles from "./table-map.module.css";
 import Table from "./table";
 import MapSelector from "./map-selector";
-import { usePathname, useRouter } from "next/navigation";
 import { MapInterface } from "@/app/api/maps/get";
 import { MapTableInterface } from "@/app/api/maps-tables/get";
 
@@ -27,6 +25,8 @@ interface TableMapProps {
     showAddMap?: boolean;
     handleDragEnd?: (props: { tableId: string; x: number; y: number }) => void;
     selectedMap?: string;
+    handleMapChange?: (newValue: string) => void;
+    handleAddMap?: () => void;
 }
 
 const TableMap: React.FC<TableMapProps> = ({
@@ -40,6 +40,8 @@ const TableMap: React.FC<TableMapProps> = ({
     showAddMap = false,
     selectedMap,
     handleDragEnd = () => {},
+    handleMapChange = () => {},
+    handleAddMap = () => {},
 }) => {
     const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
     const contentRef = useRef<HTMLDivElement>(null);
@@ -47,9 +49,6 @@ const TableMap: React.FC<TableMapProps> = ({
     const [isDragging, setIsDragging] = useState(false);
     const width = initialMap ? initialMap.width : 2000;
     const height = initialMap ? initialMap.height : 2000;
-
-    const router = useRouter();
-    const pathname = usePathname();
 
     const { setNodeRef } = useDroppable({
         id: "map-droppable",
@@ -126,12 +125,7 @@ const TableMap: React.FC<TableMapProps> = ({
             setTransform(0, 0, scale / 50, 300, "easeOut");
         };
 
-    const handleMapChange = (newValue: string) => {
-        router.push(`${pathname}?map=${newValue}`);
-    };
-
     const handleMapClick = (event: React.MouseEvent) => {
-        // Verifica si el clic fue directamente en el mapa
         if (event.target === event.currentTarget) {
             onSelectTable(null);
         }
@@ -177,7 +171,7 @@ const TableMap: React.FC<TableMapProps> = ({
                 maps={maps}
                 currentMap={selectedMap}
                 onMapChange={handleMapChange}
-                onMapAdd={() => router.push("?agregarMapa=1")}
+                onMapAdd={handleAddMap}
                 showAddMap={showAddMap}
             />
             <DndContext

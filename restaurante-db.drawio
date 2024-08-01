@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="rBc2-Wu0qSnwnDVqFj12" name="Page-1">
-        <mxGraphModel dx="2674" dy="535" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="2674" dy="587" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -212,7 +212,7 @@
                     <mxGeometry y="90" width="140" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="84" value="Maps-Tables" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-340" y="130" width="170" height="270" as="geometry"/>
+                    <mxGeometry x="-340" y="130" width="170" height="300" as="geometry"/>
                 </mxCell>
                 <mxCell id="88" value="id: SERIAL (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="84" vertex="1">
                     <mxGeometry y="30" width="170" height="30" as="geometry"/>
@@ -238,8 +238,11 @@
                 <mxCell id="114" value="qr_code" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="84" vertex="1">
                     <mxGeometry y="240" width="170" height="30" as="geometry"/>
                 </mxCell>
+                <mxCell id="143" value="deleted: BOOLEAN" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="84">
+                    <mxGeometry y="270" width="170" height="30" as="geometry"/>
+                </mxCell>
                 <mxCell id="90" value="Maps" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-100" y="160" width="170" height="180" as="geometry"/>
+                    <mxGeometry x="-100" y="160" width="170" height="210" as="geometry"/>
                 </mxCell>
                 <mxCell id="91" value="id: SERIAL (PK)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="90" vertex="1">
                     <mxGeometry y="30" width="170" height="30" as="geometry"/>
@@ -255,6 +258,9 @@
                 </mxCell>
                 <mxCell id="141" value="height: INTEGER" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" parent="90" vertex="1">
                     <mxGeometry y="150" width="170" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="144" value="deleted: BOOLEAN" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="90">
+                    <mxGeometry y="180" width="170" height="30" as="geometry"/>
                 </mxCell>
                 <mxCell id="95" style="edgeStyle=orthogonalEdgeStyle;curved=1;rounded=1;html=1;endArrow=none;endFill=0;" parent="1" source="5" target="92" edge="1">
                     <mxGeometry relative="1" as="geometry"/>

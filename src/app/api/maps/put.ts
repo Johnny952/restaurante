@@ -14,6 +14,6 @@ export async function put(
     restaurant: string
 ) {
     return sql`
-    INSERT INTO Maps (name, restaurant_id, width, height)
-    VALUES (${name}, ${restaurant}, ${width}, ${height})`;
+    INSERT INTO Maps (name, restaurant_id, width, height, deleted)
+    VALUES (${name}, ${restaurant}, ${width}, ${height}, false)`;
 }

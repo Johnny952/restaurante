@@ -1,5 +1,4 @@
 "use client";
-import { put } from "@/app/api/maps/put";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -15,18 +14,22 @@ import { ChangeEvent, useState } from "react";
 interface AddMapDioalogProps {
     open: boolean;
     handleClose: () => void;
-    restaurant: string;
+    handleAddMap?: (
+        name: string,
+        height: number,
+        width: number,
+        callback: () => void
+    ) => void;
 }
 
 export default function AddMapDialog({
     open,
     handleClose,
-    restaurant,
+    handleAddMap = () => {},
 }: AddMapDioalogProps) {
     const [value, setValue] = useState<string>("");
     const [height, setHeight] = useState<number>(2000);
     const [width, setWidth] = useState<number>(2000);
-    const setLoading = useLoadStore((state) => state.setLoading);
     const snackError = useSnackStore((state) => state.setOpenError);
 
     const handleValueChange = (
@@ -52,21 +55,15 @@ export default function AddMapDialog({
     };
 
     const handleConfirm = async () => {
-        setLoading(true);
         if (value) {
-            try {
-                await put(value, width, height, restaurant);
-                handleClose();
+            handleAddMap(value, height, width, () => {
                 setValue("");
                 setHeight(2000);
                 setWidth(2000);
-            } catch (error) {
-                snackError(`Ocurrio un error: ${error}`);
-            }
+            });
         } else {
             snackError("El nombre del mapa no puede estar vacío");
         }
-        setLoading(false);
     };
 
     return (

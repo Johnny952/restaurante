@@ -80,3 +80,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/deploym
 -   Mostrar cuando una mesa llama a un mesero
 -   Mostrar cuando el pedido de una mesa está listo
 -   Mostrar el estado de los pedidos de cada mesa
+
+-   Agregar array de mesas nuevas creadas en array distinto a las de la base de datos
+-   Agregar eliminación y edición de mapa (status para los mapas en base de datos)
+-   Modificar visualización y edición de mapa /:restaurant/mesero/:map/ver (/editar)

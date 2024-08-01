@@ -10,6 +10,7 @@ export interface MapInterface {
     name: string;
     width: number;
     height: number;
+    deleted: boolean;
 }
 
 /**
@@ -20,7 +21,7 @@ export interface MapInterface {
 export async function getByRestaurantLink(restaurantLink: string) {
     return (
         await sql.query<MapInterface>(`
-            SELECT m.id, m.name, m.width, m.height
+            SELECT m.id, m.name, m.width, m.height, m.deleted
             FROM Maps m
             JOIN Restaurants r ON r.id = m.restaurant_id
             WHERE r.link = '${restaurantLink}'

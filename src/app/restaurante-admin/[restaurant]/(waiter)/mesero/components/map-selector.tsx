@@ -35,9 +35,8 @@ const MapList = styled(Paper)(({ theme }) => ({
     boxShadow: (theme.shadows as string[])[5],
 }));
 
-// Nuevo componente para el contenedor del Popper
 const StyledPopper = styled(Popper)(({ theme }) => ({
-    zIndex: 1200, // Asegura que esté por encima de todos los demás elementos
+    zIndex: 1200,
 }));
 
 interface MapSelectorProps {
@@ -93,8 +92,12 @@ const MapSelector: React.FC<MapSelectorProps> = ({
                 endIcon={<ExpandMoreIcon />}
                 variant="contained"
                 disableElevation
+                sx={{
+                    color:
+                        selectedMap && selectedMap.deleted ? "red" : undefined,
+                }}
             >
-                {maps.length >= 0 ? selectedMap?.name : "No hay mapas"}
+                {selectedMap ? selectedMap?.name : "No hay mapas"}
             </FloatingButton>
             <StyledPopper
                 open={open}
@@ -120,21 +123,43 @@ const MapSelector: React.FC<MapSelectorProps> = ({
                                     autoFocusItem={open}
                                     onKeyDown={handleListKeyDown}
                                 >
-                                    {maps.map((map, index) => (
-                                        <MenuItem
-                                            key={index}
-                                            selected={map.id === currentMap}
-                                            onClick={() => {
-                                                onMapChange(map.id);
-                                                setOpen(false);
-                                            }}
-                                        >
-                                            <ListItemIcon>
-                                                <MapIcon fontSize="small" />
-                                            </ListItemIcon>
-                                            <ListItemText primary={map.name} />
-                                        </MenuItem>
-                                    ))}
+                                    {maps.map((map, index) =>
+                                        !showAddMap && map.deleted ? null : (
+                                            <MenuItem
+                                                sx={{
+                                                    color: map.deleted
+                                                        ? "red"
+                                                        : undefined,
+                                                }}
+                                                key={index}
+                                                selected={map.id === currentMap}
+                                                onClick={() => {
+                                                    onMapChange(map.id);
+                                                    setOpen(false);
+                                                }}
+                                            >
+                                                <ListItemIcon>
+                                                    <MapIcon
+                                                        color={
+                                                            map.deleted
+                                                                ? "error"
+                                                                : undefined
+                                                        }
+                                                        fontSize="small"
+                                                    />
+                                                </ListItemIcon>
+                                                <ListItemText
+                                                    primary={map.name}
+                                                    sx={{
+                                                        textDecoration:
+                                                            map.deleted
+                                                                ? "line-through"
+                                                                : undefined,
+                                                    }}
+                                                />
+                                            </MenuItem>
+                                        )
+                                    )}
                                     {showAddMap ? (
                                         <MenuItem
                                             onClick={() => {

@@ -66,7 +66,7 @@ CREATE TABLE Maps (
 
 CREATE TABLE Maps_Tables (
   id SERIAL PRIMARY KEY,
-  number SERIAL UNIQUE,
+  number SERIAL,
   map_id INTEGER NOT NULL,
   table_id INTEGER NOT NULL,
   position_x INTEGER,

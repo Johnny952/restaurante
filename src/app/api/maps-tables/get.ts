@@ -3,14 +3,15 @@
 import { sql } from "@vercel/postgres";
 
 export interface MapTableInterface {
-    id: string;
+    id: number;
     number: number;
-    map_id: string;
-    table_id: string;
+    map_id: number;
+    table_id: number;
     position_x: number;
     position_y: number;
     qr_code_id: string;
     qr_code: string;
+    deleted: boolean;
 }
 
 /**
@@ -22,7 +23,7 @@ export interface MapTableInterface {
 export async function getById(id: string) {
     return (
         await sql<MapTableInterface>`
-        SELECT id, number, map_id, table_id, position_x, position_y, qr_code_id, qr_code
+        SELECT id, number, map_id, table_id, position_x, position_y, qr_code_id, qr_code, deleted
         FROM Maps_Tables mt
         WHERE map_id=${id}
     `
@@ -35,7 +36,7 @@ export async function getById(id: string) {
  * @param map - The map
  * @returns The list of tables
  */
-export async function getByMap(map: string) {
+export async function getByMap(map: number) {
     return (
         await sql<MapTableInterface>`
         SELECT id, number, map_id, table_id, position_x, position_y, qr_code_id, qr_code

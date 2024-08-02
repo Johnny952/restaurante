@@ -140,15 +140,15 @@ const TableMap: React.FC<TableMapProps> = ({
         const { active, delta } = event;
         if (active && delta) {
             const currentTable = initialTables.find(
-                (table) => table.id === active.id
+                (table) => table.id.toString() === active.id
             );
             if (currentTable) {
                 const newX = currentTable.position_x + delta.x;
                 const newY = currentTable.position_y + delta.y;
                 handleDragEnd({
                     tableId: active.id,
-                    x: newX,
-                    y: newY,
+                    x: newX < 0 ? 0 : newX > width ? width : newX,
+                    y: newY < 0 ? 0 : newY > height ? height : newY,
                 });
             }
         }
@@ -246,18 +246,21 @@ const TableMap: React.FC<TableMapProps> = ({
                                 >
                                     {initialTables.map((table) => (
                                         <Table
-                                            typeId={table.table_id}
-                                            key={table.id}
-                                            id={table.id}
+                                            typeId={table.table_id.toString()}
+                                            key={table.id.toString()}
+                                            id={table.id.toString()}
                                             x={table.position_x}
                                             y={table.position_y}
                                             isEditable={mode === "edit"}
                                             isDragging={isDragging}
                                             isSelected={
-                                                table.id === selectedTable
+                                                table.id.toString() ===
+                                                selectedTable
                                             }
                                             onClick={() =>
-                                                handleTableClick(table.id)
+                                                handleTableClick(
+                                                    table.id.toString()
+                                                )
                                             }
                                         />
                                     ))}

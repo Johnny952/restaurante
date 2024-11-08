@@ -58,75 +58,73 @@ export default async function DishPage({
     const dishImage = dish.dish_image || defaultDishImg.src;
 
     return (
-        <MainWrapper>
-            <Background image={dishImage}>
-                <RestaurantHeader
-                    title={toTitle(dish.dish_name || "")}
-                    image={restaurant.logo}
-                />
-                <Container sx={{ paddingY: "60px" }}>
-                    <Grid container spacing={2} rowSpacing={2}>
-                        <Grid
-                            item
-                            xs={12}
-                            sm={6}
-                            display="flex"
-                            justifyContent="center"
-                        >
-                            <ImageWrapper>
-                                <ImageAsync
-                                    alt="plato"
-                                    src={dishImage}
-                                    sizes="100vw"
-                                    width="100"
-                                    height="100"
-                                    style={{
-                                        width: "100%",
-                                        height: "auto",
-                                        borderRadius: "5%",
-                                        maxWidth: "300px",
-                                    }}
-                                />
-                            </ImageWrapper>
-                        </Grid>
-                        <Grid item xs={12} sm={6}>
-                            <Grid container rowSpacing={2}>
-                                <Grid item xs={12} textAlign="center">
-                                    <Typography variant="body1">
-                                        {dish.dish_description || ""}
+        <Background image={dishImage}>
+            <RestaurantHeader
+                title={toTitle(dish.dish_name || "")}
+                image={restaurant.logo}
+            />
+            <Container sx={{ paddingY: "60px" }}>
+                <Grid container spacing={2} rowSpacing={2}>
+                    <Grid
+                        item
+                        xs={12}
+                        sm={6}
+                        display="flex"
+                        justifyContent="center"
+                    >
+                        <ImageWrapper>
+                            <ImageAsync
+                                alt="plato"
+                                src={dishImage}
+                                sizes="100vw"
+                                width="100"
+                                height="100"
+                                style={{
+                                    width: "100%",
+                                    height: "auto",
+                                    borderRadius: "5%",
+                                    maxWidth: "300px",
+                                }}
+                            />
+                        </ImageWrapper>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Grid container rowSpacing={2}>
+                            <Grid item xs={12} textAlign="center">
+                                <Typography variant="body1">
+                                    {dish.dish_description || ""}
+                                </Typography>
+                            </Grid>
+                            <Grid item xs={12} textAlign="center">
+                                <PriceWrapper>
+                                    <Typography
+                                        variant="h4"
+                                        sx={{
+                                            background:
+                                                "linear-gradient(45deg, #9c27b0, #673ab7)",
+                                            WebkitBackgroundClip: "text",
+                                            WebkitTextFillColor:
+                                                "transparent",
+                                            fontWeight: "bold",
+                                        }}
+                                    >
+                                        {formatPrice(dish.dish_price || -1)}
                                     </Typography>
-                                </Grid>
-                                <Grid item xs={12} textAlign="center">
-                                    <PriceWrapper>
-                                        <Typography
-                                            variant="h4"
-                                            sx={{
-                                                background:
-                                                    "linear-gradient(45deg, #9c27b0, #673ab7)",
-                                                WebkitBackgroundClip: "text",
-                                                WebkitTextFillColor:
-                                                    "transparent",
-                                                fontWeight: "bold",
-                                            }}
-                                        >
-                                            {formatPrice(dish.dish_price || -1)}
-                                        </Typography>
-                                    </PriceWrapper>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <QuantityButtons
-                                        dish={dish}
-                                        restaurantId={restaurant.id}
-                                        languangeId={languageCode}
-                                        categoryId={category.id}
-                                    />
-                                </Grid>
+                                </PriceWrapper>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <QuantityButtons
+                                    dish={dish}
+                                    restaurantId={restaurant.id}
+                                    languangeId={languageCode}
+                                    categoryId={category.id}
+                                />
                             </Grid>
                         </Grid>
                     </Grid>
-                </Container>
-                <ResponsiveNavigation />
-            </Background>
-        </MainWrapper>
+                </Grid>
+            </Container>
+            <ResponsiveNavigation />
+        </Background>
     );
 }

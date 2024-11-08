@@ -9,7 +9,11 @@ import CategoryWrapper from "./category-wrapper";
 import { CategoryType } from "@/lib/models/categories";
 
 export default async function Category(props: CategoryType) {
-    const { category_name, category_link, category_image = genericImage.src } = props;
+    const {
+        category_name,
+        category_link,
+        category_image = genericImage.src,
+    } = props;
 
     return (
         <ImageListWithStyle link={category_link}>

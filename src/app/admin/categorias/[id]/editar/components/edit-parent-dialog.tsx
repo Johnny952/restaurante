@@ -1,3 +1,4 @@
+"use client";
 import useLoadStore from "@/store/load-store";
 import {
     Button,
@@ -32,12 +33,7 @@ export default function EditParentDialog({
 }: {
     open: boolean;
     id: string;
-    category: CategoryType & {
-        restaurant_name: string;
-        restaurant_link: string;
-        parent: string;
-        language: string;
-    };
+    category: CategoryType;
 }) {
     const [formData, setFormData] = useState<FormData>({
         parent: "",
@@ -76,7 +72,7 @@ export default function EditParentDialog({
     useEffect(() => {
         getAllParentsByRestaurantLanguage(
             category.restaurant_link,
-            category.language
+            category.language_code,
         )
             .then((parents) => {
                 if ("error" in parents) {
@@ -91,7 +87,7 @@ export default function EditParentDialog({
                     autoHideDuration: 3000,
                 });
             });
-    }, [category.language, category.restaurant_link]);
+    }, [category.language_code, category.restaurant_link]);
 
     return (
         <Dialog open={open} aria-labelledby="edit-dialog-title">
@@ -118,7 +114,10 @@ export default function EditParentDialog({
                             >
                                 <MenuItem value={""}>No padre</MenuItem>
                                 {allCategories.map((cat) => (
-                                    <MenuItem key={cat.category_id} value={cat.category_id}>
+                                    <MenuItem
+                                        key={cat.id}
+                                        value={cat.id}
+                                    >
                                         {cat.category_name}
                                     </MenuItem>
                                 ))}

@@ -1,16 +1,14 @@
 "use client";
-import LinkBreadcrumbs from "@/components/link-breadcrumbs";
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
-import { RestaurantLanguageInterface } from "@/app/api/restaurants-languages/index.types";
-import { get } from "@/app/api/restaurants-languages/get";
+// import { RestaurantLanguageInterface } from "@/app/api/restaurants-languages/index.types";
+// import { get } from "@/app/api/restaurants-languages/get";
 import EditRestaurantDialog from "./components/edit-restaurant-dialog";
 import EditLanguageDialog from "./components/edit-language-dialog";
 import EditLayout from "@/app/admin/components/layouts/edit";
+import { RestaurantLanguageType } from "@/lib/models/language";
 
 const breadcrumbs = [
     {
@@ -37,7 +35,7 @@ export default function EditRestaurantePage({
     };
 }) {
     const [oldData, setOldData] =
-        useState<RestaurantLanguageInterface | null>();
+        useState<RestaurantLanguageType | null>();
     const router = useRouter();
     const pathname = usePathname();
 
@@ -51,7 +49,8 @@ export default function EditRestaurantePage({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return get(id);
+            // return get(id);
+            return null
         };
 
         fetchData()
@@ -69,13 +68,11 @@ export default function EditRestaurantePage({
     return (
         <EditLayout
             pathname={pathname}
-            redirect={(link: string) => router.push(link)}
             breadcrumbs={breadcrumbs}
-            goBack={() => router.push("/admin/restaurantes-lenguajes")}
             title={`Editar lenguage de restaurante`}
             data={[
                 {
-                    value: oldData?.restaurant_name,
+                    value: oldData?.restaurant_id.toString(),
                     name: "Restaurante",
                     link: "editRestaurant",
                 },

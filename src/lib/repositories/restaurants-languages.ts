@@ -16,11 +16,14 @@ export async function get(fields: Partial<RestaurantsLanguagesType>) {
     const rows = await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query<RestaurantsLanguagesType>(`
+            return await sql.query<RestaurantsLanguagesType>(
+                `
                 SELECT *
                 FROM restaurant_languages_view
                 WHERE ${queryString}
-            `, values);
+            `,
+                values
+            );
         },
         notFoundMessage: "Idioma del restaurante no encontrado",
         dataBaseMessage: "Error al conseguir idioma del restaurante",
@@ -58,13 +61,16 @@ export async function list({
 }: TableParams<keyof RestaurantsLanguagesType>) {
     try {
         const filterQuery = filter ? buildQueryFilter(filter) : "";
-        const { rows } = await sql.query<RestaurantsLanguagesType>(`
+        const { rows } = await sql.query<RestaurantsLanguagesType>(
+            `
             SELECT *
             FROM restaurant_languages_view
             ${filterQuery}
             ORDER BY ${sort.by} ${sort.order}
             LIMIT $1 OFFSET $2
-        `, [pagination.size, pagination.page * pagination.size]);
+        `,
+            [pagination.size, pagination.page * pagination.size]
+        );
         return rows;
     } catch (error) {
         const err = error as Error;
@@ -79,7 +85,9 @@ export async function list({
  * @param filter - The filter
  * @returns count
  */
-export async function listCount(filter: FilterParams<keyof RestaurantsLanguagesType>) {
+export async function listCount(
+    filter: FilterParams<keyof RestaurantsLanguagesType>
+) {
     try {
         const filterQuery = filter ? buildQueryFilter(filter) : "";
         const { rows } = await sql.query<{ count: string }>(`
@@ -110,10 +118,13 @@ export async function put({
 }) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 INSERT INTO restaurant_languages (restaurant_id, language_id)
                 VALUES ($1, $2)
-            `, [restaurant_id, language_id]);
+            `,
+                [restaurant_id, language_id]
+            );
         },
         notFoundMessage: "No se pudo crear el idioma del restaurante",
         dataBaseMessage: "Error al crear nuevo idioma del restaurante",
@@ -128,10 +139,13 @@ export async function put({
 export async function del(restaurant_id: string, language_id: string) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 DELETE FROM restaurant_languages
                 WHERE restaurant_id = $1 AND language_id = $2
-            `, [restaurant_id, language_id]);
+            `,
+                [restaurant_id, language_id]
+            );
         },
         notFoundMessage: "Idioma del restaurante no encontrado",
         dataBaseMessage: "Error al eliminar idioma del restaurante",

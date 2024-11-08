@@ -43,7 +43,7 @@ const PageTransition: React.FC<PageTransitionProps> = ({ children }) => {
             }
         }
         setPreviousPathname(pathname);
-    }, [pathname]);
+    }, [pathname, previousPathname]);
 
     const variants = {
         initial: (direction: string) => ({

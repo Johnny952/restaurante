@@ -55,10 +55,16 @@ export default function DeleteDialog({
                         try {
                             let promises = [
                                 deleteImage(restaurant?.logo || ""),
-                                deleteRestaurant(restaurant?.id.toString() || ""),
-                            ]
+                                deleteRestaurant(
+                                    restaurant?.id.toString() || ""
+                                ),
+                            ];
                             if (restaurant?.background_image) {
-                                promises.push(deleteImage(restaurant?.background_image || ""));
+                                promises.push(
+                                    deleteImage(
+                                        restaurant?.background_image || ""
+                                    )
+                                );
                             }
                             const responses = await Promise.all(promises);
                             if (responses[2] && "error" in responses[2]) {
@@ -67,12 +73,12 @@ export default function DeleteDialog({
                             enqueueSnackbar({
                                 message: `Restaurante ${restaurant?.name} eliminado`,
                                 variant: "success",
-                            })
+                            });
                         } catch (error) {
                             enqueueSnackbar({
                                 message: `Error al borrar el restaurante ${restaurant?.name}`,
                                 variant: "error",
-                            })
+                            });
                         }
                         setLoading(false);
                         onClose();

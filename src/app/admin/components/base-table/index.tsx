@@ -31,18 +31,18 @@ export default function Table({
 
     page = 0,
     size = 10,
-    sortBy = '',
+    sortBy = "",
     sortOrder,
     filterField,
     filterOperator,
     filterValue,
-    onPageChange = () => { },
-    onSizeChange = () => { },
-    onSortByChange = () => { },
-    onSortOrderChange = () => { },
-    onFilterFieldChange = () => { },
-    onFilterOperatorChange = () => { },
-    onFilterValueChange = () => { },
+    onPageChange = () => {},
+    onSizeChange = () => {},
+    onSortByChange = () => {},
+    onSortOrderChange = () => {},
+    onFilterFieldChange = () => {},
+    onFilterOperatorChange = () => {},
+    onFilterValueChange = () => {},
 }: {
     tableName: string;
     rowCount: number;
@@ -68,12 +68,16 @@ export default function Table({
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
-    const [selectedRow, setSelectedRow] = useState<string | number | null>(null);
+    const [selectedRow, setSelectedRow] = useState<string | number | null>(
+        null
+    );
 
-    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
-        page,
-        pageSize: size,
-    });
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>(
+        {
+            page,
+            pageSize: size,
+        }
+    );
 
     const [sortModel, setSortModel] = useState<GridSortModel>([
         {
@@ -97,12 +101,20 @@ export default function Table({
     }, [page, size]);
 
     useEffect(() => {
-        setSortModel([{ field: sortBy, sort: sortOrder as "asc" | "desc" | null }]);
+        setSortModel([
+            { field: sortBy, sort: sortOrder as "asc" | "desc" | null },
+        ]);
     }, [sortBy, sortOrder]);
 
     useEffect(() => {
         setFilterModel({
-            items: [{ field: filterField, operator: filterOperator, value: filterValue }],
+            items: [
+                {
+                    field: filterField,
+                    operator: filterOperator,
+                    value: filterValue,
+                },
+            ],
         });
     }, [filterField, filterOperator, filterValue]);
 
@@ -112,7 +124,9 @@ export default function Table({
         onSizeChange(model.pageSize);
     }
 
-    function onRowSelectionModelChange(rowSelectionModel: GridRowSelectionModel) {
+    function onRowSelectionModelChange(
+        rowSelectionModel: GridRowSelectionModel
+    ) {
         setSelectedRow(rowSelectionModel[0]);
     }
 
@@ -213,8 +227,25 @@ export default function Table({
                 onRowSelectionModelChange={onRowSelectionModelChange}
                 initialState={{
                     pagination: { paginationModel: { page, pageSize: size } },
-                    sorting: { sortModel: [{ field: sortBy, sort: sortOrder as "asc" | "desc" | null }] },
-                    filter: { filterModel: { items: [{ field: filterField, operator: filterOperator, value: filterValue }] } },
+                    sorting: {
+                        sortModel: [
+                            {
+                                field: sortBy,
+                                sort: sortOrder as "asc" | "desc" | null,
+                            },
+                        ],
+                    },
+                    filter: {
+                        filterModel: {
+                            items: [
+                                {
+                                    field: filterField,
+                                    operator: filterOperator,
+                                    value: filterValue,
+                                },
+                            ],
+                        },
+                    },
                 }}
             />
         </>

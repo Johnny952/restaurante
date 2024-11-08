@@ -1,13 +1,19 @@
 import { list } from "@/lib/services/category";
 import AdminCategoriesView from "./view";
 
-export default async function AdminCategoriesPage({ searchParams }: {
-    searchParams: { [key: string]: string | string[] | undefined }
+export default async function AdminCategoriesPage({
+    searchParams,
+}: {
+    searchParams: { [key: string]: string | string[] | undefined };
 }) {
-    const page = searchParams.page ? parseInt(searchParams.page as string, 10) : 0;
-    const size = searchParams.size ? parseInt(searchParams.size as string, 10) : 10;
-    const sortBy = searchParams.sortBy as string || 'category_name';
-    const sortOrder = searchParams.sortOrder as string || 'ASC';
+    const page = searchParams.page
+        ? parseInt(searchParams.page as string, 10)
+        : 0;
+    const size = searchParams.size
+        ? parseInt(searchParams.size as string, 10)
+        : 10;
+    const sortBy = (searchParams.sortBy as string) || "category_name";
+    const sortOrder = (searchParams.sortOrder as string) || "ASC";
     const filterField = searchParams.filterField as string;
     const filterOperator = searchParams.filterOperator as string;
     const filterValue = searchParams.filterValue as string;

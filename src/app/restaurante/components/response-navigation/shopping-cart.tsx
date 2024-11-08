@@ -212,7 +212,8 @@ const ShoppingCart = ({
                                     >
                                         Subtotal:{" "}
                                         {formatPrice(
-                                            (dish.dish_price || 0) * dish.quantity
+                                            (dish.dish_price || 0) *
+                                                dish.quantity
                                         )}
                                     </Typography>
                                     <Box

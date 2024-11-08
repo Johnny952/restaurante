@@ -12,11 +12,14 @@ export async function get(fields: Partial<CategoryType>) {
     const rows = await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query<CategoryType>(`
+            return await sql.query<CategoryType>(
+                `
                 SELECT *
                 FROM category_details
                 WHERE ${queryString}
-            `, values);
+            `,
+                values
+            );
         },
         notFoundMessage: "Categoría no encontrada",
         dataBaseMessage: "Error al conseguir categoría",
@@ -28,11 +31,14 @@ export async function getAll(fields: Partial<CategoryType>) {
     const rows = await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query<CategoryType>(`
+            return await sql.query<CategoryType>(
+                `
                 SELECT *
                 FROM category_details
                 WHERE ${queryString}
-            `, values);
+            `,
+                values
+            );
         },
         notFoundMessage: "No existen categorías",
         dataBaseMessage: "Error al conseguir todas las categorías",
@@ -44,11 +50,12 @@ export async function getAllChildren({
     restaurantId,
     language_id,
 }: {
-    restaurantId: string,
-    language_id: string,
+    restaurantId: string;
+    language_id: string;
 }) {
     try {
-        const { rows } = await sql.query<CategoryType>(`
+        const { rows } = await sql.query<CategoryType>(
+            `
             SELECT parent.*
             FROM category_details parent
             LEFT JOIN category_details child ON parent.id = child.parent_category_id
@@ -56,24 +63,35 @@ export async function getAllChildren({
             AND parent.language_id = $2 
             AND parent.is_deleted = false
             AND child.id IS NULL;
-        `, [restaurantId, language_id]);
+        `,
+            [restaurantId, language_id]
+        );
         return rows;
     } catch (error) {
         const err = error as Error;
-        throw new DatabaseError(`Error al conseguir las categorías: ${err.message}`);
+        throw new DatabaseError(
+            `Error al conseguir las categorías: ${err.message}`
+        );
     }
 }
 
-export async function list({ pagination, sort, filter }: TableParams<keyof CategoryType>) {
+export async function list({
+    pagination,
+    sort,
+    filter,
+}: TableParams<keyof CategoryType>) {
     try {
         const filterQuery = filter ? buildQueryFilter(filter) : "";
-        const { rows } = await sql.query<CategoryType>(`
+        const { rows } = await sql.query<CategoryType>(
+            `
             SELECT *
             FROM category_details
             ${filterQuery}
             ORDER BY ${sort.by} ${sort.order}
             LIMIT $1 OFFSET $2
-        `, [pagination.size, pagination.page * pagination.size]);
+        `,
+            [pagination.size, pagination.page * pagination.size]
+        );
         return rows;
     } catch (error) {
         const err = error as Error;
@@ -117,7 +135,8 @@ export async function put({
 }) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 WITH new_category AS (
                     INSERT INTO categories (restaurant_id, image, parent_id)
                     VALUES ($1, $2, $3)
@@ -126,7 +145,9 @@ export async function put({
                 INSERT INTO category_translations (category_id, language_id, name, link)
                 SELECT id, $4, $5, $6
                 FROM new_category;
-            `, [restaurantId, image, parentId, languageId, name, link]);
+            `,
+                [restaurantId, image, parentId, languageId, name, link]
+            );
         },
         notFoundMessage: "No se pudo crear la categoría",
         dataBaseMessage: "Error al crear nueva categoría",
@@ -146,46 +167,49 @@ export async function putTranslation({
 }) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 INSERT INTO category_translations (category_id, language_id, name, link)
                 VALUES ($1, $2, $3, $4)
-            `, [id, languageId, name, link]);
+            `,
+                [id, languageId, name, link]
+            );
         },
         notFoundMessage: "No se pudo crear la traducción de la categoría",
         dataBaseMessage: "Error al crear nueva traducción de categoría",
     });
 }
 
-export async function updateTranslation(
-    id: string | number,
-    fields: object
-) {
+export async function updateTranslation(id: string | number, fields: object) {
     await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query(`
+            return await sql.query(
+                `
                 UPDATE category_translations
                 SET ${queryString}
                 WHERE id = $${values.length + 1}
-            `, [...values, id]);
+            `,
+                [...values, id]
+            );
         },
         notFoundMessage: "Traducción de categoría no encontrada",
         dataBaseMessage: "Error al actualizar la traducción de la categoría",
     });
 }
 
-export async function update(
-    id: string,
-    fields: object
-) {
+export async function update(id: string, fields: object) {
     await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query(`
+            return await sql.query(
+                `
                 UPDATE categories
                 SET ${queryString}
                 WHERE id = $${values.length + 1}
-            `, [...values, id]);
+            `,
+                [...values, id]
+            );
         },
         notFoundMessage: "Categoría no encontrada",
         dataBaseMessage: "Error al actualizar la categoría",
@@ -195,10 +219,13 @@ export async function update(
 export async function del(id: string | number) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 DELETE FROM categories
                 WHERE id = $1
-            `, [id]);
+            `,
+                [id]
+            );
         },
         notFoundMessage: "Categoría no encontrada",
         dataBaseMessage: "Error al eliminar la categoría",

@@ -1,14 +1,14 @@
-import { list, put } from '@/lib/services/restaurant';
-import { NextRequest, NextResponse } from 'next/server';
+import { list, put } from "@/lib/services/restaurant";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
-    const page = req.nextUrl.searchParams.get('page') || '0';
-    const size = req.nextUrl.searchParams.get('size') || '25';
-    const sortBy = req.nextUrl.searchParams.get('sortBy') || 'name';
-    const sortOrder = req.nextUrl.searchParams.get('sortOrder') || 'ASC';
-    const filterField = req.nextUrl.searchParams.get('filterField');
-    const filterOperator = req.nextUrl.searchParams.get('filterOperator');
-    const filterValue = req.nextUrl.searchParams.get('filterValue');
+    const page = req.nextUrl.searchParams.get("page") || "0";
+    const size = req.nextUrl.searchParams.get("size") || "25";
+    const sortBy = req.nextUrl.searchParams.get("sortBy") || "name";
+    const sortOrder = req.nextUrl.searchParams.get("sortOrder") || "ASC";
+    const filterField = req.nextUrl.searchParams.get("filterField");
+    const filterOperator = req.nextUrl.searchParams.get("filterOperator");
+    const filterValue = req.nextUrl.searchParams.get("filterValue");
 
     const result = await list({
         page: parseInt(page as string, 10),
@@ -20,8 +20,11 @@ export async function GET(req: NextRequest) {
         filterValue: filterValue,
     });
 
-    if ('error' in result) {
-        return NextResponse.json({ error: result.error }, { status: result.status });
+    if ("error" in result) {
+        return NextResponse.json(
+            { error: result.error },
+            { status: result.status }
+        );
     }
 
     return NextResponse.json(result, { status: 200 });
@@ -33,8 +36,11 @@ export async function POST(req: NextRequest) {
 
     const result = await put({ name, link, logo, background });
 
-    if (result && 'error' in result) {
-        return NextResponse.json({ error: result.error }, { status: result.status });
+    if (result && "error" in result) {
+        return NextResponse.json(
+            { error: result.error },
+            { status: result.status }
+        );
     }
 
     return NextResponse.json(result, { status: 201 });

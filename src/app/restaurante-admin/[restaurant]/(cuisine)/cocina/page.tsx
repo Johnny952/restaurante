@@ -4,30 +4,25 @@ import { ThemeProvider, CssBaseline, Box, Container } from "@mui/material";
 import { KitchenView } from "./components/kitchen-view";
 import { theme } from "./components/theme";
 import { Header } from "./components/header";
-import { getBackground } from "@/app/api/restaurants/get";
+// import { getBackground } from "@/app/api/restaurants/get";
 import { notFound } from "next/navigation";
+import { RestaurantType } from "@/lib/models/restaurant";
 
 const CuisinePage = ({
     params: { restaurant: restaurantLink },
 }: {
     params: { restaurant: string };
 }) => {
-    const [restaurant, setRestaurant] = useState<{
-        background: string;
-        image: string;
-        name: string;
-    } | null>(null);
+    const [restaurant, setRestaurant] = useState<RestaurantType | null>(null);
 
     useEffect(() => {
         const fetchData = () => {
-            return getBackground(restaurantLink);
+            // return getBackground(restaurantLink);
+            return Promise.resolve(null)
         };
 
         fetchData().then((data) => {
-            if (data.length === 0) {
-                return notFound();
-            }
-            setRestaurant(data[0]);
+            setRestaurant(data);
         });
     }, [restaurantLink]);
 
@@ -43,7 +38,7 @@ const CuisinePage = ({
             >
                 <Header
                     restaurantName={restaurant?.name || ""}
-                    logoUrl={restaurant?.image || ""}
+                    logoUrl={restaurant?.logo || ""}
                 />
                 <Container maxWidth="lg" sx={{ flexGrow: 1, py: 3 }}>
                     <KitchenView />

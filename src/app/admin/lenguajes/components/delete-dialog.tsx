@@ -14,7 +14,9 @@ import { enqueueSnackbar } from "notistack";
 interface DeleteLanguageDialogProps {
     open: boolean;
     language?: LanguageType;
-    deleteLanguage: (id: string) => Promise<void | { error: string; status: number }>;
+    deleteLanguage: (
+        id: string
+    ) => Promise<void | { error: string; status: number }>;
 }
 
 export default function DeleteLanguageDialog({
@@ -55,20 +57,22 @@ export default function DeleteLanguageDialog({
                         setLoading(true);
                         try {
                             if (language) {
-                                const result = await deleteLanguage(language.id.toString());
-                                if (result && 'error' in result) {
+                                const result = await deleteLanguage(
+                                    language.id.toString()
+                                );
+                                if (result && "error" in result) {
                                     throw new Error(result.error);
                                 }
                                 enqueueSnackbar({
                                     message: `Lenguaje ${language?.name} eliminado`,
                                     variant: "success",
-                                })
+                                });
                             }
                         } catch (error) {
                             enqueueSnackbar({
                                 message: `Error al borrar el lenguaje ${language?.name}`,
                                 variant: "error",
-                            })
+                            });
                         }
                         setLoading(false);
                         onClose();

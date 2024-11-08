@@ -11,17 +11,19 @@ import {
 import styles from "./table-map.module.css";
 import Table from "./table";
 import MapSelector from "./map-selector";
-import { MapInterface } from "@/app/api/maps/get";
-import { MapTableInterface } from "@/app/api/maps-tables/get";
+import { MapType } from "@/lib/models/map";
+import { MapTableType } from "@/lib/models/map-tables";
+// import { MapInterface } from "@/app/api/maps/get";
+// import { MapTableInterface } from "@/app/api/maps-tables/get";
 
 interface TableMapProps {
     mode: "view" | "edit";
     showZoomControls: boolean;
     onSelectTable: (tableId: string | null) => void;
     selectedTable?: string | null;
-    maps: MapInterface[];
-    initialTables: MapTableInterface[];
-    initialMap?: MapInterface;
+    maps: MapType[];
+    initialTables: MapTableType[];
+    initialMap?: MapType;
     showAddMap?: boolean;
     handleDragEnd?: (props: { tableId: string; x: number; y: number }) => void;
     selectedMap?: string;
@@ -39,9 +41,9 @@ const TableMap: React.FC<TableMapProps> = ({
     initialMap,
     showAddMap = false,
     selectedMap,
-    handleDragEnd = () => {},
-    handleMapChange = () => {},
-    handleAddMap = () => {},
+    handleDragEnd = () => { },
+    handleMapChange = () => { },
+    handleAddMap = () => { },
 }) => {
     const [initialPosition, setInitialPosition] = useState({ x: 0, y: 0 });
     const contentRef = useRef<HTMLDivElement>(null);
@@ -120,10 +122,10 @@ const TableMap: React.FC<TableMapProps> = ({
                     | "easeInOutQuint"
             ) => void
         ) =>
-        (event: Event, newValue: number | number[]) => {
-            const scale = Array.isArray(newValue) ? newValue[0] : newValue;
-            setTransform(0, 0, scale / 50, 300, "easeOut");
-        };
+            (event: Event, newValue: number | number[]) => {
+                const scale = Array.isArray(newValue) ? newValue[0] : newValue;
+                setTransform(0, 0, scale / 50, 300, "easeOut");
+            };
 
     const handleMapClick = (event: React.MouseEvent) => {
         if (event.target === event.currentTarget) {

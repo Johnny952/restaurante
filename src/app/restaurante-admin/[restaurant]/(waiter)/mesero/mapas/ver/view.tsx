@@ -4,15 +4,17 @@ import { Box } from "@mui/material";
 import TableMap from "../../components/table-map";
 import BottomNavigation from "../../components/bottom-navigation";
 import { useEffect, useState } from "react";
-import { MapTableInterface } from "@/app/api/maps-tables/get";
-import { MapInterface } from "@/app/api/maps/get";
+// import { MapTableInterface } from "@/app/api/maps-tables/get";
+// import { MapInterface } from "@/app/api/maps/get";
 import { useRouter } from "next/navigation";
 import Loader from "../../components/loader";
+import { MapTableType } from "@/lib/models/map-tables";
+import { MapType } from "@/lib/models/map";
 
 interface ViewProps {
-    mapTables?: MapTableInterface[];
-    maps: MapInterface[];
-    currentMap?: MapInterface;
+    mapTables?: MapTableType[];
+    maps: MapType[];
+    currentMap?: MapType;
     selectedMap?: boolean;
     editHref?: string;
 }

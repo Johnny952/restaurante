@@ -13,8 +13,8 @@ export default async function EditRestaurantPage({
     };
 }) {
     const restaurant = await getById(id);
-    if ('error' in restaurant) {
-        return 'Not Found'
+    if ("error" in restaurant) {
+        return "Not Found";
     }
 
     return (

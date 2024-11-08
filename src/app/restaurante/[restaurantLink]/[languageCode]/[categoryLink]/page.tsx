@@ -71,17 +71,17 @@ export default async function CategoryPage({
                     <Grid container spacing={2} rowSpacing={2}>
                         {!("error" in subcategories)
                             ? subcategories.map((subcat, idx) => (
-                                <Grid item xs={6} sm={4} md={2} key={idx}>
-                                    <CategoryWrapper>
-                                        <Category
-                                            {...subcat}
-                                            category_link={`${category.category_link}/${subcat.category_link}`}
-                                        />
-                                    </CategoryWrapper>
-                                </Grid>
-                            ))
+                                  <Grid item xs={6} sm={4} md={2} key={idx}>
+                                      <CategoryWrapper>
+                                          <Category
+                                              {...subcat}
+                                              category_link={`${category.category_link}/${subcat.category_link}`}
+                                          />
+                                      </CategoryWrapper>
+                                  </Grid>
+                              ))
                             : !("error" in dishes)
-                                ? dishes.map((dish, idx) => (
+                              ? dishes.map((dish, idx) => (
                                     <Grid item xs={12} sm={6} md={4} key={idx}>
                                         <Dish
                                             {...dish}
@@ -89,7 +89,7 @@ export default async function CategoryPage({
                                         />
                                     </Grid>
                                 ))
-                                : null}
+                              : null}
                     </Grid>
                 </ContainerWrapper>
             </Container>

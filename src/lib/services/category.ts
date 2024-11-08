@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { CategoryType } from "../models/categories";
 import { filterOptions, FilterParams } from "../models/pagination";
@@ -34,7 +34,6 @@ export async function getById(id: string) {
     return buildQuery(() => get({ id: parseInt(id, 10) }));
 }
 
-
 export async function getAllParentsByRestaurantLanguage(
     restaurantLink: string,
     languageCode: string
@@ -48,10 +47,7 @@ export async function getAllParentsByRestaurantLanguage(
     );
 }
 
-export async function getAllChildren(
-    restaurantId: string,
-    languageId: string,
-) {
+export async function getAllChildren(restaurantId: string, languageId: string) {
     return buildQuery(() =>
         getAllChildrenService({
             restaurantId,
@@ -163,14 +159,16 @@ export async function putTranslation(
     id: string,
     name: string,
     languageId: string,
-    link: string,
+    link: string
 ) {
-    return buildQuery(() => putTranslationService({
-        id,
-        name,
-        languageId,
-        link,
-    }))
+    return buildQuery(() =>
+        putTranslationService({
+            id,
+            name,
+            languageId,
+            link,
+        })
+    );
 }
 
 export async function del(id: string) {
@@ -178,16 +176,14 @@ export async function del(id: string) {
 }
 
 export async function softDelete(id: string) {
-    return buildQuery(() => update(id, {
-        is_deleted: true
-    }));
+    return buildQuery(() =>
+        update(id, {
+            is_deleted: true,
+        })
+    );
 }
 
-export async function updateNameLink(
-    id: string,
-    name: string,
-    link: string
-) {
+export async function updateNameLink(id: string, name: string, link: string) {
     return buildQuery(() =>
         updateTranslation(id, {
             name,
@@ -196,10 +192,7 @@ export async function updateNameLink(
     );
 }
 
-export async function updateParent(
-    id: string,
-    parent: string
-) {
+export async function updateParent(id: string, parent: string) {
     return buildQuery(() =>
         update(id, {
             parent_id: parseInt(parent, 10),

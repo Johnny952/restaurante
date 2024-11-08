@@ -15,10 +15,10 @@ import {
     SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllByRestaurant } from "@/app/api/languages/get";
-import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
-import { getAllAvailableToDishByRestLang as getAllCats } from "@/app/api/categories/get";
-import { updateCategory } from "@/app/api/dishes/update";
+// import { getAllByRestaurant } from "@/app/api/languages/get";
+// import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
+// import { getAllAvailableToDishByRestLang as getAllCats } from "@/app/api/categories/get";
+// import { updateCategory } from "@/app/api/dishes/update";
 
 interface FormData {
     restaurant: string;
@@ -77,16 +77,16 @@ export default function EditRestLangDialog({
         const { name, value } = e.target;
         if (name === "restaurant") {
             setLoading(true);
-            const languages = await getAllByRestaurant(value);
-            setAllLanguages(languages);
+            // const languages = await getAllByRestaurant(value);
+            // setAllLanguages(languages);
             setLoading(false);
             setFormData({ restaurant: value, language: "", category: "" });
             return;
         }
         if (name === "language") {
             setLoading(true);
-            const categories = await getAllCats(formData.restaurant, value);
-            setAllCategories(categories);
+            // const categories = await getAllCats(formData.restaurant, value);
+            // setAllCategories(categories);
             setLoading(false);
             setFormData({ ...formData, [name]: value, category: "" });
             return;
@@ -101,7 +101,7 @@ export default function EditRestLangDialog({
         }
         setLoading(true);
         try {
-            await updateCategory(id, formData.category);
+            // await updateCategory(id, formData.category);
             setFormData({
                 restaurant: "",
                 language: "",
@@ -118,7 +118,8 @@ export default function EditRestLangDialog({
 
     useEffect(() => {
         const fetchData = async () => {
-            return getAllRestaurants();
+            // return getAllRestaurants();
+            return []
         };
 
         fetchData()

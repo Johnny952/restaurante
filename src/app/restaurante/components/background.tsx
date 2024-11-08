@@ -6,7 +6,6 @@ export interface BackgroundInterface {
     children: React.ReactElement | React.ReactElement[];
 }
 
-
 export default function Background({ image, children }: BackgroundInterface) {
     return (
         <GlobalWrapper>

@@ -1,4 +1,4 @@
-import { updateNameLink } from "@/app/api/dishes/update";
+// import { updateNameLink } from "@/app/api/dishes/update";
 import toKebabCase from "@/helpers/to-kebab-case";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
@@ -37,7 +37,7 @@ export default function EditNameDialog({
     async function onConfirmName() {
         setLoading(true);
         try {
-            await updateNameLink(id, nameValue, linkValue);
+            // await updateNameLink(id, nameValue, linkValue);
             snackSuccess("Nombre de plato cambiado");
             setNameValue("");
             setLinkValue("");

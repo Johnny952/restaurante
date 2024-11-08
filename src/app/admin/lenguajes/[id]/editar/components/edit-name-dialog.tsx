@@ -1,4 +1,4 @@
-import { updateName } from "@/app/api/languages/update";
+//import { updateName } from "@/app/api/languages/update";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -34,7 +34,7 @@ export default function EditNameDialog({
     async function onConfirmName() {
         setLoading(true);
         try {
-            await updateName(id, nameValue);
+            //await updateName(id, nameValue);
             snackSuccess("Nombre de Lenguage cambiado");
             setNameValue("");
             onClose();

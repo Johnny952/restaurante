@@ -1,3 +1,4 @@
+"use client"
 import useLoadStore from "@/store/load-store";
 import {
     Button,
@@ -15,8 +16,8 @@ import {
 import { useEffect, useState } from "react";
 import { enqueueSnackbar } from "notistack";
 import { useRouter } from "next/navigation";
-import { getByRestaurantLink } from "@/lib/services/language";
-import { LanguageType } from "@/lib/models/language";
+import { getAllByRestaurantLink } from "@/lib/services/language";
+import { LanguageType, RestaurantLanguageType } from "@/lib/models/language";
 import { getAll } from "@/lib/services/restaurant";
 import { updateRestaurantLanguage } from "@/lib/services/category";
 
@@ -39,14 +40,14 @@ export default function EditRestLangDialog({
     const [restaurants, setRestaurants] = useState<
         { id: number; name: string; link: string }[]
     >([]);
-    const [languages, setLanguages] = useState<LanguageType[]>([]);
+    const [languages, setLanguages] = useState<RestaurantLanguageType[]>([]);
     const setLoading = useLoadStore((state) => state.setLoading);
     const router = useRouter();
 
     const handleChange = async (e: SelectChangeEvent) => {
         if (e.target.name === "restaurant") {
             setLoading(true);
-            const languagesResponse = await getByRestaurantLink(e.target.value);
+            const languagesResponse = await getAllByRestaurantLink(e.target.value);
             if ("error" in languagesResponse) {
                 enqueueSnackbar({
                     message: `Ocurrio un error: ${languagesResponse.error}`,
@@ -66,11 +67,11 @@ export default function EditRestLangDialog({
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            await updateRestaurantLanguage(
-                id,
-                formData.restaurant,
-                formData.language
-            );
+            // await updateRestaurantLanguage(
+            //     id,
+            //     formData.restaurant,
+            //     formData.language
+            // );
             setFormData({
                 restaurant: "",
                 language: "",
@@ -164,7 +165,7 @@ export default function EditRestLangDialog({
                             >
                                 {languages.map((lang) => (
                                     <MenuItem key={lang.id} value={lang.id}>
-                                        {lang.name}
+                                        {lang.language_name}
                                     </MenuItem>
                                 ))}
                             </Select>

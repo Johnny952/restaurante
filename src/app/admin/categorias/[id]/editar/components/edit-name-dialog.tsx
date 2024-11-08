@@ -1,3 +1,4 @@
+"use client";
 import toKebabCase from "@/helpers/to-kebab-case";
 import { updateNameLink } from "@/lib/services/category";
 import useLoadStore from "@/store/load-store";

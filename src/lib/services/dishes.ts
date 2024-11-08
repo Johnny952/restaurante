@@ -1,6 +1,16 @@
 import { DishType } from "../models/dishes";
 import { filterOptions, FilterParams } from "../models/pagination";
-import { get, getAll, list as listService, listCount, put as putService, putTranslation as putTranslationService, del as delService, update, updateTranslation } from "../repositories/dishes";
+import {
+    get,
+    getAll,
+    list as listService,
+    listCount,
+    put as putService,
+    putTranslation as putTranslationService,
+    del as delService,
+    update,
+    updateTranslation,
+} from "../repositories/dishes";
 import buildQuery from "../util/query-builder";
 
 export async function getByLink(
@@ -100,20 +110,16 @@ export async function list({
     };
 }
 
-export async function put(args:
-    {
-        name: string,
-        price: number,
-        image?: string,
-        description?: string,
-        link: string,
-        categoryId: string,
-        languageId: string
-    }
-) {
-    return buildQuery(() =>
-        putService(args)
-    );
+export async function put(args: {
+    name: string;
+    price: number;
+    image?: string;
+    description?: string;
+    link: string;
+    categoryId: string;
+    languageId: string;
+}) {
+    return buildQuery(() => putService(args));
 }
 
 export async function putTranslation(
@@ -142,11 +148,7 @@ export async function softDelete(id: string) {
     return buildQuery(() => update(id, { is_deleted: true }));
 }
 
-export async function updateNameLink(
-    id: string,
-    name: string,
-    link: string
-) {
+export async function updateNameLink(id: string, name: string, link: string) {
     return buildQuery(() => updateTranslation(id, { name, link }));
 }
 
@@ -155,7 +157,9 @@ export async function updateImage(id: string, image: string) {
 }
 
 export async function updateCategory(id: string, category: string) {
-    return buildQuery(() => update(id, { category_id: parseInt(category, 10) }));
+    return buildQuery(() =>
+        update(id, { category_id: parseInt(category, 10) })
+    );
 }
 
 export async function updatePrice(id: string, price: string) {

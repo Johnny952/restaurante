@@ -3,7 +3,9 @@ interface ParamJoinResult {
     values: any[];
 }
 
-export default function paramJoin(fields: Record<string, any>): ParamJoinResult {
+export default function paramJoin(
+    fields: Record<string, any>
+): ParamJoinResult {
     const keys = Object.keys(fields);
     const values: any[] = [];
     const queryParts = keys.map((key, index) => {
@@ -16,6 +18,6 @@ export default function paramJoin(fields: Record<string, any>): ParamJoinResult 
 
     return {
         queryString: queryParts.join(" AND "),
-        values: values
+        values: values,
     };
 }

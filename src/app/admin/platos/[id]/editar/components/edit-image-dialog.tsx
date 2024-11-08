@@ -12,10 +12,11 @@ import {
 import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import UploaderWithCrop from "@/components/uploader-with-crop";
-import { DishTable } from "@/app/api/dishes/index.types";
-import { getById } from "@/app/api/dishes/get";
+// import { DishTable } from "@/app/api/dishes/index.types";
+// import { getById } from "@/app/api/dishes/get";
 import { generateDishLink } from "@/app/api/helpers/image-links";
-import { updateImage } from "@/app/api/dishes/update";
+import { DishType } from "@/lib/models/dishes";
+// import { updateImage } from "@/app/api/dishes/update";
 
 export default function EditImageDialog({
     open,
@@ -27,19 +28,19 @@ export default function EditImageDialog({
     onClose: () => void;
 }) {
     const [file, setfile] = useState<File | null>(null);
-    const [dish, setDish] = useState<DishTable | undefined>();
+    const [dish, setDish] = useState<DishType | null>(null);
     const setLoading = useLoadStore((state) => state.setLoading);
     const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
     const snackError = useSnackStore((state) => state.setOpenError);
 
     useEffect(() => {
         const fetchData = async () => {
-            return getById(id);
+            // return getById(id);
         };
 
         fetchData()
             .then((cat) => {
-                setDish(cat);
+                setDish(null);
             })
             .catch((error) => {
                 snackError(`Ocurrió un error: ${error.toString()}`);
@@ -56,18 +57,18 @@ export default function EditImageDialog({
             try {
                 const tryAwait = async () => {
                     try {
-                        await deleteImage(dish.image);
-                    } catch (error) {}
+                        await deleteImage(dish?.dish_image || "");
+                    } catch (error) { }
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,
                     putImage(
                         file,
-                        generateDishLink(dish.restaurant_id, dish.id)
+                        generateDishLink(dish?.restaurant_id.toString(), dish?.id.toString())
                     ),
                 ]);
 
-                await updateImage(id, url);
+                // await updateImage(id, url);
                 snackSuccess("Imagen actualizada");
                 setfile(null);
                 onClose();

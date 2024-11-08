@@ -7,7 +7,6 @@ import buildQueryFilter from "../util/query-filter-builder";
 import paramJoin from "../util/param-join";
 import { singleSQLQuery } from "../util/sql-query-builder";
 
-
 /**
  * Get restaurant by field
  * @param fields - The fields to search by
@@ -17,11 +16,14 @@ export async function get(fields: Partial<RestaurantType>) {
     const rows = await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query<RestaurantType>(`
+            return await sql.query<RestaurantType>(
+                `
                 SELECT *
                 FROM restaurants
                 WHERE ${queryString}
-            `, values);
+            `,
+                values
+            );
         },
         notFoundMessage: "Restaurante no encontrado",
         dataBaseMessage: "Error al conseguir restaurante",
@@ -60,14 +62,17 @@ export async function list({
 }: TableParams<keyof RestaurantType>) {
     try {
         const filterQuery = filter ? buildQueryFilter(filter) : "";
-        const { rows } = await sql.query<RestaurantType>(`
+        const { rows } = await sql.query<RestaurantType>(
+            `
             SELECT *
             FROM restaurants
             WHERE is_deleted = FALSE
             ${filterQuery}
             ORDER BY ${sort.by} ${sort.order}
             LIMIT $1 OFFSET $2
-        `, [pagination.size, pagination.page * pagination.size]);
+        `,
+            [pagination.size, pagination.page * pagination.size]
+        );
         return rows;
     } catch (error) {
         const err = error as Error;
@@ -120,10 +125,13 @@ export async function put({
 }) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 INSERT INTO restaurants (name, link, logo, background_image)
                 VALUES ($1, $2, $3, $4)
-            `, [name, link, logo, background]);
+            `,
+                [name, link, logo, background]
+            );
         },
         notFoundMessage: "No se pudo crear el restaurante",
         dataBaseMessage: "Error al crear nuevo restaurante",
@@ -139,11 +147,14 @@ export async function update(id: string, fields: Partial<RestaurantType>) {
     await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query(`
+            return await sql.query(
+                `
                 UPDATE restaurants
                 SET ${queryString}
                 WHERE id = $${values.length + 1}
-            `, [...values, id]);
+            `,
+                [...values, id]
+            );
         },
         notFoundMessage: "Restaurante no encontrado",
         dataBaseMessage: "Error al actualizar restaurante",
@@ -157,11 +168,14 @@ export async function update(id: string, fields: Partial<RestaurantType>) {
 export async function del(id: string) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 UPDATE restaurants
                 SET is_deleted = TRUE
                 WHERE id = $1
-            `, [id]);
+            `,
+                [id]
+            );
         },
         notFoundMessage: "Restaurante no encontrado",
         dataBaseMessage: "Error al eliminar restaurante",

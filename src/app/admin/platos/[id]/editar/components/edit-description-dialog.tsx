@@ -1,4 +1,4 @@
-import { updateDescription } from "@/app/api/dishes/update";
+// import { updateDescription } from "@/app/api/dishes/update";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -43,7 +43,7 @@ export default function EditDescriptionDialog({
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            await updateDescription(id, formData.description);
+            // await updateDescription(id, formData.description);
             setFormData({
                 description: "",
             });

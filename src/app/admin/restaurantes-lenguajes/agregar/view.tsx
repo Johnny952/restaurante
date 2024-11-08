@@ -47,8 +47,8 @@ interface FormErrors {
 }
 
 interface Props {
-    restaurants: BaseRestaurantType[]
-    languages: LanguageType[]
+    restaurants: BaseRestaurantType[];
+    languages: LanguageType[];
 }
 
 export default function AddRestLanguageView(props: Props) {
@@ -75,7 +75,8 @@ export default function AddRestLanguageView(props: Props) {
     const validateForm = () => {
         let newErrors: FormErrors = {};
 
-        if (!formData.restaurant) newErrors.restaurant = "El restaurante es requerido";
+        if (!formData.restaurant)
+            newErrors.restaurant = "El restaurante es requerido";
         if (!formData.language) newErrors.language = "El lenguaje es requerido";
 
         setErrors(newErrors);
@@ -146,7 +147,9 @@ export default function AddRestLanguageView(props: Props) {
 
                     <Grid item xs={12}>
                         <FormControl error={!!errors.restaurant}>
-                            <InputLabel htmlFor="restaurant-input">Restaurante</InputLabel>
+                            <InputLabel htmlFor="restaurant-input">
+                                Restaurante
+                            </InputLabel>
                             <Select
                                 labelId="restaurant-selector-label"
                                 id="restaurant-selector"
@@ -171,7 +174,9 @@ export default function AddRestLanguageView(props: Props) {
                     </Grid>
                     <Grid item xs={12}>
                         <FormControl error={!!errors.language}>
-                            <InputLabel htmlFor="language-input">Lenguaje</InputLabel>
+                            <InputLabel htmlFor="language-input">
+                                Lenguaje
+                            </InputLabel>
                             <Select
                                 labelId="language-selector-label"
                                 id="language-selector"

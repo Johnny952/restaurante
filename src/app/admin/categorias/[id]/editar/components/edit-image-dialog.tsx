@@ -1,3 +1,4 @@
+"use client";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";
@@ -22,12 +23,7 @@ export default function EditImageDialog({
 }: {
     open: boolean;
     id: string;
-    category: CategoryType & {
-        restaurant_name: string;
-        restaurant_link: string;
-        parent: string;
-        language: string;
-    };
+    category: CategoryType;
 }) {
     const [file, setfile] = useState<File | null>(null);
     const setLoading = useLoadStore((state) => state.setLoading);

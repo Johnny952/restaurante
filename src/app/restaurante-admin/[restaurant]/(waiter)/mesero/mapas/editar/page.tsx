@@ -1,7 +1,8 @@
 import React from "react";
-import { getByRestaurantLink } from "@/app/api/maps/get";
-import { getByMap } from "@/app/api/maps-tables/get";
+// import { getByRestaurantLink } from "@/app/api/maps/get";
+// import { getByMap } from "@/app/api/maps-tables/get";
 import View from "./view";
+import { MapType } from "@/lib/models/map";
 
 interface TablesEditPageProps {
     params: {
@@ -15,10 +16,10 @@ interface TablesEditPageProps {
 }
 
 async function fetData(restaurantLink: string) {
-    const maps = await getByRestaurantLink(restaurantLink);
+    const maps: MapType[] = []//await getByRestaurantLink(restaurantLink);
     let tables;
     if (maps.length > 0) {
-        tables = await getByMap(maps[0].id);
+        //tables = await getByMap(maps[0].id);
     }
     return {
         maps,

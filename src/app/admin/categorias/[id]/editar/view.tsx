@@ -17,12 +17,7 @@ const breadcrumbs = [
 ];
 
 interface Props {
-    category: CategoryType & {
-        restaurant_name: string;
-        restaurant_link: string;
-        parent: string;
-        language: string;
-    };
+    category: CategoryType;
 }
 
 export default function EditCategoryView({ category }: Props) {
@@ -30,32 +25,32 @@ export default function EditCategoryView({ category }: Props) {
         <EditLayout
             pathname={"editar"}
             breadcrumbs={breadcrumbs}
-            title={`Editar categoría: ${category.name}`}
+            title={`Editar categoría: ${category.category_name}`}
             data={[
                 {
-                    value: category.name,
+                    value: category.category_name,
                     name: "Nombre",
                     link: "editName",
                 },
                 {
-                    value: category.restaurant_name,
+                    value: category.restaurant_link,
                     name: "Restaurante",
                     link: "editRestaurant",
                 },
                 {
-                    value: category.language,
+                    value: category.language_code,
                     name: "Lenguaje",
                     link: "editLang",
                 },
                 {
-                    value: category.parent,
+                    value: category.parent_category_link,
                     name: "Categoría padre",
                     link: "editParent",
                 },
             ]}
             images={[
                 {
-                    src: category.image,
+                    src: category.category_image,
                     link: "editImage",
                     name: "Imagen",
                 },

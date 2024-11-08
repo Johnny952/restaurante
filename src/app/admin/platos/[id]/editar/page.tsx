@@ -4,13 +4,14 @@ import { useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import EditLayout from "@/app/admin/components/layouts/edit";
-import { getById } from "@/app/api/dishes/get";
-import { DishTable } from "@/app/api/dishes/index.types";
+// import { getById } from "@/app/api/dishes/get";
+// import { DishTable } from "@/app/api/dishes/index.types";
 import EditNameDialog from "./components/edit-name-dialog";
 import EditImageDialog from "./components/edit-image-dialog";
 import EditRestLangDialog from "./components/edit-rest-lang-cat-dialog";
 import EditPriceDialog from "./components/edit-price-dialog";
 import EditDescriptionDialog from "./components/edit-description-dialog";
+import { DishType } from "@/lib/models/dishes";
 
 const breadcrumbs = [
     {
@@ -51,7 +52,7 @@ export default function EditRestaurantePage({
         editDescription: string;
     };
 }) {
-    const [oldData, setOldData] = useState<DishTable | null>(null);
+    const [oldData, setOldData] = useState<DishType | null>(null);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -61,7 +62,8 @@ export default function EditRestaurantePage({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getById(id);
+            // return getById(id);
+            return null
         };
 
         fetchData()
@@ -92,45 +94,43 @@ export default function EditRestaurantePage({
     return (
         <EditLayout
             pathname={pathname}
-            redirect={(link: string) => router.push(link)}
             breadcrumbs={breadcrumbs}
-            goBack={() => router.push("/admin/platos")}
-            title={`Editar plato: ${oldData?.name}`}
+            title={`Editar plato: ${oldData?.dish_name}`}
             data={[
                 {
-                    value: oldData?.name,
+                    value: oldData?.dish_name,
                     name: "Nombre",
                     link: "editName",
                 },
                 {
-                    value: oldData?.restaurant,
+                    value: oldData?.restaurant_link,
                     name: "Restaurante",
                     link: "editRestaurant",
                 },
                 {
-                    value: oldData?.language,
+                    value: oldData?.language_code,
                     name: "Lenguaje",
                     link: "editLang",
                 },
                 {
-                    value: oldData?.category,
+                    value: oldData?.category_link,
                     name: "Categoría",
                     link: "editCat",
                 },
                 {
-                    value: oldData?.price,
+                    value: (oldData?.dish_price || -1).toString(),
                     name: "Precio",
                     link: "editPrice",
                 },
                 {
-                    value: oldData?.description,
+                    value: oldData?.dish_description || "",
                     name: "Descripción",
                     link: "editDescription",
                 },
             ]}
             images={[
                 {
-                    src: oldData?.image,
+                    src: oldData?.dish_image || "",
                     link: "editImage",
                     name: "Imagen",
                 },

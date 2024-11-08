@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import EditLayout from "@/app/admin/components/layouts/edit";
 import { RestaurantType } from "@/lib/models/restaurant";
@@ -9,7 +9,6 @@ import EditRestaurantNameDialog from "./components/edit-name-dialog";
 import EditRestaurantLogoDialog from "./components/edit-logo-dialog";
 import EditRestaurantBGDialog from "./components/edit-bg-dialog";
 import Loader from "@/app/admin/components/loader";
-
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -34,25 +33,33 @@ interface Props {
     editBackground?: string;
 }
 
-export default function EditRestaurantView({ restaurant, editName, editLogo, editBackground }: Props) {
-    const router = useRouter()
-    const pathname = usePathname()
+export default function EditRestaurantView({
+    restaurant,
+    editName,
+    editLogo,
+    editBackground,
+}: Props) {
+    const router = useRouter();
+    const pathname = usePathname();
 
     const { data, error, mutate } = useSWR<RestaurantType | { error: string }>(
         `/api/restaurants/${restaurant.id}`,
         fetcher,
-        { fallbackData: restaurant },
+        { fallbackData: restaurant }
     );
 
-    if (error || !data || "error" in data) return <div>Error al cargar los datos</div>;
+    if (error || !data || "error" in data)
+        return <div>Error al cargar los datos</div>;
     if (!data) return <Loader />;
 
     return (
-        <SWRConfig value={{
-            fallback: {
-                [`/api/restaurants/${restaurant.id}`]: restaurant
-            }
-        }}>
+        <SWRConfig
+            value={{
+                fallback: {
+                    [`/api/restaurants/${restaurant.id}`]: restaurant,
+                },
+            }}
+        >
             <EditLayout
                 pathname={pathname}
                 breadcrumbs={breadcrumbs}
@@ -81,16 +88,16 @@ export default function EditRestaurantView({ restaurant, editName, editLogo, edi
                     id={data?.id}
                     open={Boolean(editName)}
                     onClose={() => {
-                        router.push(pathname)
-                        mutate()
+                        router.push(pathname);
+                        mutate();
                     }}
                 />
                 <EditRestaurantLogoDialog
                     open={Boolean(editLogo)}
                     id={data?.id}
                     onClose={() => {
-                        router.push(pathname)
-                        mutate()
+                        router.push(pathname);
+                        mutate();
                     }}
                     oldLogo={restaurant?.logo || ""}
                     restaurant={restaurant?.link || ""}
@@ -99,13 +106,13 @@ export default function EditRestaurantView({ restaurant, editName, editLogo, edi
                     open={Boolean(editBackground)}
                     id={data?.id}
                     onClose={() => {
-                        router.push(pathname)
-                        mutate()
+                        router.push(pathname);
+                        mutate();
                     }}
                     oldBG={restaurant?.background_image || ""}
                     restaurant={restaurant?.link || ""}
                 />
             </EditLayout>
-        </SWRConfig >
+        </SWRConfig>
     );
 }

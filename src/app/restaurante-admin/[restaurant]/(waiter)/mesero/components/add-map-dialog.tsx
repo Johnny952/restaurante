@@ -1,5 +1,4 @@
 "use client";
-import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
     Button,
@@ -25,7 +24,7 @@ interface AddMapDioalogProps {
 export default function AddMapDialog({
     open,
     handleClose,
-    handleAddMap = () => {},
+    handleAddMap = () => { },
 }: AddMapDioalogProps) {
     const [value, setValue] = useState<string>("");
     const [height, setHeight] = useState<number>(2000);

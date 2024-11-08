@@ -37,7 +37,7 @@ export default function EditRestaurantBGDialog({
             const tryAwait = async () => {
                 try {
                     await deleteImage(oldBG);
-                } catch (error) { }
+                } catch (error) {}
             };
             let url: string = "";
             if (file) {

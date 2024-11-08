@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { DishType } from "@/lib/models/dishes";
 import useLoadStore from "@/store/load-store";
 import {
@@ -20,7 +20,8 @@ export default function DeleteDialog({
     open: boolean;
     dish: DishType;
     deleteDish: (
-        id: string, url: string
+        id: string,
+        url: string
     ) => Promise<void | { error: string; status: number }>;
 }) {
     const setLoading = useLoadStore((state) => state.setLoading);
@@ -55,12 +56,15 @@ export default function DeleteDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await deleteDish(dish?.id.toString() || "", dish?.dish_image || "")
+                            await deleteDish(
+                                dish?.id.toString() || "",
+                                dish?.dish_image || ""
+                            );
                         } catch (error) {
                             enqueueSnackbar({
                                 message: `Error al borrar el plato ${error}`,
                                 variant: "error",
-                            })
+                            });
                         }
                         onClose();
                     }}

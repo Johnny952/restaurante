@@ -2,14 +2,18 @@ import { list } from "@/lib/services/language";
 import AdminLanguagesView from "./view";
 
 export default async function AdminLanguagesPage({
-    searchParams
+    searchParams,
 }: {
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: { [key: string]: string | string[] | undefined };
 }) {
-    const page = searchParams.page ? parseInt(searchParams.page as string, 10) : 0;
-    const size = searchParams.size ? parseInt(searchParams.size as string, 10) : 10;
-    const sortBy = searchParams.sortBy as string || 'id';
-    const sortOrder = searchParams.sortOrder as string || 'ASC';
+    const page = searchParams.page
+        ? parseInt(searchParams.page as string, 10)
+        : 0;
+    const size = searchParams.size
+        ? parseInt(searchParams.size as string, 10)
+        : 10;
+    const sortBy = (searchParams.sortBy as string) || "id";
+    const sortOrder = (searchParams.sortOrder as string) || "ASC";
     const filterField = searchParams.filterField as string;
     const filterOperator = searchParams.filterOperator as string;
     const filterValue = searchParams.filterValue as string;
@@ -25,9 +29,9 @@ export default async function AdminLanguagesPage({
         filterValue,
     });
 
-    if ('error' in initialData) {
+    if ("error" in initialData) {
         return {
-            notFound: true
+            notFound: true,
         };
     }
 

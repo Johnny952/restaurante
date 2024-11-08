@@ -19,9 +19,11 @@ import UploaderWithCrop from "@/components/uploader-with-crop";
 import toKebabCase from "@/helpers/to-kebab-case";
 import { enqueueSnackbar } from "notistack";
 import { putImage } from "@/app/api/upload/put-image";
-import { generateRestaurantImgLink, generateRestaurantLogoLink } from "@/app/api/helpers/image-links";
+import {
+    generateRestaurantImgLink,
+    generateRestaurantLogoLink,
+} from "@/app/api/helpers/image-links";
 import { put } from "@/lib/services/restaurant";
-
 
 const breadcrumbs = [
     {
@@ -107,12 +109,17 @@ export default function AddRestaurantView() {
             if (background) {
                 [logoUrl, bgUrl] = await Promise.all([
                     putImage(logo, generateRestaurantLogoLink(formData.link)),
-                    putImage(background, generateRestaurantImgLink(formData.link)),
+                    putImage(
+                        background,
+                        generateRestaurantImgLink(formData.link)
+                    ),
                 ]);
             } else {
-                logoUrl = await putImage(logo, generateRestaurantLogoLink(formData.link));
+                logoUrl = await putImage(
+                    logo,
+                    generateRestaurantLogoLink(formData.link)
+                );
             }
-
 
             if (!logoUrl || logoUrl === null) {
                 throw Error("La imagen no tiene enlace");

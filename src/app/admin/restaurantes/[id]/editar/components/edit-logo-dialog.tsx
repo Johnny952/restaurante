@@ -38,7 +38,7 @@ export default function EditRestaurantLogoDialog({
                 const tryAwait = async () => {
                     try {
                         await deleteImage(oldLogo);
-                    } catch (error) { }
+                    } catch (error) {}
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,

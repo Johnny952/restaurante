@@ -14,7 +14,8 @@ import { styled } from "@mui/system";
 import MapIcon from "@mui/icons-material/Map";
 import Add from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { MapInterface } from "@/app/api/maps/get";
+import { MapType } from "@/lib/models/map";
+// import { MapInterface } from "@/app/api/maps/get";
 
 const FloatingButton = styled(Button)(({ theme }) => ({
     position: "absolute",
@@ -40,7 +41,7 @@ const StyledPopper = styled(Popper)(({ theme }) => ({
 }));
 
 interface MapSelectorProps {
-    maps: MapInterface[];
+    maps: MapType[];
     currentMap?: string;
     onMapChange: (index: string) => void;
     onMapAdd: () => void;
@@ -132,9 +133,9 @@ const MapSelector: React.FC<MapSelectorProps> = ({
                                                         : undefined,
                                                 }}
                                                 key={index}
-                                                selected={map.id === currentMap}
+                                                selected={map.id.toString() === currentMap}
                                                 onClick={() => {
-                                                    onMapChange(map.id);
+                                                    onMapChange(map.id.toString());
                                                     setOpen(false);
                                                 }}
                                             >

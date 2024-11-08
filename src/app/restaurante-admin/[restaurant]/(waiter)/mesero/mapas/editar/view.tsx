@@ -7,22 +7,24 @@ import AddMapDialog from "../../components/add-map-dialog";
 import AddTableDrawer from "../../components/add-table";
 import DeleteMapDialog from "../../components/delete-map-dialog";
 import { useEffect, useState } from "react";
-import { put as putMap } from "@/app/api/maps/put";
+// import { put as putMap } from "@/app/api/maps/put";
 import { usePathname, useRouter } from "next/navigation";
-import { MapTableInterface } from "@/app/api/maps-tables/get";
-import { MapInterface } from "@/app/api/maps/get";
+// import { MapTableInterface } from "@/app/api/maps-tables/get";
+// import { MapInterface } from "@/app/api/maps/get";
 import Loader from "../../components/loader";
-import { putAndUpdateTables } from "@/app/api/maps-tables/put";
-import { del as deleteMap } from "@/app/api/maps/delete";
+import { MapTableType } from "@/lib/models/map-tables";
+import { MapType } from "@/lib/models/map";
+// import { putAndUpdateTables } from "@/app/api/maps-tables/put";
+// import { del as deleteMap } from "@/app/api/maps/delete";
 
 interface Props {
-    mapTables?: MapTableInterface[];
-    maps: MapInterface[];
+    mapTables?: MapTableType[];
+    maps: MapType[];
     restaurantLink: string;
     openAddMapDialog: boolean;
     openAddTable: boolean;
     openDeleteMap: boolean;
-    currentMap?: MapInterface;
+    currentMap?: MapType;
     selectedMap?: boolean;
     viewHref?: string;
 }
@@ -41,8 +43,8 @@ export default function View({
     const [isLoading, setIsLoading] = useState(true);
     const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
     const [showZoomControls, setShowZoomControls] = useState(false);
-    const [serverTables, setServerTables] = useState<MapTableInterface[]>([]);
-    const [localTables, setLocalTables] = useState<MapTableInterface[]>([]);
+    const [serverTables, setServerTables] = useState<MapTableType[]>([]);
+    const [localTables, setLocalTables] = useState<MapTableType[]>([]);
 
     const router = useRouter();
     const pathname = usePathname();
@@ -73,8 +75,8 @@ export default function View({
         const mapSetter = isServerTable
             ? setServerTables
             : isLocalTable
-              ? setLocalTables
-              : undefined;
+                ? setLocalTables
+                : undefined;
 
         if (mapSetter) {
             mapSetter((prevTables) =>
@@ -98,7 +100,7 @@ export default function View({
             if (!currentMap) {
                 throw Error("Mapa no encontrado");
             }
-            await putAndUpdateTables(localTables, serverTables, currentMap?.id);
+            // await putAndUpdateTables(localTables, serverTables, currentMap?.id);
         } catch (error) {
             console.log(`Ocurrio un error: ${error}`);
         }
@@ -118,7 +120,7 @@ export default function View({
     ) => {
         setIsLoading(true);
         try {
-            await putMap(name, width, height, restaurantLink);
+            // await putMap(name, width, height, restaurantLink);
             router.push("./editar");
             callback();
         } catch (error) {
@@ -133,7 +135,7 @@ export default function View({
             if (!currentMap) {
                 throw Error("Mapa no encontrado");
             }
-            await deleteMap(currentMap?.id.toString());
+            // await deleteMap(currentMap?.id.toString());
             if (selectedMap) {
                 router.push("../editar");
             } else {
@@ -180,13 +182,13 @@ export default function View({
         if (!currentMap) return;
         const maxNumber =
             localTables.length === 0
-                ? Math.max(...serverTables.map((table) => table.number), 0)
-                : Math.max(...localTables.map((table) => table.number), 0);
+                ? Math.max(...serverTables.map((table) => table.number || 0), 0)
+                : Math.max(...localTables.map((table) => table.number || 0), 0);
         const maxId =
             localTables.length === 0
                 ? Math.max(...serverTables.map((table) => table.id), 0)
                 : Math.max(...localTables.map((table) => table.id), 0);
-        const newTable: MapTableInterface = {
+        const newTable: MapTableType = {
             id: maxId + 1,
             number: maxNumber + 1,
             map_id: currentMap.id,

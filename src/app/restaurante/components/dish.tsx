@@ -22,7 +22,10 @@ import { DishType } from "@/lib/models/dishes";
 
 export default function Dish(dish: DishType) {
     const router = useRouter();
-    const img = !dish.dish_image || dish.dish_image === "" ? defaultDishImg.src : dish.dish_image;
+    const img =
+        !dish.dish_image || dish.dish_image === ""
+            ? defaultDishImg.src
+            : dish.dish_image;
 
     const addToFav = useCallback(() => {
         useFavStore.getState().addProduct(dish);
@@ -33,7 +36,10 @@ export default function Dish(dish: DishType) {
     }, [dish]);
 
     const quantity = useFavStore(
-        useCallback((state) => state.products[dish.id]?.quantity || 0, [dish.id])
+        useCallback(
+            (state) => state.products[dish.id]?.quantity || 0,
+            [dish.id]
+        )
     );
 
     return (

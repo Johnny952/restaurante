@@ -1,12 +1,16 @@
 import { filterOptions, FilterParams } from "../models/pagination";
 import { RestaurantsLanguagesType } from "../models/restaurants-languages";
 import buildQuery from "../util/query-builder";
-import { list as listService, listCount, put as putService } from "../repositories/restaurants-languages";
+import {
+    list as listService,
+    listCount,
+    put as putService,
+} from "../repositories/restaurants-languages";
 
 const fieldMap = {
-    restaurant: 'restaurant_id',
-    language: 'language_id',
-}
+    restaurant: "restaurant_id",
+    language: "language_id",
+};
 
 export async function list({
     page = 0,
@@ -35,7 +39,9 @@ export async function list({
         Object.values(filterOptions).includes(filterOperator)
     ) {
         filter = {
-            field: fieldMap[filterField as keyof typeof fieldMap] as keyof RestaurantsLanguagesType,
+            field: fieldMap[
+                filterField as keyof typeof fieldMap
+            ] as keyof RestaurantsLanguagesType,
             operator: filterOperator,
             value: filterValue,
         };
@@ -49,7 +55,9 @@ export async function list({
                     size,
                 },
                 sort: {
-                    by: fieldMap[sortBy as keyof typeof fieldMap] as keyof RestaurantsLanguagesType,
+                    by: fieldMap[
+                        sortBy as keyof typeof fieldMap
+                    ] as keyof RestaurantsLanguagesType,
                     order:
                         sortOrder.toLowerCase().trim() === "desc"
                             ? "DESC"

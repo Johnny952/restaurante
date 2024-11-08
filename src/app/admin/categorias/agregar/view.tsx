@@ -99,13 +99,13 @@ export default function AddCategoryView({ restaurants }: Props) {
             setLoading(true);
             const restaurantId = restaurants.find(
                 (restaurant) => restaurant.link === e.target.value
-            )?.id
+            )?.id;
             if (!restaurantId) {
                 enqueueSnackbar({
                     message: "Error al cargar restaurantes",
                     variant: "error",
                 });
-                setLoading(false)
+                setLoading(false);
                 return;
             }
             const languagesResponse = await getByRestaurant(restaurantId);
@@ -114,7 +114,7 @@ export default function AddCategoryView({ restaurants }: Props) {
                     message: "Error al cargar lenguajes",
                     variant: "error",
                 });
-                setLoading(false)
+                setLoading(false);
                 return;
             }
             setLanguages(languagesResponse);
@@ -127,8 +127,8 @@ export default function AddCategoryView({ restaurants }: Props) {
                 e.target.value
             );
             if ("error" in categoriesResponse) {
-                setCategories([])
-                setLoading(false)
+                setCategories([]);
+                setLoading(false);
             } else {
                 setCategories(categoriesResponse);
                 setLoading(false);
@@ -140,10 +140,10 @@ export default function AddCategoryView({ restaurants }: Props) {
                 link: toKebabCase(e.target.value),
                 name: e.target.value,
             });
-            setLoading(false)
+            setLoading(false);
             return;
         } else {
-            setLoading(false)
+            setLoading(false);
             setFormData({ ...formData, [e.target.name]: e.target.value });
         }
     };
@@ -155,7 +155,7 @@ export default function AddCategoryView({ restaurants }: Props) {
                 message: "Debe seleccionar una imagen",
                 variant: "error",
             });
-            setLoading(false)
+            setLoading(false);
             return;
         }
         if (!validateForm()) {
@@ -163,7 +163,7 @@ export default function AddCategoryView({ restaurants }: Props) {
                 message: "Formulario con errores",
                 variant: "error",
             });
-            setLoading(false)
+            setLoading(false);
             return;
         }
         try {
@@ -176,7 +176,7 @@ export default function AddCategoryView({ restaurants }: Props) {
                     message: "La imagen no tiene enlace",
                     variant: "error",
                 });
-                setLoading(false)
+                setLoading(false);
                 return;
             }
             const restaurantId = restaurants.find(
@@ -187,7 +187,7 @@ export default function AddCategoryView({ restaurants }: Props) {
                     message: "Restaurante no encontrado",
                     variant: "error",
                 });
-                setLoading(false)
+                setLoading(false);
                 return;
             }
             const res = await put(

@@ -12,11 +12,14 @@ export async function get(fields: Partial<DishType>) {
     const rows = await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query<DishType>(`
+            return await sql.query<DishType>(
+                `
                 SELECT *
                 FROM dish_details
                 WHERE ${queryString}
-            `, values);
+            `,
+                values
+            );
         },
         notFoundMessage: "Plato no encontrado",
         dataBaseMessage: "Error al conseguir plato",
@@ -28,11 +31,14 @@ export async function getAll(fields: Partial<DishType>) {
     const rows = await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query<DishType>(`
+            return await sql.query<DishType>(
+                `
                 SELECT *
                 FROM dish_details
                 WHERE ${queryString}
-            `, values);
+            `,
+                values
+            );
         },
         notFoundMessage: "No existen platos",
         dataBaseMessage: "Error al conseguir todos los platos",
@@ -40,16 +46,23 @@ export async function getAll(fields: Partial<DishType>) {
     return rows;
 }
 
-export async function list({ pagination, sort, filter }: TableParams<keyof DishType>) {
+export async function list({
+    pagination,
+    sort,
+    filter,
+}: TableParams<keyof DishType>) {
     try {
         const filterQuery = filter ? buildQueryFilter(filter) : "";
-        const { rows } = await sql.query<DishType>(`
+        const { rows } = await sql.query<DishType>(
+            `
             SELECT *
             FROM dish_details
             ${filterQuery}
             ORDER BY ${sort.by} ${sort.order}
             LIMIT $1 OFFSET $2
-        `, [pagination.size, pagination.page * pagination.size]);
+        `,
+            [pagination.size, pagination.page * pagination.size]
+        );
         return rows;
     } catch (error) {
         const err = error as Error;
@@ -83,7 +96,7 @@ export async function put({
     description,
     link,
     categoryId,
-    languageId
+    languageId,
 }: {
     name: string;
     price: number;
@@ -96,7 +109,8 @@ export async function put({
     await singleSQLQuery({
         query: async () => {
             if (image) {
-                return await sql.query(`
+                return await sql.query(
+                    `
                     WITH new_dish AS (
                         INSERT INTO dishes (price, category_id, image, is_deleted)
                         VALUES ($1, $2, $3, false)
@@ -105,9 +119,20 @@ export async function put({
                     INSERT INTO dish_translations (dish_id, language_id, name, link, description)
                     SELECT id, $4, $5, $6, $7
                     FROM new_dish;
-                `, [price, categoryId, image, languageId, name, link, description || ""]);
+                `,
+                    [
+                        price,
+                        categoryId,
+                        image,
+                        languageId,
+                        name,
+                        link,
+                        description || "",
+                    ]
+                );
             }
-            return await sql.query(`
+            return await sql.query(
+                `
                 WITH new_dish AS (
                     INSERT INTO dishes (price, category_id, image, is_deleted)
                     VALUES ($1, $2, NULL, false)
@@ -116,7 +141,9 @@ export async function put({
                 INSERT INTO dish_translations (dish_id, language_id, name, link, description)
                 SELECT id, $3, $4, $5, $6
                 FROM new_dish;
-            `, [price, categoryId, languageId, name, link, description || ""]);
+            `,
+                [price, categoryId, languageId, name, link, description || ""]
+            );
         },
         notFoundMessage: "No se pudo crear el plato",
         dataBaseMessage: "Error al crear plato",
@@ -128,7 +155,7 @@ export async function putTranslation({
     name,
     languageId,
     link,
-    description
+    description,
 }: {
     id: string;
     name: string;
@@ -138,10 +165,13 @@ export async function putTranslation({
 }) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 INSERT INTO dish_translations (dish_id, language_id, name, link, description)
                 VALUES ($1, $2, $3, $4, $5)
-            `, [id, languageId, name, link, description]);
+            `,
+                [id, languageId, name, link, description]
+            );
         },
         notFoundMessage: "No se pudo crear la traducción del plato",
         dataBaseMessage: "Error al crear traducción del plato",
@@ -150,16 +180,19 @@ export async function putTranslation({
 
 export async function updateTranslation(
     id: string | number,
-    fields: Record<string, unknown>,
+    fields: Record<string, unknown>
 ) {
     await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query(`
+            return await sql.query(
+                `
                 UPDATE dish_translations
                 SET ${queryString}
                 WHERE id = $${values.length + 1}
-            `, [...values, id]);
+            `,
+                [...values, id]
+            );
         },
         notFoundMessage: "Traducción del plato no encontrada",
         dataBaseMessage: "Error al actualizar la traducción del plato",
@@ -173,11 +206,14 @@ export async function update(
     await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query(`
+            return await sql.query(
+                `
                 UPDATE dishes
                 SET ${queryString}
                 WHERE id = $${values.length + 1}
-            `, [...values, id]);
+            `,
+                [...values, id]
+            );
         },
         notFoundMessage: "Plato no encontrado",
         dataBaseMessage: "Error al actualizar el plato",
@@ -187,10 +223,13 @@ export async function update(
 export async function del(id: string | number) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 DELETE FROM dishes
                 WHERE id = $1
-            `, [id]);
+            `,
+                [id]
+            );
         },
         notFoundMessage: "Plato no encontrado",
         dataBaseMessage: "Error al eliminar el plato",

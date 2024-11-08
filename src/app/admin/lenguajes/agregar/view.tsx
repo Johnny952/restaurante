@@ -1,6 +1,17 @@
 "use client";
 import LinkBreadcrumbs from "@/components/link-breadcrumbs";
-import { Box, Button, FormControl, FormHelperText, Grid, Input, InputLabel, Paper, SelectChangeEvent, Typography } from "@mui/material";
+import {
+    Box,
+    Button,
+    FormControl,
+    FormHelperText,
+    Grid,
+    Input,
+    InputLabel,
+    Paper,
+    SelectChangeEvent,
+    Typography,
+} from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { ChangeEvent, useState } from "react";
 import useLoadStore from "@/store/load-store";
@@ -141,7 +152,6 @@ export default function AddLanguageView() {
                             </FormHelperText>
                         </FormControl>
                     </Grid>
-
 
                     <Grid item xs={12}>
                         <FormControl error={!!errors.name}>

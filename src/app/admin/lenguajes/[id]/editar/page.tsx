@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import EditNameDialog from "./components/edit-name-dialog";
-import { LanguageTableInterface } from "@/app/api/languages/index.types";
-import { getById } from "@/app/api/languages/get";
+// import { LanguageTableInterface } from "@/app/api/languages/index.types";
+// import { getById } from "@/app/api/languages/get";
 import EditIDDialog from "./components/edit-id-dialog";
 import EditLayout from "@/app/admin/components/layouts/edit";
+import { LanguageType } from "@/lib/models/language";
 
 const breadcrumbs = [
     {
@@ -33,7 +34,7 @@ export default function EditLanguagePage({
         editID?: string;
     };
 }) {
-    const [oldData, setOldData] = useState<LanguageTableInterface | null>(null);
+    const [oldData, setOldData] = useState<LanguageType | null>(null);
     const router = useRouter();
     const pathname = usePathname();
 
@@ -44,12 +45,12 @@ export default function EditLanguagePage({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getById(id);
+            // return getById(id);
         };
 
         fetchData()
             .then((data) => {
-                setOldData(data);
+                setOldData(null);
                 setLoading(false);
             })
             .catch((error) => {
@@ -62,13 +63,11 @@ export default function EditLanguagePage({
     return (
         <EditLayout
             pathname={pathname}
-            redirect={(link: string) => router.push(link)}
             breadcrumbs={breadcrumbs}
-            goBack={() => router.push("/admin/lenguajes")}
             title={`Editar Lenguaje: ${oldData?.name}`}
             data={[
                 {
-                    value: oldData?.id,
+                    value: oldData?.id.toString(),
                     name: "ID",
                     link: "editID",
                 },

@@ -1,10 +1,10 @@
-import dynamic from 'next/dynamic';
-import Loader from '../../components/loader';
+import dynamic from "next/dynamic";
+import Loader from "../../components/loader";
 import { getAll } from "@/lib/services/restaurant";
 
-const AddDishView = dynamic(() => import('./view'), {
-    loading: () => <Loader />
-})
+const AddDishView = dynamic(() => import("./view"), {
+    loading: () => <Loader />,
+});
 
 export default async function AddRestaurantPage() {
     const restaurants = await getAll();
@@ -13,7 +13,5 @@ export default async function AddRestaurantPage() {
         return <AddDishView restaurants={[]} />;
     }
 
-    return (
-        <AddDishView restaurants={restaurants} />
-    );
+    return <AddDishView restaurants={restaurants} />;
 }

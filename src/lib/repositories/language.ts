@@ -1,6 +1,10 @@
 "use server";
 import { sql } from "@vercel/postgres";
-import { LanguageType, LanguageWithRestaurantType, RestaurantLanguageType } from "../models/language";
+import {
+    LanguageType,
+    LanguageWithRestaurantType,
+    RestaurantLanguageType,
+} from "../models/language";
 import DatabaseError from "../errors/database-error";
 import { FilterParams, TableParams } from "../models/pagination";
 import buildQueryFilter from "../util/query-filter-builder";
@@ -16,11 +20,14 @@ export async function get(fields: Partial<LanguageType>) {
     const rows = await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query<LanguageType>(`
+            return await sql.query<LanguageType>(
+                `
                 SELECT *
                 FROM languages
                 WHERE ${queryString}
-            `, values);
+            `,
+                values
+            );
         },
         notFoundMessage: "Idioma no encontrado",
         dataBaseMessage: "Error al conseguir idioma",
@@ -31,11 +38,14 @@ export async function get(fields: Partial<LanguageType>) {
 export async function getAllByRestaurantLink(link: string) {
     const rows = await singleSQLQuery({
         query: async () => {
-            return await sql.query<RestaurantLanguageType>(`
+            return await sql.query<RestaurantLanguageType>(
+                `
                 SELECT *
                 FROM restaurant_languages_view
                 WHERE restaurant_link = $1
-            `, [link]);
+            `,
+                [link]
+            );
         },
         notFoundMessage: "Idiomas asociado al restaurante no encontrados",
         dataBaseMessage: "Error al conseguir idiomas",
@@ -73,13 +83,16 @@ export async function list({
 }: TableParams<keyof LanguageType>) {
     try {
         const filterQuery = filter ? buildQueryFilter(filter) : "";
-        const { rows } = await sql.query<LanguageType>(`
+        const { rows } = await sql.query<LanguageType>(
+            `
             SELECT *
             FROM languages
             ${filterQuery}
             ORDER BY ${sort.by} ${sort.order}
             LIMIT $1 OFFSET $2
-        `, [pagination.size, pagination.page * pagination.size]);
+        `,
+            [pagination.size, pagination.page * pagination.size]
+        );
         return rows;
     } catch (error) {
         const err = error as Error;
@@ -116,19 +129,16 @@ export async function listCount(filter: FilterParams<keyof LanguageType>) {
  * @param code - The language code
  * @param name - The language name
  */
-export async function put({
-    code,
-    name,
-}: {
-    code: string;
-    name: string;
-}) {
+export async function put({ code, name }: { code: string; name: string }) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 INSERT INTO languages (code, name)
                 VALUES ($1, $2)
-            `, [code, name]);
+            `,
+                [code, name]
+            );
         },
         notFoundMessage: "No se pudo crear el idioma",
         dataBaseMessage: "Error al crear nuevo idioma",
@@ -144,11 +154,14 @@ export async function update(id: string, fields: Partial<LanguageType>) {
     await singleSQLQuery({
         query: async () => {
             const { queryString, values } = paramJoin(fields);
-            return await sql.query(`
+            return await sql.query(
+                `
                 UPDATE languages
                 SET ${queryString}
                 WHERE id = $${values.length + 1}
-            `, [...values, id]);
+            `,
+                [...values, id]
+            );
         },
         notFoundMessage: "Idioma no encontrado",
         dataBaseMessage: "Error al actualizar idioma",
@@ -162,16 +175,18 @@ export async function update(id: string, fields: Partial<LanguageType>) {
 export async function del(id: string) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 DELETE FROM languages
                 WHERE id = $1
-            `, [id]);
+            `,
+                [id]
+            );
         },
         notFoundMessage: "Idioma no encontrado",
         dataBaseMessage: "Error al eliminar idioma",
     });
 }
-
 
 /**
  * Get languages associated with a restaurant
@@ -181,13 +196,15 @@ export async function del(id: string) {
 export async function getLanguagesByRestaurant(restaurantId: number) {
     const rows = await singleSQLQuery({
         query: async () => {
-            return await sql.query<LanguageWithRestaurantType>(`
+            return await sql.query<LanguageWithRestaurantType>(
+                `
                 SELECT l.*, r.id as restaurant_id, r.link as restaurant_link
                 FROM languages l
                 JOIN restaurant_languages rl ON l.id = rl.language_id
                 JOIN restaurants r ON r.id = rl.restaurant_id
                 WHERE r.id = $1
-            `, [restaurantId]
+            `,
+                [restaurantId]
             );
         },
         notFoundMessage: "No se encontraron idiomas para este restaurante",
@@ -201,14 +218,20 @@ export async function getLanguagesByRestaurant(restaurantId: number) {
  * @param restaurantId - The restaurant id
  * @param languageId - The language id
  */
-export async function associateLanguageWithRestaurant(restaurantId: string, languageId: string) {
+export async function associateLanguageWithRestaurant(
+    restaurantId: string,
+    languageId: string
+) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 INSERT INTO restaurant_languages (restaurant_id, language_id)
                 VALUES ($1, $2)
                 ON CONFLICT (restaurant_id, language_id) DO NOTHING
-            `, [restaurantId, languageId]);
+            `,
+                [restaurantId, languageId]
+            );
         },
         notFoundMessage: "No se pudo asociar el idioma con el restaurante",
         dataBaseMessage: "Error al asociar el idioma con el restaurante",
@@ -220,13 +243,19 @@ export async function associateLanguageWithRestaurant(restaurantId: string, lang
  * @param restaurantId - The restaurant id
  * @param languageId - The language id
  */
-export async function disassociateLanguageFromRestaurant(restaurantId: string, languageId: string) {
+export async function disassociateLanguageFromRestaurant(
+    restaurantId: string,
+    languageId: string
+) {
     await singleSQLQuery({
         query: async () => {
-            return await sql.query(`
+            return await sql.query(
+                `
                 DELETE FROM restaurant_languages
                 WHERE restaurant_id = $1 AND language_id = $2
-            `, [restaurantId, languageId]);
+            `,
+                [restaurantId, languageId]
+            );
         },
         notFoundMessage: "No se pudo desasociar el idioma del restaurante",
         dataBaseMessage: "Error al desasociar el idioma del restaurante",
@@ -253,7 +282,7 @@ export async function listWithRestaurants({
             ${filterQuery}
             ORDER BY ${sort.by} ${sort.order}
             LIMIT ${pagination.size} OFFSET ${pagination.page * pagination.size}
-        `)
+        `);
         return rows;
     } catch (error) {
         const err = error as Error;

@@ -1,4 +1,4 @@
-import { updatePrice } from "@/app/api/dishes/update";
+// import { updatePrice } from "@/app/api/dishes/update";
 import formatPrice from "@/helpers/format-price";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
@@ -70,7 +70,7 @@ export default function EditPriceDialog({
         }
         setLoading(true);
         try {
-            await updatePrice(id, formData.price.replaceAll(".", ""));
+            // await updatePrice(id, formData.price.replaceAll(".", ""));
             setFormData({
                 price: "",
             });

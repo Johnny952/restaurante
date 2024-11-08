@@ -1,7 +1,15 @@
 import { LanguageType } from "../models/language";
 import { filterOptions, FilterParams } from "../models/pagination";
 import buildQuery from "../util/query-builder";
-import { list as listService, listCount, del as delService, put as putService, getAll as getAllService, getLanguagesByRestaurant, getAllByRestaurantLink as getAllByRestaurantLinkService } from "../repositories/language";
+import {
+    list as listService,
+    listCount,
+    del as delService,
+    put as putService,
+    getAll as getAllService,
+    getLanguagesByRestaurant,
+    getAllByRestaurantLink as getAllByRestaurantLinkService,
+} from "../repositories/language";
 
 export async function getByRestaurant(id: number) {
     return buildQuery(() => getLanguagesByRestaurant(id));
@@ -12,7 +20,7 @@ export async function getAllByRestaurantLink(link: string) {
 }
 
 export async function getAll() {
-    return buildQuery(() => getAllService())
+    return buildQuery(() => getAllService());
 }
 
 export async function list({
@@ -82,11 +90,6 @@ export async function del(id: string) {
     return buildQuery(() => delService(id));
 }
 
-export async function put(args: {
-    code: string;
-    name: string;
-}) {
-    return buildQuery(() =>
-        putService(args)
-    );
+export async function put(args: { code: string; name: string }) {
+    return buildQuery(() => putService(args));
 }

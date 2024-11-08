@@ -11,7 +11,14 @@ import InputLabel from "@mui/material/InputLabel";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import useLoadStore from "@/store/load-store";
-import { InputAdornment, MenuItem, OutlinedInput, Select, SelectChangeEvent, TextField } from "@mui/material";
+import {
+    InputAdornment,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    SelectChangeEvent,
+    TextField,
+} from "@mui/material";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import ArrowBack from "@mui/icons-material/ArrowBack";
@@ -27,7 +34,6 @@ import { LanguageType } from "@/lib/models/language";
 import { getByRestaurant } from "@/lib/services/language";
 import { getAllChildren } from "@/lib/services/category";
 import formatPrice from "@/helpers/format-price";
-
 
 const breadcrumbs = [
     {
@@ -65,7 +71,7 @@ interface FormErrors {
 }
 
 interface Props {
-    restaurants: BaseRestaurantType[]
+    restaurants: BaseRestaurantType[];
 }
 
 export default function AddRestaurantView({ restaurants }: Props) {
@@ -73,9 +79,9 @@ export default function AddRestaurantView({ restaurants }: Props) {
         name: "",
         link: "",
         price: 0,
-        category: '',
-        language: '',
-        restaurant: '',
+        category: "",
+        language: "",
+        restaurant: "",
     });
     const [file, setFile] = useState<File | null>(null);
     const [errors, setErrors] = useState<FormErrors>({});
@@ -97,22 +103,24 @@ export default function AddRestaurantView({ restaurants }: Props) {
     ) => {
         if (e.target.name === "restaurant") {
             setLoading(true);
-            const restaurantId = e.target.value
+            const restaurantId = e.target.value;
             if (!restaurantId) {
                 enqueueSnackbar({
                     message: "Error al cargar restaurantes",
                     variant: "error",
                 });
-                setLoading(false)
+                setLoading(false);
                 return;
             }
-            const languagesResponse = await getByRestaurant(parseInt(restaurantId, 10));
+            const languagesResponse = await getByRestaurant(
+                parseInt(restaurantId, 10)
+            );
             if ("error" in languagesResponse) {
                 enqueueSnackbar({
                     message: "Error al cargar lenguajes",
                     variant: "error",
                 });
-                setLoading(false)
+                setLoading(false);
                 return;
             }
             setLanguages(languagesResponse);
@@ -125,11 +133,11 @@ export default function AddRestaurantView({ restaurants }: Props) {
                 e.target.value
             );
             if ("error" in categoriesResponse) {
-                setCategories([])
+                setCategories([]);
             } else {
                 setCategories(categoriesResponse);
             }
-            setLoading(false)
+            setLoading(false);
         }
         if (e.target.name === "name") {
             setFormData({
@@ -137,11 +145,14 @@ export default function AddRestaurantView({ restaurants }: Props) {
                 link: toKebabCase(e.target.value),
                 name: e.target.value,
             });
-            setLoading(false)
+            setLoading(false);
             return;
         }
         if (e.target.name === "price") {
-            setFormData({ ...formData, price: parseInt(e.target.value.replaceAll('.', ''), 10) });
+            setFormData({
+                ...formData,
+                price: parseInt(e.target.value.replaceAll(".", ""), 10),
+            });
         }
 
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -159,7 +170,7 @@ export default function AddRestaurantView({ restaurants }: Props) {
         }
         if (!validateForm()) {
             enqueueSnackbar({
-                message: `Formulario con errores: ${Object.values(errors).join(', ')}`,
+                message: `Formulario con errores: ${Object.values(errors).join(", ")}`,
                 variant: "error",
             });
             setLoading(false);
@@ -168,7 +179,18 @@ export default function AddRestaurantView({ restaurants }: Props) {
         try {
             let fileUrl;
             if (file) {
-                fileUrl = await putImage(file, generateDishLink(restaurants.find((restaurant) => restaurant.link === formData.restaurant)?.id.toString() || "", formData.link))
+                fileUrl = await putImage(
+                    file,
+                    generateDishLink(
+                        restaurants
+                            .find(
+                                (restaurant) =>
+                                    restaurant.link === formData.restaurant
+                            )
+                            ?.id.toString() || "",
+                        formData.link
+                    )
+                );
             }
             const res = await put({
                 name: formData.name,
@@ -203,7 +225,8 @@ export default function AddRestaurantView({ restaurants }: Props) {
         if (!formData.name) newErrors.name = "El nombre es requerido";
         if (!formData.link) newErrors.link = "El enlace es requerido";
         if (!formData.price) newErrors.price = "El precio es requerido";
-        if (!formData.category) newErrors.category = "La categoría es requerida";
+        if (!formData.category)
+            newErrors.category = "La categoría es requerida";
         if (!formData.language) newErrors.language = "El lenguaje es requerido";
 
         setErrors(newErrors);
@@ -275,14 +298,20 @@ export default function AddRestaurantView({ restaurants }: Props) {
 
                     <Grid item xs={12}>
                         <FormControl error={!!errors.price}>
-                            <InputLabel htmlFor="price-input">Precio</InputLabel>
+                            <InputLabel htmlFor="price-input">
+                                Precio
+                            </InputLabel>
                             <OutlinedInput
                                 id="price-input"
                                 aria-describedby="price-error-text"
                                 onChange={handleChange}
                                 value={formData.price}
                                 name="price"
-                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                                startAdornment={
+                                    <InputAdornment position="start">
+                                        $
+                                    </InputAdornment>
+                                }
                                 required
                             />
                             <FormHelperText id="price-error-text">
@@ -300,7 +329,7 @@ export default function AddRestaurantView({ restaurants }: Props) {
                             value={formData.description}
                             name="description"
                             multiline
-                            sx={{ minWidth: '400px' }}
+                            sx={{ minWidth: "400px" }}
                             maxRows={4}
                         />
                     </Grid>

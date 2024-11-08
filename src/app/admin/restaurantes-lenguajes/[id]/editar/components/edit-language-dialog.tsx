@@ -1,5 +1,5 @@
-import { getAll as getAllLanguages } from "@/app/api/languages/get";
-import { updateLanguage } from "@/app/api/restaurants-languages/update";
+// import { getAll as getAllLanguages } from "@/app/api/languages/get";
+// import { updateLanguage } from "@/app/api/restaurants-languages/update";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -35,7 +35,7 @@ export default function EditLanguageDialog({
     async function onConfirmLanguage() {
         setLoading(true);
         try {
-            await updateLanguage(id, languageValue);
+            // await updateLanguage(id, languageValue);
             snackSuccess("Lenguaje cambiado");
             setLanguageValue("");
             onClose();
@@ -48,7 +48,8 @@ export default function EditLanguageDialog({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getAllLanguages();
+            // return getAllLanguages();
+            return []
         };
 
         fetchData()

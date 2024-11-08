@@ -1,5 +1,5 @@
-import { updateRestaurant } from "@/app/api/restaurants-languages/update";
-import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
+// import { updateRestaurant } from "@/app/api/restaurants-languages/update";
+// import { getAll as getAllRestaurants } from "@/app/api/restaurants/get";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
 import {
@@ -35,7 +35,7 @@ export default function EditRestaurantDialog({
     async function onConfirmRestaurant() {
         setLoading(true);
         try {
-            await updateRestaurant(id, restaurantValue);
+            // await updateRestaurant(id, restaurantValue);
             snackSuccess("Restaurante cambiado");
             setRestaurantValue("");
             onClose();
@@ -48,7 +48,8 @@ export default function EditRestaurantDialog({
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            return getAllRestaurants();
+            // return getAllRestaurants();
+            return []
         };
 
         fetchData()

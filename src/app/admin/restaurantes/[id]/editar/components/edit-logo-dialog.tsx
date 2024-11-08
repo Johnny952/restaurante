@@ -1,4 +1,4 @@
-import { updateLogo } from "@/app/api/restaurants/update";
+import { updateLogo } from "@/lib/services/restaurant";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";
@@ -21,7 +21,7 @@ export default function EditRestaurantLogoDialog({
     restaurant,
 }: {
     open: boolean;
-    id: string;
+    id: number;
     onClose: () => void;
     oldLogo: string;
     restaurant: string;
@@ -38,14 +38,14 @@ export default function EditRestaurantLogoDialog({
                 const tryAwait = async () => {
                     try {
                         await deleteImage(oldLogo);
-                    } catch (error) {}
+                    } catch (error) { }
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,
                     putImage(file, `restaurant/${restaurant}/logo.png`),
                 ]);
 
-                await updateLogo(id, url);
+                await updateLogo(id.toString(), url);
                 snackSuccess("Logo actualizado");
                 setfile(null);
                 onClose();

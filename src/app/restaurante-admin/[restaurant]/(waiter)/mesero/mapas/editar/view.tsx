@@ -178,10 +178,17 @@ export default function View({
 
     const handleAddTable = (id: string) => {
         if (!currentMap) return;
+        const maxNumber =
+            localTables.length === 0
+                ? Math.max(...serverTables.map((table) => table.number), 0)
+                : Math.max(...localTables.map((table) => table.number), 0);
+        const maxId =
+            localTables.length === 0
+                ? Math.max(...serverTables.map((table) => table.id), 0)
+                : Math.max(...localTables.map((table) => table.id), 0);
         const newTable: MapTableInterface = {
-            id: Math.max(...localTables.map((table) => table.id), 0) + 1,
-            number:
-                Math.max(...localTables.map((table) => table.number), 0) + 1,
+            id: maxId + 1,
+            number: maxNumber + 1,
             map_id: currentMap.id,
             table_id: parseInt(id, 10),
             position_x: Math.floor(currentMap.width / 2),

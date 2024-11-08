@@ -1,6 +1,6 @@
-import { del } from "@/app/api/dishes/delete";
+"use client"
+import { DishType } from "@/lib/models/dishes";
 import useLoadStore from "@/store/load-store";
-import useSnackStore from "@/store/snackbar-store";
 import {
     Button,
     Dialog,
@@ -9,19 +9,28 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
+import { usePathname, useRouter } from "next/navigation";
+import { enqueueSnackbar } from "notistack";
 
 export default function DeleteDialog({
     open,
-    onClose,
-    selected,
+    dish,
+    deleteDish,
 }: {
     open: boolean;
-    onClose: () => void;
-    selected: string | number | null;
+    dish: DishType;
+    deleteDish: (
+        id: string, url: string
+    ) => Promise<void | { error: string; status: number }>;
 }) {
     const setLoading = useLoadStore((state) => state.setLoading);
-    const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
-    const snackError = useSnackStore((state) => state.setOpenError);
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const onClose = () => {
+        router.refresh();
+        router.push(pathname);
+    };
 
     return (
         <Dialog
@@ -31,7 +40,7 @@ export default function DeleteDialog({
             aria-describedby="alert-dialog-description"
         >
             <DialogTitle id="alert-dialog-title">
-                {`Eliminar Plato: ${selected}`}
+                {`Eliminar Plato: ${dish.dish_name}`}
             </DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
@@ -46,12 +55,13 @@ export default function DeleteDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await del((selected || "").toString());
-                            snackSuccess(`Plato ${selected} eliminada`);
+                            await deleteDish(dish?.id.toString() || "", dish?.dish_image || "")
                         } catch (error) {
-                            snackError(`Ocurrió un error: ${error}`);
+                            enqueueSnackbar({
+                                message: `Error al borrar el plato ${error}`,
+                                variant: "error",
+                            })
                         }
-                        setLoading(false);
                         onClose();
                     }}
                     autoFocus

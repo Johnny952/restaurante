@@ -1,28 +1,27 @@
+"use client";
 import LinkBreadcrumbs from "@/components/link-breadcrumbs";
 import { Box, Button, Divider, Grid, Paper, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { ImageAsync } from "@/components/image-async";
 import { LinkBreadcrumbsProps } from "@/components/link-breadcrumbs/index.d";
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export default function EditLayout({
     pathname,
-    redirect,
     children,
     breadcrumbs,
-    goBack,
     title,
     data,
     images,
 }: {
     pathname: string;
-    redirect: (link: string) => void;
     children?: string | JSX.Element | JSX.Element[];
-    goBack: () => void;
     title: string;
     data: { value?: string; name: string; link: string }[];
     images?: { src?: string; link: string; name: string }[];
 } & LinkBreadcrumbsProps) {
+    const router = useRouter();
     return (
         <div>
             <LinkBreadcrumbs breadcrumbs={breadcrumbs} />
@@ -41,7 +40,7 @@ export default function EditLayout({
                         <Button
                             variant="text"
                             startIcon={<ArrowBackIcon />}
-                            onClick={goBack}
+                            onClick={() => router.push("..")}
                         >
                             Atrás
                         </Button>
@@ -72,7 +71,7 @@ export default function EditLayout({
                                             <Button
                                                 variant="contained"
                                                 onClick={() =>
-                                                    redirect(
+                                                    router.push(
                                                         `${pathname}?${item.link}=1`
                                                     )
                                                 }
@@ -87,8 +86,8 @@ export default function EditLayout({
                     </Grid>
 
                     {images
-                        ? images.map((image) => (
-                              <>
+                        ? images.map((image, idx) => (
+                              <div key={idx}>
                                   <Grid item xs={12}>
                                       <Divider />
                                   </Grid>
@@ -131,7 +130,7 @@ export default function EditLayout({
                                                       sx={{ my: "10px" }}
                                                       variant="contained"
                                                       onClick={() =>
-                                                          redirect(
+                                                          router.push(
                                                               `${pathname}?${image.link}=1`
                                                           )
                                                       }
@@ -142,7 +141,7 @@ export default function EditLayout({
                                           </Grid>
                                       </Grid>
                                   </Grid>
-                              </>
+                              </div>
                           ))
                         : null}
                 </Grid>

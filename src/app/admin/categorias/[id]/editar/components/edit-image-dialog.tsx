@@ -1,7 +1,6 @@
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";
-import useSnackStore from "@/store/snackbar-store";
 import {
     Button,
     Dialog,
@@ -9,45 +8,30 @@ import {
     DialogContent,
     DialogTitle,
 } from "@mui/material";
-import { useEffect, useState } from "react";
-import { CategoryTable } from "@/app/api/categories/index.types";
-import { notFound } from "next/navigation";
-import { getById } from "@/app/api/categories/get";
+import { useState } from "react";
+import { notFound, useRouter } from "next/navigation";
 import UploaderWithCrop from "@/components/uploader-with-crop";
-import { updateImage } from "@/app/api/categories/update";
+import { CategoryType } from "@/lib/models/categories";
+import { enqueueSnackbar } from "notistack";
+import { updateImage } from "@/lib/services/category";
 
 export default function EditImageDialog({
     open,
     id,
-    onClose,
+    category,
 }: {
     open: boolean;
     id: string;
-    onClose: () => void;
+    category: CategoryType & {
+        restaurant_name: string;
+        restaurant_link: string;
+        parent: string;
+        language: string;
+    };
 }) {
     const [file, setfile] = useState<File | null>(null);
-    const [category, setCategory] = useState<
-        | (CategoryTable & { restlang: string; restaurant_link: string })
-        | undefined
-    >();
     const setLoading = useLoadStore((state) => state.setLoading);
-    const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
-    const snackError = useSnackStore((state) => state.setOpenError);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            return getById(id);
-        };
-
-        fetchData()
-            .then((cat) => {
-                setCategory(cat);
-            })
-            .catch((error) => {
-                snackError(`Ocurrió un error: ${error.toString()}`);
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, onClose]);
+    const router = useRouter();
 
     async function handleSubmit() {
         if (!category) {
@@ -57,28 +41,41 @@ export default function EditImageDialog({
             setLoading(true);
             try {
                 const tryAwait = async () => {
+                    if (!category.category_image) {
+                        return;
+                    }
                     try {
-                        await deleteImage(category.image);
-                    } catch (error) {}
+                        await deleteImage(category.category_image);
+                    } catch (error) { }
                 };
                 const [_, url] = await Promise.all([
                     tryAwait,
                     putImage(
                         file,
-                        `restaurante/${category.restaurant_link}/categories/${category.link}.png`
+                        `restaurante/${category.restaurant_link}/categories/${category.category_link}.png`
                     ),
                 ]);
 
                 await updateImage(id, url);
-                snackSuccess("Logo actualizado");
+                enqueueSnackbar({
+                    message: "Imagen actualizada",
+                    variant: "success",
+                });
                 setfile(null);
-                onClose();
+                router.push("editar");
+                router.refresh();
             } catch (error) {
-                snackError(`Ocurrió un error: ${error}`);
+                enqueueSnackbar({
+                    message: "Ocurrio un error al subir la imagen",
+                    variant: "error",
+                });
             }
             setLoading(false);
         } else {
-            snackError("Ninguna imagen seleccionada");
+            enqueueSnackbar({
+                message: "Ninguna imagen seleccionada",
+                variant: "error",
+            });
         }
     }
     return (
@@ -90,7 +87,7 @@ export default function EditImageDialog({
                     <Button
                         onClick={() => {
                             setfile(null);
-                            onClose();
+                            router.push("editar");
                         }}
                         color="error"
                         autoFocus

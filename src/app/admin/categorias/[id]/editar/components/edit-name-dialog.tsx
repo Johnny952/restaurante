@@ -1,7 +1,6 @@
-import { updateNameLink } from "@/app/api/categories/update";
 import toKebabCase from "@/helpers/to-kebab-case";
+import { updateNameLink } from "@/lib/services/category";
 import useLoadStore from "@/store/load-store";
-import useSnackStore from "@/store/snackbar-store";
 import {
     Button,
     Dialog,
@@ -10,22 +9,21 @@ import {
     DialogTitle,
     TextField,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { enqueueSnackbar } from "notistack";
 import { ChangeEvent, useState } from "react";
 
 export default function EditNameDialog({
     open,
     id,
-    onClose,
 }: {
     open: boolean;
     id: string;
-    onClose: () => void;
 }) {
     const [nameValue, setNameValue] = useState("");
     const [linkValue, setLinkValue] = useState("");
     const setLoading = useLoadStore((state) => state.setLoading);
-    const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
-    const snackError = useSnackStore((state) => state.setOpenError);
+    const router = useRouter();
 
     function onNameValueChange(
         event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,12 +36,21 @@ export default function EditNameDialog({
         setLoading(true);
         try {
             await updateNameLink(id, nameValue, linkValue);
-            snackSuccess("Nombre de categoría cambiado");
+            enqueueSnackbar({
+                message: "Nombre de categoría cambiado",
+                variant: "success",
+                autoHideDuration: 3000,
+            });
             setNameValue("");
             setLinkValue("");
-            onClose();
+            router.refresh();
+            router.push("editar");
         } catch (error) {
-            snackError(`Ocurrió un error: ${error}`);
+            enqueueSnackbar({
+                message: `Ocurrio un error: ${error}`,
+                variant: "error",
+                autoHideDuration: 3000,
+            });
         }
         setLoading(false);
     }
@@ -74,7 +81,7 @@ export default function EditNameDialog({
                         onClick={() => {
                             setNameValue("");
                             setLinkValue("");
-                            onClose();
+                            router.push("editar");
                         }}
                         color="error"
                         autoFocus

@@ -1,54 +1,23 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from "@mui/material";
 
 const theme = createTheme({
     palette: {
-        mode: "dark",
         primary: {
-            main: "#FF6B35", // Naranja vibrante
-        },
-        secondary: {
-            main: "#4ECB71", // Verde vibrante
+            main: "#2196f3",
         },
         background: {
-            default: "#121212", // Negro elegante
-            paper: "#1E1E1E", // Gris muy oscuro
+            default: "#f5f5f5",
+            paper: "#ffffff",
         },
         text: {
-            primary: "#FFFFFF",
-            secondary: "#B0B0B0",
+            primary: "#333333",
+            secondary: "#666666",
         },
     },
     typography: {
-        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-        h1: {
-            fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 700,
-        },
-        h2: {
-            fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 700,
-        },
-        h3: {
-            fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 600,
-        },
+        fontFamily: '"Poppins", "Roboto", "Helvetica", "Arial", sans-serif',
         h4: {
-            fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 600,
-        },
-        h5: {
-            fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 500,
-        },
-        h6: {
-            fontFamily: '"Montserrat", sans-serif',
-            fontWeight: 500,
-        },
-        body1: {
-            fontFamily: '"Merriweather", serif',
-        },
-        body2: {
-            fontFamily: '"Merriweather", serif',
+            fontWeight: 700,
         },
     },
     components: {
@@ -57,14 +26,6 @@ const theme = createTheme({
                 root: {
                     borderRadius: "50px",
                     textTransform: "none",
-                },
-            },
-        },
-        MuiCard: {
-            styleOverrides: {
-                root: {
-                    backgroundColor: "#1E1E1E",
-                    borderRadius: "15px",
                 },
             },
         },

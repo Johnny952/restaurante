@@ -1,6 +1,5 @@
-import { del } from "@/app/api/categories/delete";
+"use client";
 import useLoadStore from "@/store/load-store";
-import useSnackStore from "@/store/snackbar-store";
 import {
     Button,
     Dialog,
@@ -9,19 +8,28 @@ import {
     DialogContentText,
     DialogTitle,
 } from "@mui/material";
+import { usePathname, useRouter } from "next/navigation";
+import { enqueueSnackbar } from "notistack";
 
 export default function DeleteCategoryDialog({
     open,
-    onClose,
     selected,
+    deleteCategory,
 }: {
     open: boolean;
-    onClose: () => void;
     selected: string | number | null;
+    deleteCategory: (
+        id: string
+    ) => Promise<void | { error: string; status: number }>;
 }) {
     const setLoading = useLoadStore((state) => state.setLoading);
-    const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
-    const snackError = useSnackStore((state) => state.setOpenError);
+    const router = useRouter();
+    const pathname = usePathname();
+
+    const onClose = () => {
+        router.refresh();
+        router.push(pathname);
+    };
 
     return (
         <Dialog
@@ -46,10 +54,21 @@ export default function DeleteCategoryDialog({
                     onClick={async () => {
                         setLoading(true);
                         try {
-                            await del((selected || "").toString());
-                            snackSuccess(`Categoría ${selected} eliminada`);
+                            const response = await deleteCategory(
+                                (selected || "").toString()
+                            );
+                            if (response && "error" in response) {
+                                throw Error(response.error);
+                            }
+                            enqueueSnackbar({
+                                message: `Categoría ${selected} eliminada`,
+                                variant: "success",
+                            });
                         } catch (error) {
-                            snackError(`Ocurrió un error: ${error}`);
+                            enqueueSnackbar({
+                                message: `Error al borrar la categoría ${selected}`,
+                                variant: "error",
+                            });
                         }
                         setLoading(false);
                         onClose();

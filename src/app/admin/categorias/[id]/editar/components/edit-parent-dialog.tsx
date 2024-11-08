@@ -1,5 +1,4 @@
 import useLoadStore from "@/store/load-store";
-import useSnackStore from "@/store/snackbar-store";
 import {
     Button,
     Dialog,
@@ -14,10 +13,13 @@ import {
     SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllParents, getById } from "@/app/api/categories/get";
-import { notFound } from "next/navigation";
-import { updateParent } from "@/app/api/categories/update";
-import { CategoryTable } from "@/app/api/categories/index.types";
+import { CategoryType } from "@/lib/models/categories";
+import { enqueueSnackbar } from "notistack";
+import {
+    getAllParentsByRestaurantLanguage,
+    updateParent,
+} from "@/lib/services/category";
+import { useRouter } from "next/navigation";
 
 interface FormData {
     parent: string;
@@ -26,70 +28,70 @@ interface FormData {
 export default function EditParentDialog({
     open,
     id,
-    onClose,
+    category,
 }: {
     open: boolean;
     id: string;
-    onClose: () => void;
+    category: CategoryType & {
+        restaurant_name: string;
+        restaurant_link: string;
+        parent: string;
+        language: string;
+    };
 }) {
     const [formData, setFormData] = useState<FormData>({
         parent: "",
     });
-    const [allCategories, setAllCategories] = useState<
-        { id: string; name: string }[]
-    >([]);
-    const [category, setCategory] = useState<
-        (CategoryTable & { restlang: string }) | undefined
-    >();
+    const [allCategories, setAllCategories] = useState<CategoryType[]>([]);
     const setLoading = useLoadStore((state) => state.setLoading);
-    const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
-    const snackError = useSnackStore((state) => state.setOpenError);
+    const router = useRouter();
 
     const handleChange = async (e: SelectChangeEvent) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = async () => {
-        if (!category) {
-            notFound();
-        }
         setLoading(true);
         try {
             await updateParent(id, formData.parent);
             setFormData({
                 parent: "",
             });
-            onClose();
-            snackSuccess("Categoría editada");
+            router.push("editar");
+            router.refresh();
+            enqueueSnackbar({
+                message: "Categoría editada",
+                variant: "success",
+            });
         } catch (error) {
-            snackError(`Ocurrió un error: ${error}`);
+            enqueueSnackbar({
+                message: `Ocurrio un error: ${error}`,
+                variant: "error",
+                autoHideDuration: 3000,
+            });
         }
         setLoading(false);
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            const cat = await getById(id);
-            if (!cat) {
-                notFound();
-            }
-            const categories = await getAllParents(cat.restlang, id);
-            return {
-                categories,
-                category: cat,
-            };
-        };
-
-        fetchData()
-            .then(({ categories, category: cat }) => {
-                setAllCategories(categories);
-                setCategory(cat);
+        getAllParentsByRestaurantLanguage(
+            category.restaurant_link,
+            category.language
+        )
+            .then((parents) => {
+                if ("error" in parents) {
+                    throw parents.error;
+                }
+                setAllCategories(parents);
             })
             .catch((error) => {
-                snackError(`Ocurrió un error: ${error.toString()}`);
+                enqueueSnackbar({
+                    message: `Ocurrio un error: ${error}`,
+                    variant: "error",
+                    autoHideDuration: 3000,
+                });
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [id, onClose]);
+    }, [category.language, category.restaurant_link]);
 
     return (
         <Dialog open={open} aria-labelledby="edit-dialog-title">
@@ -116,8 +118,8 @@ export default function EditParentDialog({
                             >
                                 <MenuItem value={""}>No padre</MenuItem>
                                 {allCategories.map((cat) => (
-                                    <MenuItem key={cat.id} value={cat.id}>
-                                        {cat.name}
+                                    <MenuItem key={cat.category_id} value={cat.category_id}>
+                                        {cat.category_name}
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -130,7 +132,7 @@ export default function EditParentDialog({
                             setFormData({
                                 parent: "",
                             });
-                            onClose();
+                            router.push("editar");
                         }}
                         color="error"
                         autoFocus

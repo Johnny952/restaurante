@@ -1,4 +1,4 @@
-import { updateBackground } from "@/app/api/restaurants/update";
+import { updateBackground } from "@/lib/services/restaurant";
 import { deleteImage } from "@/app/api/upload/delete-image";
 import { putImage } from "@/app/api/upload/put-image";
 import useLoadStore from "@/store/load-store";
@@ -21,7 +21,7 @@ export default function EditRestaurantBGDialog({
     restaurant,
 }: {
     open: boolean;
-    id: string;
+    id: number;
     onClose: () => void;
     oldBG: string;
     restaurant: string;
@@ -37,7 +37,7 @@ export default function EditRestaurantBGDialog({
             const tryAwait = async () => {
                 try {
                     await deleteImage(oldBG);
-                } catch (error) {}
+                } catch (error) { }
             };
             let url: string = "";
             if (file) {
@@ -48,7 +48,7 @@ export default function EditRestaurantBGDialog({
                 url = r[1];
             }
 
-            await updateBackground(id, url);
+            await updateBackground(id.toString(), url);
             snackSuccess("Logo actualizado");
             setFile(null);
             onClose();

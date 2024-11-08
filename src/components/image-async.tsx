@@ -1,7 +1,7 @@
 "use client";
-import { Box, Collapse } from "@mui/material";
+import { Box } from "@mui/material";
 import Image, { ImageProps } from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ContentLoader from "react-content-loader";
 
 export const ImageAsync = ({
@@ -9,32 +9,41 @@ export const ImageAsync = ({
     alt,
     radius = "0",
     loadingImg,
+    disableRevealState = true,
     objectFit,
     ...props
-}: ImageProps & { radius?: string; loadingImg?: boolean }) => {
+}: ImageProps & {
+    radius?: string;
+    loadingImg?: boolean;
+    disableRevealState?: boolean;
+}) => {
     const [reveal, setReveal] = useState<boolean>(false);
     const loading = !reveal || loadingImg;
     const loader = !loading ? "none" : "inline-block";
 
+    useEffect(() => {
+        if (disableRevealState) setReveal(true);
+    }, [disableRevealState]);
+
+    useEffect(() => {}, [reveal, loadingImg]);
+
     return (
-        <Box>
-            <Collapse in={!loading}>
-                {src && src !== "" ? (
-                    <Image
-                        src={src}
-                        alt={alt}
-                        width={props.width}
-                        height={props.height}
-                        {...props}
-                        style={{ ...props.style }}
-                        onError={() => setReveal(true)}
-                        onLoad={() => {
-                            setReveal(true);
-                        }}
-                        objectFit={objectFit}
-                    />
-                ) : null}
-            </Collapse>
+        <Box sx={{ height: "100%" }}>
+            {src && src !== "" && !loading ? (
+                <Image
+                    src={src}
+                    alt={alt}
+                    width={props.width}
+                    height={props.height}
+                    {...props}
+                    style={{ ...props.style }}
+                    onError={() => setReveal(true)}
+                    onLoad={() => {
+                        setReveal(true);
+                    }}
+                    objectFit={objectFit}
+                />
+            ) : null}
             <ContentLoader
                 style={{ display: loader }}
                 speed={2}

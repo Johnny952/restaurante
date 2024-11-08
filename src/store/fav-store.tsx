@@ -1,28 +1,18 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
-import type {} from "@redux-devtools/extension";
+import type { } from "@redux-devtools/extension";
+import { DishType } from "@/lib/models/dishes";
 
-interface IncompleteProduct {
-    id: string;
-    name: string;
-    link: string;
-    price: number;
-    image: string;
-    restaurant: string;
-    language: string;
-    category: string;
-}
-
-interface Product extends IncompleteProduct {
+interface Product extends DishType {
     quantity: number;
 }
 
 interface FavState {
-    products: Record<string, Product>;
-    addProduct: (product: IncompleteProduct) => void;
-    addOneProduct: (id: string) => void;
-    subProduct: (id: string) => void;
-    removeProduct: (id: string) => void;
+    products: Record<number, Product>;
+    addProduct: (product: DishType) => void;
+    addOneProduct: (id: number) => void;
+    subProduct: (id: number) => void;
+    removeProduct: (id: number) => void;
     clear: () => void;
 }
 
@@ -39,9 +29,9 @@ const useFavStore = create<FavState>()(
                                 ...state.products,
                                 [product.id]: storedProduct
                                     ? {
-                                          ...storedProduct,
-                                          quantity: storedProduct.quantity + 1,
-                                      }
+                                        ...storedProduct,
+                                        quantity: storedProduct.quantity + 1,
+                                    }
                                     : { ...product, quantity: 1 },
                             },
                         };

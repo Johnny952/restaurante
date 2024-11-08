@@ -1,3 +1,4 @@
+"use client";
 import {
     AppBar,
     Box,
@@ -14,10 +15,12 @@ import {
     GridRowSelectionModel,
     GridSortModel,
 } from "@mui/x-data-grid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { navigateWithNewParam } from "@/helpers/navigate-with-new-params";
 
 export default function Table({
     tableName,
@@ -25,26 +28,27 @@ export default function Table({
     columns,
     rows,
     tableLoading,
-    redirectLoadData,
-    pathname,
-    redirect,
 
-    page,
-    size,
-    sortBy,
+    page = 0,
+    size = 10,
+    sortBy = '',
     sortOrder,
     filterField,
     filterOperator,
     filterValue,
+    onPageChange = () => { },
+    onSizeChange = () => { },
+    onSortByChange = () => { },
+    onSortOrderChange = () => { },
+    onFilterFieldChange = () => { },
+    onFilterOperatorChange = () => { },
+    onFilterValueChange = () => { },
 }: {
     tableName: string;
     rowCount: number;
     columns: GridColDef[];
     rows: any[];
     tableLoading: boolean;
-    redirectLoadData: (params: Record<string, string | number>) => void;
-    pathname: string;
-    redirect: (p: string) => void;
 
     page?: number;
     size?: number;
@@ -53,38 +57,79 @@ export default function Table({
     filterField: string;
     filterOperator: string;
     filterValue?: string;
+    onPageChange?: (page: number) => void;
+    onSizeChange?: (size: number) => void;
+    onSortByChange?: (sortBy: string) => void;
+    onSortOrderChange?: (sortOrder: string) => void;
+    onFilterFieldChange?: (filterField: string) => void;
+    onFilterOperatorChange?: (filterOperator: string) => void;
+    onFilterValueChange?: (filterValue: string) => void;
 }) {
-    const [selectedRow, setSelectedRow] = useState<string | number | null>(
-        null
-    );
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const [selectedRow, setSelectedRow] = useState<string | number | null>(null);
+
+    const [paginationModel, setPaginationModel] = useState<GridPaginationModel>({
+        page,
+        pageSize: size,
+    });
+
+    const [sortModel, setSortModel] = useState<GridSortModel>([
+        {
+            field: sortBy,
+            sort: sortOrder as "asc" | "desc" | null,
+        },
+    ]);
+
+    const [filterModel, setFilterModel] = useState<GridFilterModel>({
+        items: [
+            {
+                field: filterField,
+                operator: filterOperator,
+                value: filterValue,
+            },
+        ],
+    });
+
+    useEffect(() => {
+        setPaginationModel({ page, pageSize: size });
+    }, [page, size]);
+
+    useEffect(() => {
+        setSortModel([{ field: sortBy, sort: sortOrder as "asc" | "desc" | null }]);
+    }, [sortBy, sortOrder]);
+
+    useEffect(() => {
+        setFilterModel({
+            items: [{ field: filterField, operator: filterOperator, value: filterValue }],
+        });
+    }, [filterField, filterOperator, filterValue]);
 
     function onPaginationModelChange(model: GridPaginationModel) {
-        redirectLoadData({
-            page: model.page,
-            size: model.pageSize,
-        });
+        setPaginationModel(model);
+        onPageChange(model.page);
+        onSizeChange(model.pageSize);
     }
-    function onRowSelectionModelChange(
-        rowSelectionModel: GridRowSelectionModel
-    ) {
+
+    function onRowSelectionModelChange(rowSelectionModel: GridRowSelectionModel) {
         setSelectedRow(rowSelectionModel[0]);
     }
 
-    function onFilterModelChange(args: GridFilterModel) {
-        if (args.items.length > 0) {
-            redirectLoadData({
-                filterField: args.items[0].field,
-                filterOperator: args.items[0].operator,
-                filterValue: args.items[0].value,
-            });
+    function onFilterModelChange(model: GridFilterModel) {
+        setFilterModel(model);
+        if (model.items.length > 0) {
+            onFilterFieldChange(model.items[0].field);
+            onFilterOperatorChange(model.items[0].operator);
+            onFilterValueChange(model.items[0].value);
         }
     }
-    function onSortModelChange(args: GridSortModel) {
-        if (args.length > 0) {
-            redirectLoadData({
-                sortBy: args[0].field,
-                sortOrder: args[0].sort || "asc",
-            });
+
+    function onSortModelChange(model: GridSortModel) {
+        setSortModel(model);
+        if (model.length > 0) {
+            onSortByChange(model[0].field);
+            onSortOrderChange(model[0].sort || "asc");
         }
     }
 
@@ -103,7 +148,7 @@ export default function Table({
                     <Tooltip title="Agregar">
                         <IconButton
                             color="inherit"
-                            onClick={() => redirect(`${pathname}/agregar`)}
+                            onClick={() => router.push(`${pathname}/agregar`)}
                         >
                             <AddIcon />
                         </IconButton>
@@ -114,7 +159,7 @@ export default function Table({
                                 <IconButton
                                     color="inherit"
                                     onClick={() =>
-                                        redirect(
+                                        router.push(
                                             `${pathname}/${selectedRow}/editar`
                                         )
                                     }
@@ -126,11 +171,19 @@ export default function Table({
                             <Tooltip title="Eliminar">
                                 <IconButton
                                     color="inherit"
-                                    onClick={() =>
-                                        redirectLoadData({
-                                            delete: selectedRow,
-                                        })
-                                    }
+                                    onClick={() => {
+                                        navigateWithNewParam(
+                                            router,
+                                            searchParams,
+                                            pathname,
+                                            [
+                                                {
+                                                    name: "delete",
+                                                    value: selectedRow.toString(),
+                                                },
+                                            ]
+                                        );
+                                    }}
                                 >
                                     <DeleteIcon />
                                 </IconButton>
@@ -150,27 +203,19 @@ export default function Table({
                 disableMultipleRowSelection
                 rows={rows}
                 columns={columns}
-                sortModel={[
-                    {
-                        field: sortBy || "",
-                        sort: sortOrder === "asc" ? "asc" : "desc",
-                    },
-                ]}
-                filterModel={{
-                    items: [
-                        {
-                            field: filterField,
-                            operator: filterOperator,
-                            value: filterValue,
-                        },
-                    ],
-                }}
-                paginationModel={{ page: page || 0, pageSize: size || 25 }}
+                paginationModel={paginationModel}
+                sortModel={sortModel}
+                filterModel={filterModel}
                 pageSizeOptions={[5, 10, 25, 50]}
-                onSortModelChange={onSortModelChange}
                 onPaginationModelChange={onPaginationModelChange}
-                onRowSelectionModelChange={onRowSelectionModelChange}
+                onSortModelChange={onSortModelChange}
                 onFilterModelChange={onFilterModelChange}
+                onRowSelectionModelChange={onRowSelectionModelChange}
+                initialState={{
+                    pagination: { paginationModel: { page, pageSize: size } },
+                    sorting: { sortModel: [{ field: sortBy, sort: sortOrder as "asc" | "desc" | null }] },
+                    filter: { filterModel: { items: [{ field: filterField, operator: filterOperator, value: filterValue }] } },
+                }}
             />
         </>
     );

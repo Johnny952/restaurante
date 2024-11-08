@@ -12,6 +12,7 @@ import {
     Snackbar,
 } from "@mui/material";
 import React, { useState } from "react";
+import { SnackbarProvider } from "notistack";
 
 export default function DashboardLayout({
     children, // will be a page or nested layout
@@ -54,6 +55,7 @@ export default function DashboardLayout({
 
     return (
         <Box sx={{ display: "flex", color: "rgb(114, 119, 122)" }}>
+            <SnackbarProvider />
             <CssBaseline />
             <Header handleDrawerToggle={handleDrawerToggle} />
             <Sidebar

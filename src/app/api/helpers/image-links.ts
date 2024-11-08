@@ -1,5 +1,5 @@
-export function generateRestaurantLogoLink(restaurantId: string) {
-    return `restaurant/${restaurantId}/logo.png`;
+export function generateRestaurantLogoLink(restaurantLink: string) {
+    return `restaurant/${restaurantLink}/logo.png`;
 }
 
 export function generateRestaurantImgLink(restaurantId: string) {

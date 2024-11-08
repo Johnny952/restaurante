@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
     AppBar,
     Toolbar,
@@ -19,17 +19,16 @@ import Image from "next/image";
 import HomeIcon from "@mui/icons-material/Home";
 import InfoIcon from "@mui/icons-material/Info";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
-import WorkIcon from "@mui/icons-material/Work";
 import ContactMailIcon from "@mui/icons-material/ContactMail";
 import MenuIcon from "@mui/icons-material/Menu";
 import { keyframes } from "@emotion/react";
+import { useRouter } from "next/navigation";
 
 const menuItems = [
-    { name: "", icon: <HomeIcon /> },
-    { name: "Acerca", icon: <InfoIcon /> },
-    { name: "Servicios", icon: <BusinessCenterIcon /> },
-    { name: "Proyectos", icon: <WorkIcon /> },
-    { name: "Contacto", icon: <ContactMailIcon /> },
+    { name: "", icon: <HomeIcon />, link: "/" },
+    { name: "Acerca", icon: <InfoIcon />, link: "/acerca" },
+    { name: "Servicios", icon: <BusinessCenterIcon />, link: "/servicios" },
+    { name: "Contacto", icon: <ContactMailIcon />, link: "/contacto" },
 ];
 
 const fadeIn = keyframes`
@@ -49,6 +48,7 @@ const Header = () => {
         disableHysteresis: true,
         threshold: 100,
     });
+    const router = useRouter();
 
     const getAppBarStyle = (scrolled: boolean) => ({
         backgroundColor: scrolled ? "rgba(33, 150, 243, 0.95)" : "transparent",
@@ -100,6 +100,7 @@ const Header = () => {
                                     backgroundColor: "rgba(255, 255, 255, 0.1)",
                                 },
                             }}
+                            onClick={() => router.push(item.link)}
                         >
                             <ListItemIcon sx={{ color: "white" }}>
                                 {item.icon}
@@ -133,6 +134,8 @@ const Header = () => {
                             height={40}
                             style={{
                                 animation: `${fadeIn} 0.5s ease-out`,
+                                width: "auto",
+                                height: "auto",
                             }}
                         />
                         <Typography
@@ -145,7 +148,7 @@ const Header = () => {
                                 animation: `${fadeIn} 0.5s ease-out 0.2s both`,
                             }}
                         >
-                            VirtualTable Solutions
+                            Virtual Table
                         </Typography>
                     </Box>
 
@@ -153,6 +156,7 @@ const Header = () => {
                         {menuItems.map((item, index) => (
                             <Button
                                 key={item.name}
+                                onClick={() => router.push(item.link)}
                                 sx={{
                                     ...getTextStyle(trigger),
                                     mx: 1,
@@ -212,7 +216,7 @@ const Header = () => {
                             animation: `${fadeIn} 0.5s ease-out 0.8s both`,
                         }}
                     >
-                        Comenzar
+                        Log in
                     </Button>
                 </Toolbar>
             </Container>

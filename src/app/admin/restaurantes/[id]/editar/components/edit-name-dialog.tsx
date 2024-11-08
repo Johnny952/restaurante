@@ -1,4 +1,4 @@
-import { updateName } from "@/app/api/restaurants/update";
+import { updateName } from "@/lib/services/restaurant";
 import toKebabCase from "@/helpers/to-kebab-case";
 import useLoadStore from "@/store/load-store";
 import useSnackStore from "@/store/snackbar-store";
@@ -18,7 +18,7 @@ export default function EditRestaurantNameDialog({
     onClose,
 }: {
     open: boolean;
-    id: string;
+    id: number;
     onClose: () => void;
 }) {
     const [nameValue, setNameValue] = useState("");
@@ -37,7 +37,7 @@ export default function EditRestaurantNameDialog({
     async function onConfirmName() {
         setLoading(true);
         try {
-            await updateName(id, nameValue, linkValue);
+            await updateName(id.toString(), nameValue, linkValue);
             snackSuccess("Nombre de restaurante cambiado");
             setNameValue("");
             setLinkValue("");

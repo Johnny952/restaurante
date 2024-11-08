@@ -1,199 +1,202 @@
-CREATE TABLE Restaurants (
-  id SERIAL PRIMARY KEY,
-  name varchar(40) UNIQUE NOT NULL,
-  link varchar(40) UNIQUE NOT NULL,
-  image varchar(255) NOT NULL,
-  background varchar(255)
+CREATE TABLE restaurants (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  link TEXT NOT NULL UNIQUE,
+  logo TEXT,
+  background_image TEXT,
+  is_deleted BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE Languages (
-  id varchar(2) PRIMARY KEY,
-  name varchar(40) UNIQUE NOT NULL
+CREATE TABLE workers (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  role TEXT NOT NULL CHECK (role IN ('mesero', 'dueño', 'cocinero')),
+  restaurant_id BIGINT REFERENCES restaurants (id) ON DELETE CASCADE,
+  is_deleted BOOLEAN DEFAULT FALSE
 );
 
-CREATE TABLE Restaurant_Languages (
-  id SERIAL PRIMARY KEY,
-  restaurant_id INTEGER NOT NULL,
-  language_id varchar(2),
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id),
-  FOREIGN KEY (language_id) REFERENCES Languages(id),
+CREATE TABLE order_statuses (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE categories (
+  id BIGSERIAL PRIMARY KEY,
+  restaurant_id BIGINT REFERENCES restaurants (id) ON DELETE CASCADE,
+  image TEXT,
+  parent_id BIGINT REFERENCES categories (id) ON DELETE CASCADE,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE dishes (
+  id BIGSERIAL PRIMARY KEY,
+  price NUMERIC(10, 2) NOT NULL,
+  category_id BIGINT REFERENCES categories (id) ON DELETE CASCADE,
+  image TEXT,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE sectors (
+  id BIGSERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  restaurant_id BIGINT REFERENCES restaurants (id) ON DELETE CASCADE,
+  width NUMERIC(10, 2),
+  height NUMERIC(10, 2),
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE tables (
+  id BIGSERIAL PRIMARY KEY,
+  type INTEGER NOT NULL,
+  number INTEGER NOT NULL,
+  sector_id BIGINT REFERENCES sectors (id) ON DELETE CASCADE,
+  pos_x NUMERIC(10, 2),
+  pos_y NUMERIC(10, 2),
+  code UUID DEFAULT gen_random_uuid() NOT NULL UNIQUE,
+  qr_code_image TEXT,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE orders (
+  id BIGSERIAL PRIMARY KEY,
+  table_id BIGINT REFERENCES tables (id) ON DELETE CASCADE,
+  order_time TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  total_price NUMERIC(10, 2) NOT NULL,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE order_items (
+  id BIGSERIAL PRIMARY KEY,
+  order_id BIGINT REFERENCES orders (id) ON DELETE CASCADE,
+  dish_id BIGINT REFERENCES dishes (id) ON DELETE CASCADE,
+  quantity INTEGER NOT NULL,
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE payments (
+  id BIGSERIAL PRIMARY KEY,
+  order_id BIGINT REFERENCES orders (id) ON DELETE CASCADE,
+  amount NUMERIC(10, 2) NOT NULL,
+  payment_time TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  method TEXT NOT NULL CHECK (method IN ('efectivo', 'tarjeta', 'transferencia')),
+  is_deleted BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE languages (
+  id BIGSERIAL PRIMARY KEY,
+  code TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL
+);
+
+CREATE TABLE restaurant_languages (
+  id BIGSERIAL PRIMARY KEY,
+  restaurant_id BIGINT REFERENCES restaurants(id) ON DELETE CASCADE,
+  language_id BIGINT REFERENCES languages(id) ON DELETE CASCADE,
   UNIQUE (restaurant_id, language_id)
 );
 
-CREATE TABLE Categories (
-  id SERIAL PRIMARY KEY,
-  restaurant_language_id INTEGER NOT NULL,
-  name varchar(40),
-  link varchar(40),
-  parent_id INTEGER,
-  image varchar(255),
-  FOREIGN KEY (restaurant_language_id) REFERENCES Restaurant_Languages(id),
-  FOREIGN KEY (parent_id) REFERENCES Categories(id),
-  UNIQUE (restaurant_language_id, link)
-);
-CREATE INDEX idx_categories_parent_id ON Categories(parent_id);
-
-CREATE TABLE Dishes (
-  id SERIAL PRIMARY KEY,
-  category_id INTEGER NOT NULL,
-  name VARCHAR(100) NOT NULL,
-  image VARCHAR(255),
-  link VARCHAR(100),
-  description VARCHAR(255),
-  price INTEGER,
-  FOREIGN KEY (category_id) REFERENCES Categories(id),
-  UNIQUE (category_id, link)
-);
-CREATE INDEX idx_dishes_category_id ON Dishes(category_id);
-CREATE INDEX idx_dishes_price ON Dishes(price);
-
-
-CREATE TABLE Tables (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL
+CREATE TABLE category_translations (
+  id BIGSERIAL PRIMARY KEY,
+  category_id BIGINT REFERENCES categories (id) ON DELETE CASCADE,
+  language_id BIGINT REFERENCES languages (id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  link TEXT NOT NULL
 );
 
-CREATE TABLE Maps (
-  id SERIAL PRIMARY KEY,
-  name VARCHAR(100) NOT NULL,
-  restaurant_id INTEGER NOT NULL,
-  width INTEGER NOT NULL,
-  height INTEGER NOT NULL,
-  deleted BOOLEAN,
-  
-  FOREIGN KEY (restaurant_id) REFERENCES restaurants(id)
+CREATE TABLE dish_translations (
+  id BIGSERIAL PRIMARY KEY,
+  dish_id BIGINT REFERENCES dishes (id) ON DELETE CASCADE,
+  language_id BIGINT REFERENCES languages (id) ON DELETE CASCADE,
+  name TEXT NOT NULL,
+  link TEXT NOT NULL,
+  description TEXT
 );
 
-CREATE TABLE Maps_Tables (
-  id SERIAL PRIMARY KEY,
-  number SERIAL,
-  map_id INTEGER NOT NULL,
-  table_id INTEGER NOT NULL,
-  position_x INTEGER,
-  position_y INTEGER,
-  qr_code_id VARCHAR(100) NOT NULL,
-  qr_code VARCHAR(255),
-  deleted BOOLEAN,
-
-  FOREIGN KEY (map_id) REFERENCES maps(id),
-  FOREIGN KEY (table_id) REFERENCES Tables(id)
+CREATE TABLE waiter_calls (
+  id BIGSERIAL PRIMARY KEY,
+  table_id BIGINT REFERENCES tables (id) ON DELETE CASCADE,
+  worker_id BIGINT REFERENCES workers (id),
+  call_time TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  is_completed BOOLEAN DEFAULT FALSE,
+  completed_at TIMESTAMP WITH TIME ZONE
 );
 
+CREATE TABLE order_status_history (
+  id BIGSERIAL PRIMARY KEY,
+  order_id BIGINT REFERENCES orders (id) ON DELETE CASCADE,
+  status_id BIGINT REFERENCES order_statuses (id) ON DELETE CASCADE,
+  worker_id BIGINT REFERENCES workers (id),
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
 
+-- Views
 
-INSERT INTO restaurants (name, link, image, background)
-VALUES ('johnny', 'johnny', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/logo-njISKiYUdCsNuVkDci32xOKgy5M9uS.png', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/main-bg-FQMUD2cSmmREKIE8pL5y9KNedALprr.png');
+CREATE OR REPLACE VIEW restaurant_languages_view AS
+SELECT DISTINCT
+  rl.id as id,
+  r.id AS restaurant_id,
+  r.link AS restaurant_link,
+  l.id AS language_id,
+  l.code AS language_code,
+  l.name AS language_name
+FROM restaurant_languages rl
+JOIN restaurants r ON rl.restaurant_id = r.id
+JOIN languages l ON rl.language_id = l.id;
 
-INSERT INTO LANGUAGES (id, name)
-VALUES ('es', 'español'),
-('en', 'english');
+CREATE OR REPLACE VIEW category_details AS
+SELECT 
+  c.id AS id,
+  c.image AS category_image,
+  c.is_deleted AS is_deleted,
+  ct.name AS category_name,
+  ct.link AS category_link,
+  r.id AS restaurant_id,
+  r.link AS restaurant_link,
+  l.id AS language_id,
+  l.code AS language_code,
+  parent.id AS parent_category_id,
+  parent_ct.link AS parent_category_link
+FROM categories c
+JOIN category_translations ct ON c.id = ct.category_id
+JOIN languages l ON ct.language_id = l.id
+JOIN restaurants r ON c.restaurant_id = r.id
+LEFT JOIN categories parent ON c.parent_id = parent.id
+LEFT JOIN category_translations parent_ct ON parent.id = parent_ct.category_id AND parent_ct.language_id = l.id;
 
-INSERT INTO Restaurant_Languages (restaurant_id, language_id)
-VALUES (1, 'es'),
-(1, 'en');
+CREATE OR REPLACE VIEW dish_details AS
+SELECT 
+  d.id AS id,
+  d.price AS dish_price,
+  d.image AS dish_image,
+  d.is_deleted AS is_deleted,
+  dt.name AS dish_name,
+  dt.link AS dish_link,
+  dt.description AS dish_description,
+  c.id AS category_id,
+  ct.name AS category_name,
+  ct.link AS category_link,
+  r.id AS restaurant_id,
+  r.link AS restaurant_link,
+  l.id AS language_id,
+  l.code AS language_code
+FROM dishes d
+JOIN categories c ON d.category_id = c.id
+JOIN category_translations ct ON c.id = ct.category_id
+JOIN restaurants r ON c.restaurant_id = r.id
+JOIN dish_translations dt ON d.id = dt.dish_id
+JOIN languages l ON dt.language_id = l.id;
 
-INSERT INTO Categories (id, restaurant_language_id, name, link, parent_id, image)
-VALUES 
-(3, 1, 'aperitivos', 'aperitivos', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/aperitivos-SNVl70mMPD0Hs6zSSeCcCfWmQZD26b.png'),
-(4, 2, 'appetizers', 'appetizers', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/aperitivos-SNVl70mMPD0Hs6zSSeCcCfWmQZD26b.png'),
-(5, 1, 'coctel o aperitivo', 'coctel-o-aperitivo', 3, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/coctel-c9BWtVurbsibze0YQ6yFoHL4AkW2y5.png'),
-(6, 2, 'cocktail or appetizer', 'cocktail-or-appetizer', 4, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/coctel-c9BWtVurbsibze0YQ6yFoHL4AkW2y5.png'),
-(7, 1, 'aperitivos con macerados y sabores', 'aperitivos-con-macerados-y-sabores', 3, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/macerado-Fi6bEAB4aYC9BEnXmR2d9mzJBKvCkY.png'),
-(8, 2, 'flavored and infused appetizers', 'flavored-and-infused-appetizers', 4, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/macerado-Fi6bEAB4aYC9BEnXmR2d9mzJBKvCkY.png'),
-(9, 1, 'sour premium', 'sour-premium', 3, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/sour-w3r9LhgwSLcMkg6c3gXPByRnWuxRzB.png'),
-(10, 2, 'premium sour', 'premium-sour', 4, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/sour-w3r9LhgwSLcMkg6c3gXPByRnWuxRzB.png'),
+-- Indexes
 
-(11, 1, 'entradas', 'entradas', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/entrada-CD5A5HLIdAp5vko2nXku1WzAANd8Zc.png'),
-(12, 2, 'starters', 'starters', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/entrada-CD5A5HLIdAp5vko2nXku1WzAANd8Zc.png'),
-(13, 1, 'ceviches', 'ceviches', 11, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/ceviche-Gqc77Z6v1bNJRouqs1BkXlXV9AhWZF.png'),
-(14, 2, 'ceviches', 'ceviches', 12, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/ceviche-Gqc77Z6v1bNJRouqs1BkXlXV9AhWZF.png'),
-(15, 1, 'chicharrones', 'chicharrones', 11, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/chicharrones-bIpesqrC9PAg7FY87kfFs5qg5n0uzL.png'),
-(16, 2, 'chicharrones', 'chicharrones', 12, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/chicharrones-bIpesqrC9PAg7FY87kfFs5qg5n0uzL.png'),
-(17, 1, 'piqueos', 'piqueos', 11, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/piqueos-am3GRg3p1LbRJU4zCWlLpxhi9L2pod.png'),
-(18, 2, 'peckings', 'peckings', 12, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/piqueos-am3GRg3p1LbRJU4zCWlLpxhi9L2pod.png'),
-(19, 1, 'sopas', 'sopas', 11, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/sopas-P38BHbOJiKuee6bfCutVmERSbSAv2Q.png'),
-(20, 2, 'soups', 'soups', 12, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/sopas-P38BHbOJiKuee6bfCutVmERSbSAv2Q.png'),
-(21, 1, 'tiraditos', 'tiraditos', 11, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/tiraditos-CizZjLaU9B8zWSet3WL3owHPQxsfWW.png'),
-(22, 2, 'tiraditos', 'tiraditos', 12, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/tiraditos-CizZjLaU9B8zWSet3WL3owHPQxsfWW.png'),
-
-(23, 1, 'ensaladas', 'ensaladas', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/ensaladas-Cgt4eWNkdTdkjwbaoN8vua7KqYPcZc.png'),
-(24, 2, 'salads', 'salads', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/ensaladas-Cgt4eWNkdTdkjwbaoN8vua7KqYPcZc.png'),
-
-(25, 1, 'platos principales', 'platos-principales', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/platos-principales-1G6zEWMAIo2rGfWd9zHN65zYfzT3qt.png'),
-(26, 2, 'main dishes', 'main-dishes', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/platos-principales-1G6zEWMAIo2rGfWd9zHN65zYfzT3qt.png'),
-(27, 1, 'acompañamientos', 'acompanamientos', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/acompanamientos-Lon0RSmTCbFYO8sgjXgl2bjMx04Cxy.png'),
-(28, 2, 'side dishes', 'side-dishes', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/acompanamientos-Lon0RSmTCbFYO8sgjXgl2bjMx04Cxy.png'),
-(29, 1, 'arroces y risotos', 'arroces-risotos', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/arroces-uCSwPDZjmEeUv03ZuoR0fj24YsV9lj.png'),
-(30, 2, 'rices and risottos', 'rices-risottos', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/arroces-uCSwPDZjmEeUv03ZuoR0fj24YsV9lj.png'),
-(31, 1, 'aves', 'aves', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/aves-G1oVFGpbfZEnl5Vp8YGtqrzbOB2qfy.png'),
-(32, 2, 'poultry', 'poultry', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/aves-G1oVFGpbfZEnl5Vp8YGtqrzbOB2qfy.png'),
-(33, 1, 'carnes', 'carnes', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/carnes-kVXy5HtyNHlZmTyauxaqS9xWUXpsQL.png'),
-(34, 2, 'meats', 'meats', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/carnes-kVXy5HtyNHlZmTyauxaqS9xWUXpsQL.png'),
-(35, 1, 'causas', 'causas', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/causas-740veK653RXMDhpHd24FOhilHb9LHC.png'),
-(36, 2, 'causas', 'causas', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/causas-740veK653RXMDhpHd24FOhilHb9LHC.png'),
-(37, 1, 'gratinados', 'gratinados', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/gratinados-DchxAFrnwF2jcPojg2hWnU0mWk3Kc5.png'),
-(38, 2, 'au gratins', 'au-gratins', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/gratinados-DchxAFrnwF2jcPojg2hWnU0mWk3Kc5.png'),
-(39, 1, 'pastas', 'pastas', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/pastas-wfOHwAsvOt7Ovn8F7IdpZLh9tiNulv.png'),
-(40, 2, 'pastas', 'pastas', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/pastas-wfOHwAsvOt7Ovn8F7IdpZLh9tiNulv.png'),
-(41, 1, 'pescados y mariscos', 'pescados-y-mariscos', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/pescados-Vi49pXntv3GhcdepA6rZVTdXFSOXv1.png'),
-(42, 2, 'fish and seafood', 'fish-and-seafood', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/pescados-Vi49pXntv3GhcdepA6rZVTdXFSOXv1.png'),
-(43, 1, 'tacu tacu', 'tacu-tacu', 25, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/tacu-tacu-Ilwdps1jnFtlbWQE2fl2dQ1StwaVnT.png'),
-(44, 2, 'tacu tacu', 'tacu-tacu', 26, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/tacu-tacu-Ilwdps1jnFtlbWQE2fl2dQ1StwaVnT.png'),
-
-(45, 1, 'menú niños', 'menu-ninos', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/menu-ninos-X6PZCYOml2WHa0Fs9cR6KcuBccHkbn.png'),
-(46, 2, 'kids menu', 'kids-menu', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/menu-ninos-X6PZCYOml2WHa0Fs9cR6KcuBccHkbn.png'),
-
-(47, 1, 'postres', 'postres', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/postres-fFtMqu0Syba1ZCe4Jo7Y6NK8GjqMBI.png'),
-(48, 2, 'desserts', 'desserts', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/postres-fFtMqu0Syba1ZCe4Jo7Y6NK8GjqMBI.png'),
-
-(49, 1, 'bebestibles', 'bebestibles', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/bebestibles-cwpB2xGG104iWfqyR5zDjPZvJBbFTc.png'),
-(50, 2, 'drinks', 'drinks', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/bebestibles-cwpB2xGG104iWfqyR5zDjPZvJBbFTc.png'),
-(51, 1, 'cervezas', 'cervezas', 49, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/cervezas-nyF6BCzhzcUoVJN47uDoxZapuecWPY.png'),
-(52, 2, 'beers', 'beers', 50, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/cervezas-nyF6BCzhzcUoVJN47uDoxZapuecWPY.png'),
-(53, 1, 'destilados', 'destilados', 49, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/destilados-QzG5vB2SWXljKR13lxjuaOU3Kohjlo.png'),
-(54, 2, 'distilled spirits', 'distilled-spirits', 50, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/destilados-QzG5vB2SWXljKR13lxjuaOU3Kohjlo.png'),
-(55, 1, 'bebidas', 'bebidas', 49, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/bebidas-VbmsMNTGZ5ZCesSim4PS4iLiz2m6i6.png'),
-(56, 2, 'soda soft drinks', 'soda-soft-drinks', 50, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/bebidas-VbmsMNTGZ5ZCesSim4PS4iLiz2m6i6.png'),
-
-(57, 1, 'bajativos', 'bajativos', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/bajativos-QZcOKwNaTbUh09xe9392oso7jsMPcY.png'),
-(58, 2, 'digestives', 'digestives', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/bajativos-QZcOKwNaTbUh09xe9392oso7jsMPcY.png'),
-
-(59, 1, 'café e infusiones', 'cafe-e-infusiones', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/cafe-infusiones-CnjljV3NSAPPe0gnlZN3XuBfKdQFZ2.png'),
-(60, 2, 'coffee and infusions', 'coffee-and-infusions', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/cafe-infusiones-CnjljV3NSAPPe0gnlZN3XuBfKdQFZ2.png'),
-
-(61, 1, 'bebidas de happy hour', 'bebidas-de-happy-hour', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/happy-hour-iRDNaYy8Pu0pf2Q7h6P4hqHJZdRhMt.png'),
-(62, 2, 'happy hour drinks', 'happy-hour-drinks', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/happy-hour-iRDNaYy8Pu0pf2Q7h6P4hqHJZdRhMt.png'),
-
-(63, 1, 'vinos', 'vinos', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/vinos-XsvkV0URpS1blAJ4CROvCm5lFHQktz.png'),
-(64, 2, 'wines', 'wines', null, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/vinos-XsvkV0URpS1blAJ4CROvCm5lFHQktz.png'),
-(65, 1, 'cabernet suavignon', 'cabernet-suavignon', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/cabernet-suavignon-Qp5w4gWem3c6KzRLzrIzsMVsigAtm5.png'),
-(66, 2, 'cabernet suavignon', 'cabernet-suavignon', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/cabernet-suavignon-Qp5w4gWem3c6KzRLzrIzsMVsigAtm5.png'),
-(67, 1, 'carmenere', 'carmenere', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/carmenere-HfowhLlBHIBpNsICJgnv3D3BsPVkwv.png'),
-(68, 2, 'carmenere', 'carmenere', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/carmenere-HfowhLlBHIBpNsICJgnv3D3BsPVkwv.png'),
-(69, 1, 'chardonay', 'chardonay', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/chardonay-8lbuAd9UPLyjNVS7Cd2bSekZTtrKmc.png'),
-(70, 2, 'chardonay', 'chardonay', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/chardonay-8lbuAd9UPLyjNVS7Cd2bSekZTtrKmc.png'),
-(71, 1, 'espumantes', 'espumantes', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/espumantes-4noGbG1hMKurcgOcy6GZKfKzgbgL5e.png'),
-(72, 2, 'sparkling wines', 'sparkling-wines', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/espumantes-4noGbG1hMKurcgOcy6GZKfKzgbgL5e.png'),
-(73, 1, 'grandes vinos', 'grandes-vinos', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/grandes-vinos-B99Zh9yiAWqm5BLO9S0nTK3JXP8Swk.png'),
-(74, 2, 'great wines', 'great-wines', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/grandes-vinos-B99Zh9yiAWqm5BLO9S0nTK3JXP8Swk.png'),
-(75, 1, 'malbec', 'malbec', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/malbec-OmSSJOMu7CGUGL6xjfhDjCCLawpfFg.png'),
-(76, 2, 'malbec', 'malbec', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/malbec-OmSSJOMu7CGUGL6xjfhDjCCLawpfFg.png'),
-(77, 1, 'merlot', 'merlot', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/merlot-PP7ejgGsm66CZ7DUj4StrFgOnb60Tt.png'),
-(78, 2, 'merlot', 'merlot', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/merlot-PP7ejgGsm66CZ7DUj4StrFgOnb60Tt.png'),
-(79, 1, 'suavignon blanc', 'suavignon-blanc', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/suavignon-blanc-UAgOuBzs3UeKAOOn4bsbN3F2TNExjO.png'),
-(80, 2, 'suavignon blanc', 'suavignon-blanc', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/suavignon-blanc-UAgOuBzs3UeKAOOn4bsbN3F2TNExjO.png'),
-(81, 1, 'syrah', 'syrah', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/syrah-Y3lXjo0c2npFc5nmpAtxsxsE72Iwza.png'),
-(82, 2, 'syrah', 'syrah', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/syrah-Y3lXjo0c2npFc5nmpAtxsxsE72Iwza.png'),
-(83, 1, 'viognier', 'viognier', 63, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/viognier-q9Rr8lUANTweOeqKzTcPz3eqBMo7tK.png'),
-(84, 2, 'viognier', 'viognier', 64, 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/categories/viognier-q9Rr8lUANTweOeqKzTcPz3eqBMo7tK.png');
-
-INSERT INTO Dishes (category_id, name, image, link, description, price)
-VALUES
-(39, 'FETUCCINI A LA HUANCAÍNA CON LOMO SALTADO', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/fetuccini-sIN1RXPktpPcM1Z3Hz3YELPk4IhZL0.png', 'fetuccini-a-la-huancaina-con-lomo-saltado', 'Fetuccini al dente con lomo salteado.', 14900),
-(39, 'RAVIOLIS A LA OCOPA CON FILETE AL GRILL', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/raviolis-8DZOPQloDqDimIcPl1h27I6XFma7JY.png', 'raviolis-a-la-ocopa-con-filete-al-grill', 'Raviolis en salsa de ocopa flameados con pisco y acompañado con filete al grill.', 14900),
-(39, 'ÑOQUIS A LA HUANCAÍNA CON CAMARONES', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/noquis-emoSr1K63nRbwztOmwvyrUrppAqBgD.png', 'noquis-a-la-huancaina-con-camarones', 'Tradicional salsa a la huancaína con camarones.', 13900),
-(40, 'Fettuccine Huancaina with sautéed beef', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/fetuccini-sIN1RXPktpPcM1Z3Hz3YELPk4IhZL0.png', 'fettuccine-huancaina-with-sauteed-beef', 'Al dente fettuccine with sautéed beef.', 14900),
-(40, 'Fettuccine with pesto and grilled steak', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/raviolis-8DZOPQloDqDimIcPl1h27I6XFma7JY.png', 'fettuccine-with-pesto-and-grilled-steak', 'Ravioli in Ocopa sauce flambéed with pisco and accompanied by grilled steak.', 14900),
-(40, 'Gnocchi Huancaina with shrimp', 'https://h7s6fkxi0hijadl6.public.blob.vercel-storage.com/restaurante/johnny/dishes/noquis-emoSr1K63nRbwztOmwvyrUrppAqBgD.png', 'gnocchi-huancaina-with-shrimp', 'Traditional Huancaina sauce with shrimp.', 13900),
-(39, 'FETUCCINI AL PESTO CON PULPO A LA PARRILLA', '', 'fetuccini-al-pesto-con-pulpo-a-la-parrilla', 'Fetuccini al dente con salsa al pesto y pulpo a la parrilla.', 13900),
-(40, 'Fettuccine with pesto and grilled octopus', '', 'fettuccine-with-pesto-and-grilled-octopus', 'Al dente fettuccine with pesto sauce and grilled octopus..', 13900);
+CREATE INDEX idx_category_translations_category_id ON category_translations (category_id);
+CREATE INDEX idx_category_translations_language_id ON category_translations (language_id);
+CREATE INDEX idx_dish_translations_dish_id ON dish_translations (dish_id);
+CREATE INDEX idx_dish_translations_language_id ON dish_translations (language_id);
+CREATE INDEX idx_categories_restaurant_id ON categories (restaurant_id);
+CREATE INDEX idx_categories_parent_id ON categories (parent_id);
+CREATE INDEX idx_dishes_category_id ON dishes (category_id);
+CREATE INDEX idx_dishes_is_deleted ON dishes (is_deleted);
+CREATE INDEX idx_orders_table_id ON orders (table_id);
+CREATE INDEX idx_order_status_history_status_id ON order_status_history (status_id);
+CREATE INDEX idx_order_statuses_name ON order_statuses (name);

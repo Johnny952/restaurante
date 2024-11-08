@@ -1,7 +1,5 @@
 import useLoadStore from "@/store/load-store";
-import useSnackStore from "@/store/snackbar-store";
 import {
-    Box,
     Button,
     Dialog,
     DialogActions,
@@ -15,9 +13,12 @@ import {
     SelectChangeEvent,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllByRestaurant } from "@/app/api/languages/get";
-import { getAll } from "@/app/api/restaurants/get";
-import { updateRestLang } from "@/app/api/categories/update";
+import { enqueueSnackbar } from "notistack";
+import { useRouter } from "next/navigation";
+import { getByRestaurantLink } from "@/lib/services/language";
+import { LanguageType } from "@/lib/models/language";
+import { getAll } from "@/lib/services/restaurant";
+import { updateRestaurantLanguage } from "@/lib/services/category";
 
 interface FormData {
     restaurant: string;
@@ -27,32 +28,34 @@ interface FormData {
 export default function EditRestLangDialog({
     open,
     id,
-    onClose,
 }: {
     open: boolean;
     id: string;
-    onClose: () => void;
 }) {
     const [formData, setFormData] = useState<FormData>({
         restaurant: "",
         language: "",
     });
-    const [allRestaurants, setAllRestaurants] = useState<
-        { id: string; name: string; link: string }[]
+    const [restaurants, setRestaurants] = useState<
+        { id: number; name: string; link: string }[]
     >([]);
-    const [allLanguages, setAllLanguages] = useState<
-        { id: string; name: string }[]
-    >([]);
+    const [languages, setLanguages] = useState<LanguageType[]>([]);
     const setLoading = useLoadStore((state) => state.setLoading);
-    const snackSuccess = useSnackStore((state) => state.setOpenSuccess);
-    const snackError = useSnackStore((state) => state.setOpenError);
+    const router = useRouter();
 
     const handleChange = async (e: SelectChangeEvent) => {
         if (e.target.name === "restaurant") {
             setLoading(true);
-            const languages = await getAllByRestaurant(e.target.value);
-
-            setAllLanguages(languages);
+            const languagesResponse = await getByRestaurantLink(e.target.value);
+            if ("error" in languagesResponse) {
+                enqueueSnackbar({
+                    message: `Ocurrio un error: ${languagesResponse.error}`,
+                    variant: "error",
+                    autoHideDuration: 3000,
+                });
+                return;
+            }
+            setLanguages(languagesResponse);
             setLoading(false);
             setFormData({ restaurant: e.target.value, language: "" });
         } else {
@@ -63,15 +66,28 @@ export default function EditRestLangDialog({
     const handleSubmit = async () => {
         setLoading(true);
         try {
-            await updateRestLang(id, formData.restaurant, formData.language);
+            await updateRestaurantLanguage(
+                id,
+                formData.restaurant,
+                formData.language
+            );
             setFormData({
                 restaurant: "",
                 language: "",
             });
-            onClose();
-            snackSuccess("Categoría editada");
+            router.push("editar");
+            router.refresh();
+            enqueueSnackbar({
+                message: "Categoría editada",
+                variant: "success",
+                autoHideDuration: 3000,
+            });
         } catch (error) {
-            snackError(`Ocurrió un error: ${error}`);
+            enqueueSnackbar({
+                message: "Ocurrio un error",
+                variant: "error",
+                autoHideDuration: 3000,
+            });
         }
         setLoading(false);
     };
@@ -82,13 +98,19 @@ export default function EditRestLangDialog({
         };
 
         fetchData()
-            .then((restaurants) => {
-                setAllRestaurants(restaurants);
+            .then((restaurantsResponse) => {
+                if ("error" in restaurantsResponse) {
+                    throw restaurantsResponse.error;
+                }
+                setRestaurants(restaurantsResponse);
             })
             .catch((error) => {
-                snackError(`Ocurrió un error: ${error.toString()}`);
+                enqueueSnackbar({
+                    message: `Ocurrio un error: ${error.toString()}`,
+                    variant: "error",
+                    autoHideDuration: 3000,
+                });
             });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
     return (
@@ -114,7 +136,7 @@ export default function EditRestLangDialog({
                                 required
                                 fullWidth
                             >
-                                {allRestaurants.map((rest) => (
+                                {restaurants.map((rest) => (
                                     <MenuItem key={rest.id} value={rest.id}>
                                         {rest.name}
                                     </MenuItem>
@@ -140,7 +162,7 @@ export default function EditRestLangDialog({
                                 required
                                 fullWidth
                             >
-                                {allLanguages.map((lang) => (
+                                {languages.map((lang) => (
                                     <MenuItem key={lang.id} value={lang.id}>
                                         {lang.name}
                                     </MenuItem>
@@ -157,7 +179,7 @@ export default function EditRestLangDialog({
                                 restaurant: "",
                                 language: "",
                             });
-                            onClose();
+                            router.push("editar");
                         }}
                         color="error"
                         autoFocus

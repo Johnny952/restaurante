@@ -1,196 +1,43 @@
-"use client";
-import { Paper } from "@mui/material";
-import LinkBreadcrumbs from "@/components/link-breadcrumbs";
-import BaseTable from "../components/base-table";
-import { useEffect, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
-import useSnackStore from "@/store/snackbar-store";
-import pathWithQueries from "@/helpers/path-with-queries";
-import { GridColDef } from "@mui/x-data-grid";
-import filterOperators from "../components/base-table/filter-operators";
-import { CategoryTable } from "@/app/api/categories/index.types";
-import { getCount, list } from "@/app/api/categories/get";
-import DeleteCategoryDialog from "./components/delete-dialog";
+import { list } from "@/lib/services/category";
+import AdminCategoriesView from "./view";
 
-const breadcrumbs = [
-    {
-        name: "Home",
-        link: "/admin",
-    },
-    {
-        name: "Categorías",
-    },
-];
-
-const columns: GridColDef[] = [
-    {
-        field: "id",
-        headerName: "ID",
-        width: 100,
-        filterOperators,
-    },
-    {
-        field: "name",
-        headerName: "Nombre",
-        width: 150,
-        filterOperators,
-    },
-    {
-        field: "restaurant_name",
-        headerName: "Restaurante",
-        width: 150,
-        filterOperators,
-    },
-    {
-        field: "language",
-        headerName: "Lenguaje",
-        width: 150,
-        filterOperators,
-    },
-    {
-        field: "link",
-        headerName: "Enlace",
-        width: 150,
-        filterOperators,
-    },
-    {
-        field: "parent",
-        headerName: "Categoría Padre",
-        width: 150,
-        filterOperators,
-    },
-    {
-        field: "image",
-        headerName: "Imagen",
-        width: 150,
-        filterOperators: [],
-    },
-];
-
-export default function AdminCategoriesPage(props: {
-    searchParams: {
-        page?: string;
-        size?: string;
-        delete?: string;
-        sortBy?: string;
-        sortOrder?: string;
-        filterField?: string;
-        filterOperator?: string;
-        filterValue?: string;
-    };
+export default async function AdminCategoriesPage({ searchParams }: {
+    searchParams: { [key: string]: string | string[] | undefined }
 }) {
-    const page = props.searchParams.page
-        ? parseInt(props.searchParams.page)
-        : undefined;
-    const size = props.searchParams.size
-        ? parseInt(props.searchParams.size)
-        : undefined;
-    const {
-        sortBy,
-        sortOrder,
-        filterField,
-        filterOperator,
-        filterValue,
-        delete: del,
-    } = props.searchParams;
+    const page = searchParams.page ? parseInt(searchParams.page as string, 10) : 0;
+    const size = searchParams.size ? parseInt(searchParams.size as string, 10) : 10;
+    const sortBy = searchParams.sortBy as string || 'category_name';
+    const sortOrder = searchParams.sortOrder as string || 'ASC';
+    const filterField = searchParams.filterField as string;
+    const filterOperator = searchParams.filterOperator as string;
+    const filterValue = searchParams.filterValue as string;
+    const del = searchParams.delete as string;
 
-    const [rowCount, setRowCount] = useState<number>(0);
-    const [rows, setRows] = useState<CategoryTable[]>([]);
-    const [tableLoading, setTableLoading] = useState(true);
-    const router = useRouter();
-    const pathname = usePathname();
-    const snackError = useSnackStore((state) => state.setOpenError);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setTableLoading(true);
-            return Promise.all([
-                list({
-                    page,
-                    size,
-                    sortBy,
-                    sortOrder,
-                    filterField,
-                    filterOperator,
-                    filterValue,
-                }),
-                getCount(filterField, filterOperator, filterValue),
-            ]);
-        };
-
-        fetchData()
-            .then(([dataRows, count]) => {
-                setRowCount(parseInt(count.count, 10));
-                setRows(dataRows);
-                setTableLoading(false);
-            })
-            .catch((error) => {
-                snackError(`Ocurrió un error: ${error.toString()}`);
-                setTableLoading(false);
-            });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        filterField,
-        filterOperator,
-        filterValue,
+    const initialData = await list({
         page,
         size,
         sortBy,
         sortOrder,
-        del,
-    ]);
+        filterField,
+        filterOperator,
+        filterValue,
+    });
 
-    function redirectLoadData(params: Record<string, string | number>) {
-        router.push(
-            pathWithQueries(pathname, {
-                page,
-                size,
-                filterField,
-                filterOperator,
-                filterValue,
-                sortBy,
-                sortOrder,
-                ...params,
-            })
-        );
+    if ("error" in initialData) {
+        return <div>{initialData.error}</div>;
     }
 
     return (
-        <div>
-            <LinkBreadcrumbs breadcrumbs={breadcrumbs} />
-
-            <Paper
-                elevation={0}
-                sx={{
-                    mt: "20px",
-                    p: "20px",
-                    border: "1px solid rgba(0, 0, 0, 0.12)",
-                    color: "rgb(114, 119, 122)",
-                }}
-            >
-                <BaseTable
-                    tableName="Categorías"
-                    rowCount={rowCount}
-                    columns={columns}
-                    rows={rows}
-                    tableLoading={tableLoading}
-                    redirectLoadData={redirectLoadData}
-                    pathname={pathname}
-                    redirect={(path: string) => router.push(path)}
-                    page={page}
-                    size={size}
-                    sortBy={sortBy}
-                    sortOrder={sortOrder}
-                    filterField={filterField || "id"}
-                    filterOperator={filterOperator || "contains"}
-                    filterValue={filterValue}
-                />
-                <DeleteCategoryDialog
-                    open={Boolean(del) && del !== ""}
-                    onClose={() => redirectLoadData({})}
-                    selected={del || ""}
-                />
-            </Paper>
-        </div>
+        <AdminCategoriesView
+            initialData={initialData}
+            initialPage={page}
+            initialSize={size}
+            initialSortBy={sortBy}
+            initialSortOrder={sortOrder}
+            initialFilterField={filterField}
+            initialFilterOperator={filterOperator}
+            initialFilterValue={filterValue}
+            del={del}
+        />
     );
 }

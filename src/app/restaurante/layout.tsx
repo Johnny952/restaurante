@@ -1,5 +1,7 @@
-import React, { Suspense } from "react";
-import Loader from "./components/page-loader";
+import React from "react";
+import { Box, ThemeProvider } from "@mui/material";
+import theme from "./components/theme";
+import PageTransition from "./components/page-transition";
 
 export default function RootLayout({
     children,
@@ -7,10 +9,10 @@ export default function RootLayout({
     children: React.ReactNode;
 }) {
     return (
-        <html lang="es">
-            <body>
-                <Suspense fallback={<Loader />}>{children}</Suspense>
-            </body>
-        </html>
+        <ThemeProvider theme={theme}>
+            <Box>
+                <PageTransition>{children}</PageTransition>
+            </Box>
+        </ThemeProvider>
     );
 }
